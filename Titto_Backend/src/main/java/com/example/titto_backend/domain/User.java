@@ -1,4 +1,4 @@
-package com.example.titto_backend.entity.dto;
+package com.example.titto_backend.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
