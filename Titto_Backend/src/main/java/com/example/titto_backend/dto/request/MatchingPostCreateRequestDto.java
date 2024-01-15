@@ -1,11 +1,14 @@
 package com.example.titto_backend.dto.request;
 
+import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MatchingPostCreateRequestDto {
     @NotNull
     private Long userId;
@@ -13,4 +16,11 @@ public class MatchingPostCreateRequestDto {
     private String title;
     @NotNull
     private String content;
+
+    public MatchingPost toEntity() {
+        return MatchingPost.builder()
+                .title(title)
+                .content(content)
+                .build();
+    }
 }
