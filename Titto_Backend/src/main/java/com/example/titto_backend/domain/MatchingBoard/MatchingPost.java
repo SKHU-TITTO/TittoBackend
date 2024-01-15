@@ -17,7 +17,7 @@ public class MatchingPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "matchingPost_id")
-    private int matchingPostId;
+    private Long matchingPostId;
 
     // 직상자
     @ManyToOne
@@ -43,7 +43,7 @@ public class MatchingPost extends BaseEntity {
 
     // 조회수
     @Column(name = "view_count", nullable = false)
-    private int viewCount;
+    private Integer viewCount;
 
     // 1대1 관계 매핑
     @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
