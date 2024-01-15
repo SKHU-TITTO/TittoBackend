@@ -45,4 +45,7 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "view_count", nullable = false)
     private int viewCount;
 
+    // 1대1 관계 매핑
+    @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MatchingBoard matchingBoard;
 }
