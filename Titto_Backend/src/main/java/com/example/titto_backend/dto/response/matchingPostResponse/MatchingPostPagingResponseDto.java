@@ -1,6 +1,6 @@
-package com.example.titto_backend.dto.response;
+package com.example.titto_backend.dto.response.matchingPostResponse;
 
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;

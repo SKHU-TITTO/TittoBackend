@@ -1,4 +1,4 @@
-package com.example.titto_backend.dto.request;
+package com.example.titto_backend.dto.request.MatchingPostRequest;
 
 import lombok.Data;
 

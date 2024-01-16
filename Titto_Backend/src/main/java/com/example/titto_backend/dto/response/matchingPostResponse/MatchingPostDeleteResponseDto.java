@@ -1,4 +1,4 @@
-package com.example.titto_backend.dto.response;
+package com.example.titto_backend.dto.response.matchingPostResponse;
 
 import lombok.AllArgsConstructor;
 

@@ -1,7 +1,7 @@
-package com.example.titto_backend.dto.response;
+package com.example.titto_backend.dto.response.matchingPostResponse;
 
-import com.example.titto_backend.domain.MatchingBoard.Category;
-import com.example.titto_backend.domain.MatchingBoard.Status;
+import com.example.titto_backend.domain.matchingBoard.Category;
+import com.example.titto_backend.domain.matchingBoard.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,6 @@ public class MatchingPostResponseDto {
     private Integer viewCount;
     private Integer reviewCount;
     private LocalDateTime updateDate;
-
 
     public static MatchingPostResponseDto of(
             Long matchingPostId,

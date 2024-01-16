@@ -1,7 +1,7 @@
-package com.example.titto_backend.dto.request;
+package com.example.titto_backend.dto.request.MatchingPostRequest;
 
-import com.example.titto_backend.domain.MatchingBoard.Category;
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.example.titto_backend.domain.matchingBoard.Category;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
