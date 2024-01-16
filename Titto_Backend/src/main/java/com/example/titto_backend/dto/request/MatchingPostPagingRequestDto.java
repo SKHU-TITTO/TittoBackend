@@ -1,9 +1,9 @@
-package com.example.titto_backend.dto.response;
+package com.example.titto_backend.dto.request;
 
 import lombok.Data;
 
 @Data
-public class MatchingPostPagingDto {
+public class MatchingPostPagingRequestDto {
     private int page;
     private int size;
     private String sort;
