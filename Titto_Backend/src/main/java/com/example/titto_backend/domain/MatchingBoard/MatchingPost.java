@@ -1,5 +1,6 @@
 package com.example.titto_backend.domain.MatchingBoard;
 
+import com.example.titto_backend.converter.CategoryToIntegerConverter;
 import com.example.titto_backend.domain.BaseEntity;
 import com.example.titto_backend.domain.User;
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ public class MatchingPost extends BaseEntity {
     private User user;
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
-    @Enumerated(EnumType.ORDINAL)
+    @Convert(converter = CategoryToIntegerConverter.class)
     private Category category;
 
     // 상태(모집중, 모집 완료)
@@ -42,7 +43,7 @@ public class MatchingPost extends BaseEntity {
     private String content;
 
     // 조회수
-    @Column(name = "view_count", nullable = false)
+    @Column(name = "view_count", columnDefinition = "integer default 0", nullable = false)
     private Integer viewCount;
 
     // 1대1 관계 매핑
