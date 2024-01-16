@@ -1,4 +1,4 @@
-package com.example.titto_backend.domain.MatchingBoard;
+package com.example.titto_backend.domain.matchingBoard;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

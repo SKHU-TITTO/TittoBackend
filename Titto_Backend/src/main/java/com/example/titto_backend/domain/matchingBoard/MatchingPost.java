@@ -1,4 +1,4 @@
-package com.example.titto_backend.domain.MatchingBoard;
+package com.example.titto_backend.domain.matchingBoard;
 
 import com.example.titto_backend.converter.CategoryToIntegerConverter;
 import com.example.titto_backend.domain.BaseEntity;

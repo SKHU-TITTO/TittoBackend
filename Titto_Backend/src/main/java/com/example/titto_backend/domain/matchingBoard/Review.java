@@ -1,6 +1,7 @@
-package com.example.titto_backend.domain;
+package com.example.titto_backend.domain.matchingBoard;
 
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.example.titto_backend.domain.BaseEntity;
+import com.example.titto_backend.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
