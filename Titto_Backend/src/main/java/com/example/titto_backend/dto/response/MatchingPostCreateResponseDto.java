@@ -18,6 +18,7 @@ public class MatchingPostCreateResponseDto {
     private String title;
     private String content;
     private Integer viewCount;
+    private Integer reviewCount;
     private LocalDateTime createDate;
 
     public static MatchingPostCreateResponseDto of(
@@ -28,8 +29,9 @@ public class MatchingPostCreateResponseDto {
             String title,
             String content,
             Integer viewCount,
+            Integer reviewCount,
             LocalDateTime createDate) {
-        return new MatchingPostCreateResponseDto(matchingPostId, author, category, status, title, content, viewCount, createDate);
+        return new MatchingPostCreateResponseDto(matchingPostId, author, category, status, title, content, viewCount, reviewCount, createDate);
     }
 }
 

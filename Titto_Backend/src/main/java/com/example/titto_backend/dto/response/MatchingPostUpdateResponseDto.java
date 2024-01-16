@@ -18,6 +18,7 @@ public class MatchingPostUpdateResponseDto {
     private String title;
     private String content;
     private Integer viewCount;
+    private Integer reviewCount;
     private LocalDateTime updateDate;
 
     public static MatchingPostUpdateResponseDto of(
@@ -28,7 +29,17 @@ public class MatchingPostUpdateResponseDto {
             String title,
             String content,
             Integer viewCount,
+            Integer reviewCount,
             LocalDateTime updateDate) {
-        return new MatchingPostUpdateResponseDto(matchingPostId, author, category, status, title, content, viewCount, updateDate);
+        return new MatchingPostUpdateResponseDto(
+                matchingPostId,
+                author,
+                category,
+                status,
+                title,
+                content,
+                viewCount,
+                reviewCount,
+                updateDate);
     }
 }
