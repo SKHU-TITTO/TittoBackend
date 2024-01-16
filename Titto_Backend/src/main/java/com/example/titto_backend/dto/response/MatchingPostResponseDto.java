@@ -13,26 +13,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MatchingPostResponseDto {
     private Long matchingPostId;
-    private UserResponseDto user;
+    private String authorNickName;
     private Category category;
     private Status status;
     private String title;
     private String content;
     private Integer viewCount;
     private LocalDateTime createDate;
-    private LocalDateTime updateDate;
+
 
     public static MatchingPostResponseDto of(
             Long matchingPostId,
-            UserResponseDto user,
+            String authorNickName,
             Category category,
             Status status,
             String title,
             String content,
             Integer viewCount,
-            LocalDateTime createDate,
-            LocalDateTime updateDate) {
-        return new MatchingPostResponseDto(matchingPostId, user, category, status, title, content, viewCount, createDate, updateDate);
+            LocalDateTime createDate) {
+        return new MatchingPostResponseDto(matchingPostId, authorNickName, category, status, title, content, viewCount, createDate);
     }
 
 }

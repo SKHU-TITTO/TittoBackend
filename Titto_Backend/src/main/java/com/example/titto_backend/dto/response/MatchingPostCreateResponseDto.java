@@ -1,7 +1,5 @@
 package com.example.titto_backend.dto.response;
 
-import com.example.titto_backend.domain.MatchingBoard.Category;
-import com.example.titto_backend.domain.MatchingBoard.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +12,9 @@ import java.time.LocalDateTime;
 public class MatchingPostCreateResponseDto {
 
     private Long matchingPostId;
-    private UserResponseDto user;
-    private Category category;
-    private Status status;
+    private String author;
+    private String category;
+    private String status;
     private String title;
     private String content;
     private Integer viewCount;
@@ -24,13 +22,14 @@ public class MatchingPostCreateResponseDto {
 
     public static MatchingPostCreateResponseDto of(
             Long matchingPostId,
-            UserResponseDto user,
-            Category category,
-            Status status,
+            String author,
+            String category,
+            String status,
             String title,
             String content,
             Integer viewCount,
             LocalDateTime createDate) {
-        return new MatchingPostCreateResponseDto(matchingPostId, user, category, status, title, content, viewCount, createDate);
+        return new MatchingPostCreateResponseDto(matchingPostId, author, category, status, title, content, viewCount, createDate);
     }
 }
+
