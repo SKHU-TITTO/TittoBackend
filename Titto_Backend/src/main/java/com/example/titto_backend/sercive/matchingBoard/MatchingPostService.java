@@ -10,6 +10,9 @@ import com.example.titto_backend.dto.response.MatchingPostResponseDto;
 import com.example.titto_backend.dto.response.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
 import com.example.titto_backend.repository.MatchingBoard.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -41,6 +44,7 @@ public class MatchingPostService {
                 matchingPost.getTitle(),
                 matchingPost.getContent(),
                 matchingPost.getViewCount(),
+                matchingPost.getReview_count(),
                 matchingPost.getCreateDate()
         );
     }
@@ -56,7 +60,8 @@ public class MatchingPostService {
                 matchingPost.getTitle(),
                 matchingPost.getContent(),
                 matchingPost.getViewCount(),
-                matchingPost.getCreateDate()
+                matchingPost.getReview_count(),
+                matchingPost.getUpdateDate()
         );
     }
     // 게시물 삭제
@@ -86,10 +91,44 @@ public class MatchingPostService {
                     matchingPost.getTitle(),
                     matchingPost.getContent(),
                     matchingPost.getViewCount(),
+                    matchingPost.getReview_count(),
                     matchingPost.getUpdateDate()
             );
         }
         else throw new AuthorizationServiceException("잘못된 접근입니다");
+    }
+    // 게시글 조회수 연산
+    private void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (matchingPost != null) {
+            if (cookies != null) {
+                for (Cookie oldCookie : cookies) {
+                    if (oldCookie.getName().equals("postVies")) {
+                        cookie = oldCookie;
+                        break;
+                    }
+                }
+            }
+            if (cookie != null) {
+                if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
+                    matchingPost.updateViewCount();
+                    matchingPostRepository.save(matchingPost);
+                    cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
+                }
+            } else {
+                matchingPost.updateViewCount();
+                matchingPostRepository.save(matchingPost);
+                cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
+            }
+            response.addCookie(setCookieValue(cookie));
+        }
+    }
+    // 쿠키 설정
+    private Cookie setCookieValue(Cookie cookie) {
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        return cookie;
     }
 }
 
