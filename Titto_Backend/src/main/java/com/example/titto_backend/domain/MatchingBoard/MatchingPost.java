@@ -25,6 +25,10 @@ public class MatchingPost extends BaseEntity {
     @JoinColumn(name = "post_author")
     private User user;
 
+    // 1대1 관계 매핑
+    @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MatchingBoard matchingBoard;
+
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
     @Convert(converter = CategoryToIntegerConverter.class)
     private Category category;
@@ -46,7 +50,8 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "view_count", columnDefinition = "integer default 0", nullable = false)
     private Integer viewCount;
 
-    // 1대1 관계 매핑
-    @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private MatchingBoard matchingBoard;
+    // 댓글 수
+    @Column(name = "reivew_count", columnDefinition = "integer default 0", nullable = false)
+    private Integer review_count;
+
 }
