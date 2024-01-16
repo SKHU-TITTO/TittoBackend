@@ -54,4 +54,7 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "reivew_count", columnDefinition = "integer default 0", nullable = false)
     private Integer review_count;
 
+    public void updateViewCount() {
+        this.viewCount++;
+    }
 }
