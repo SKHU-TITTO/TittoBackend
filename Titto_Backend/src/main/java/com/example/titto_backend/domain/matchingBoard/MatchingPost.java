@@ -25,7 +25,7 @@ public class MatchingPost extends BaseEntity {
     @JoinColumn(name = "post_author")
     private User user;
 
-    // 1대1 관계 매핑
+    // 매칭게시판
     @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MatchingBoard matchingBoard;
 
