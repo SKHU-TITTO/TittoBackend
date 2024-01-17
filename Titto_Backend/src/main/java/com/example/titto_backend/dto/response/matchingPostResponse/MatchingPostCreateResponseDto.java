@@ -1,13 +1,9 @@
 package com.example.titto_backend.dto.response.matchingPostResponse;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class MatchingPostCreateResponseDto {
 
