@@ -3,13 +3,9 @@ package com.example.titto_backend.dto.response.matchingPostResponse;
 import com.example.titto_backend.domain.matchingBoard.Category;
 import com.example.titto_backend.domain.matchingBoard.Status;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class MatchingPostResponseDto {
     private Long matchingPostId;

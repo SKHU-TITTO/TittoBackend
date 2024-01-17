@@ -1,8 +1,10 @@
 package com.example.titto_backend.domain;
 
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
+import com.example.titto_backend.domain.review.MatchingPostReview;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
+@Getter
 public class User {
 
   @Id
@@ -36,5 +39,5 @@ public class User {
 
   @JsonIgnore
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Review> reviews;
+  private List<MatchingPostReview> matchingPostReviews;
 }

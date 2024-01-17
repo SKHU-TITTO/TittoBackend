@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review extends BaseEntity {
+public class MatchingPostReview extends BaseEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long review_id;
