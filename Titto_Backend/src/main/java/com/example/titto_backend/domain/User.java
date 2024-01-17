@@ -1,11 +1,12 @@
 package com.example.titto_backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import java.time.LocalDateTime;
+import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -29,4 +30,11 @@ public class User {
   //available point
   private Integer availablePoint;
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<MatchingPost> matchingPosts;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Review> reviews;
 }

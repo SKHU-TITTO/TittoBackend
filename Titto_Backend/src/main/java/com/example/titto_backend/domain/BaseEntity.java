@@ -15,17 +15,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(value = {AuditingEntityListener.class})
 public class BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "create_date", nullable = false, updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createDate;
 
     @Column(name = "update_date", nullable = false)
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private LocalDateTime updateDate;
 
 }
