@@ -1,7 +1,7 @@
 package com.example.titto_backend.domain;
 
 import com.example.titto_backend.domain.matchingBoard.MatchingPost;
-import com.example.titto_backend.domain.review.Review;
+import com.example.titto_backend.domain.review.MatchingPostReview;
 import com.example.titto_backend.login.domain.oauth.OAuthProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
@@ -68,5 +68,5 @@ public class User {
 
   @JsonIgnore
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<Review> reviews;
+  private List<MatchingPostReview> matchingPostReviews;
 }

@@ -1,7 +1,8 @@
-package com.example.titto_backend.domain.matchingBoard;
+package com.example.titto_backend.domain.review;
 
 import com.example.titto_backend.domain.BaseEntity;
 import com.example.titto_backend.domain.User;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review extends BaseEntity {
+public class MatchingPostReview extends BaseEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long review_id;
@@ -21,11 +23,11 @@ public class Review extends BaseEntity {
     // 댓글 작성자
     @ManyToOne
     @JoinColumn(name = "review_author")
-    private User user;
+    private User reviewAuthor;
 
     // 게시글
     @ManyToOne
-    @JoinColumn(name = "MatchingPost_id")
+    @JoinColumn(name = "matchingPost_id")
     private MatchingPost matchingPost;
 
     // 내용

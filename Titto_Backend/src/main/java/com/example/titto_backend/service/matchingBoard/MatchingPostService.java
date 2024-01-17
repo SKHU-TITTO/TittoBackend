@@ -1,22 +1,22 @@
 package com.example.titto_backend.service.matchingBoard;
 
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.domain.User;
-import com.example.titto_backend.dto.request.MatchingPostCreateRequestDto;
-import com.example.titto_backend.dto.request.MatchingPostUpdateRequestDto;
-import com.example.titto_backend.dto.response.MatchingPostCreateResponseDto;
-import com.example.titto_backend.dto.response.MatchingPostDeleteResponseDto;
-import com.example.titto_backend.dto.response.MatchingPostResponseDto;
-import com.example.titto_backend.dto.response.MatchingPostUpdateResponseDto;
+import com.example.titto_backend.dto.request.MatchingPostRequest.MatchingPostCreateRequestDto;
+import com.example.titto_backend.dto.request.MatchingPostRequest.MatchingPostUpdateRequestDto;
+import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostCreateResponseDto;
+import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostDeleteResponseDto;
+import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostResponseDto;
+import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
 import com.example.titto_backend.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 
@@ -49,9 +49,11 @@ public class MatchingPostService {
         );
     }
     // 게시물 조회
+    @Transactional(readOnly = true)
     public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
+
         return MatchingPostResponseDto.of(
                 matchingPost.getMatchingPostId(),
                 matchingPost.getUser().getNickname(),
@@ -70,6 +72,7 @@ public class MatchingPostService {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
         matchingPostRepository.delete(matchingPost);
+
         return MatchingPostDeleteResponseDto.of(matchingPostId);
     }
     // 게시물 수정
@@ -104,7 +107,7 @@ public class MatchingPostService {
         if (matchingPost != null) {
             if (cookies != null) {
                 for (Cookie oldCookie : cookies) {
-                    if (oldCookie.getName().equals("postVies")) {
+                    if (oldCookie.getName().equals("postViews")) {
                         cookie = oldCookie;
                         break;
                     }

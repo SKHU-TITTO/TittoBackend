@@ -1,8 +1,8 @@
 package com.example.titto_backend.service.matchingBoard;
 
-import com.example.titto_backend.domain.MatchingBoard.MatchingPost;
-import com.example.titto_backend.dto.request.MatchingPostPagingRequestDto;
-import com.example.titto_backend.dto.response.MatchingPostPagingResponseDto;
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
+import com.example.titto_backend.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
+import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
