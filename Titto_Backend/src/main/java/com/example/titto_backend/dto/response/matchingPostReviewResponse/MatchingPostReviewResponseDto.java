@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-public class MatchingReviewUpdateResponseDto {
+public class MatchingPostReviewResponseDto {
     private Long reviewId;
 
     private Long postId;
@@ -16,12 +16,12 @@ public class MatchingReviewUpdateResponseDto {
 
     private LocalDateTime updateDate;
 
-    public static MatchingReviewUpdateResponseDto of(
+    public static MatchingPostReviewResponseDto of(
             Long reviewId,
             Long postId,
             String author,
             String content,
             LocalDateTime updateDate){
-        return new MatchingReviewUpdateResponseDto(reviewId, postId, author, content, updateDate);
+        return new MatchingPostReviewResponseDto(reviewId, postId, author, content, updateDate);
     }
 }
