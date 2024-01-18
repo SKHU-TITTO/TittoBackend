@@ -67,6 +67,7 @@ public class User {
   private List<MatchingPost> matchingPosts;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<MatchingPostReview> matchingPostReviews;
+
 }
