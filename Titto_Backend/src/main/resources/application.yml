@@ -13,36 +13,15 @@ spring:
   jwt:
     secret: ${JWT_SECRET}
 
-  security:
-    oauth2:
-      client:
-        registration:
-          naver:
-            client-id: ${naver-client-id}
-            client-secret: ${naver-client-secret}
-            client-name: Naver
-            redirect-uri: "{baseUrl}/oauth/naver/login"
-            scope:
-              - email
-              - profile_image
-          kakao:
-            client-id: ${kakao-client-id}
-            client-secret: ${kakao-client-secret}
-            redirect-uri: "{baseUrl}/oauth/kakao/login"
-            authorization-grant-type: authorization_code
-            client-authentication-method: POST
-            client-name: Kakao
-            scope:
-              - profile_image
-              - account_email
-      provider:
-        naver:
-          authorization-uri: https://nid.naver.com/oauth2.0/authorize
-          token-uri: https://nid.naver.com/oauth2.0/token
-          user-info-uri: https://openapi.naver.com/v1/nid/me
-          user-name-attribute: response
-        kakao:
-          authorization-uri: https://kauth.kakao.com/oauth/authorize
-          token-uri: https://kauth.kakao.com/oauth/token
-          user-info-uri: https://kapi.kakao.com/v2/user/me
-          user-name-attribute: id
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+  naver:
+    secret: ${NAVER_CLIENT_SECRET}
+    client-id: ${NAVER_CLIENT_ID}
+    url:
+      auth: https://nid.naver.com
+      api: https://openapi.naver.com
