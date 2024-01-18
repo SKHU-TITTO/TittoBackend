@@ -1,4 +1,4 @@
-package com.example.titto_backend.sercive.matchingBoard;
+package com.example.titto_backend.service.matchingBoard;
 
 import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
