@@ -25,7 +25,7 @@ public class NaverApiClient implements OAuthApiClient {
   private String apiUrl;
   @Value("${oauth.naver.client-id}")
   private String clientId;
-  @Value("${oauth.naver.client-secret}")
+  @Value("${oauth.naver.secret}")
   private String clientSecret;
 
   private final RestTemplate restTemplate;

@@ -1,6 +1,6 @@
 package com.example.titto_backend.domain.matchingBoard;
 
-import com.example.titto_backend.converter.CategoryToIntegerConverter;
+//import com.example.titto_backend.converter.CategoryToIntegerConverter;
 import com.example.titto_backend.domain.BaseEntity;
 import com.example.titto_backend.domain.User;
 import jakarta.persistence.*;
@@ -30,7 +30,7 @@ public class MatchingPost extends BaseEntity {
     private MatchingBoard matchingBoard;
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
-    @Convert(converter = CategoryToIntegerConverter.class)
+//    @Convert(converter = CategoryToIntegerConverter.class)
     private Category category;
 
     // 상태(모집중, 모집 완료)
