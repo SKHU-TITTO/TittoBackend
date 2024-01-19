@@ -1,5 +1,6 @@
 package com.example.titto_backend.dto.response.matchingPostReviewResponse;
 
+import com.example.titto_backend.domain.review.MatchingPostReview;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -7,21 +8,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MatchingPostReviewResponseDto {
     private Long reviewId;
-
-    private Long postId;
-
-    private String author;
-
+    private String reviewAuthor;
     private String content;
-
     private LocalDateTime updateDate;
 
-    public static MatchingPostReviewResponseDto of(
-            Long reviewId,
-            Long postId,
-            String author,
-            String content,
-            LocalDateTime updateDate){
-        return new MatchingPostReviewResponseDto(reviewId, postId, author, content, updateDate);
+    public MatchingPostReviewResponseDto(MatchingPostReview matchingPostReview) {
+        this.reviewId = matchingPostReview.getReview_id();
+        this.reviewAuthor = matchingPostReview.getReviewAuthor().getNickname();
+        this.content = matchingPostReview.getContent();
+        this.updateDate = matchingPostReview.getUpdateDate();
     }
 }
