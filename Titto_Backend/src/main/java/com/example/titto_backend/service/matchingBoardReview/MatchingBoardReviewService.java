@@ -4,8 +4,10 @@ import com.example.titto_backend.domain.User;
 import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.domain.review.MatchingPostReview;
 import com.example.titto_backend.dto.request.matchingPostReviewRequest.MatchingPostReviewCreateRequestDto;
+import com.example.titto_backend.dto.request.matchingPostReviewRequest.MatchingPostReviewUpdateRequestDto;
 import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewCreateResponseDto;
 import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewResponseDto;
+import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewUpdateResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
 import com.example.titto_backend.repository.MatchingPostReviewRepository;
 import com.example.titto_backend.repository.UserRepository;
@@ -47,6 +49,23 @@ public class MatchingBoardReviewService {
 
         List<MatchingPostReview> matchingPostReviews = matchingPostReviewRepository.findAllByMatchingPost(matchingPost);
         return new ArrayList<>();
+    }
+
+    // 수정
+    @Transactional
+    public MatchingPostReviewUpdateResponseDto updateReview(Principal principal, MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
+        Long userId = Long.valueOf(principal.getName());
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        MatchingPostReview matchingPostReview = MatchingPostReview.builder()
+                .review_id(matchingPostReviewUpdateRequestDto.getReviewId())
+                .matchingPost(matchingPostRepository.findById(matchingPostReviewUpdateRequestDto.getPostId())
+                        .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다.")))
+                .reviewAuthor(user)
+                .content(matchingPostReviewUpdateRequestDto.getContent())
+                .build();
+        return new MatchingPostReviewUpdateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
 
 
