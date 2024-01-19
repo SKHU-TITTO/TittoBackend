@@ -6,6 +6,7 @@ import com.example.titto_backend.domain.review.MatchingPostReview;
 import com.example.titto_backend.dto.request.matchingPostReviewRequest.MatchingPostReviewCreateRequestDto;
 import com.example.titto_backend.dto.request.matchingPostReviewRequest.MatchingPostReviewUpdateRequestDto;
 import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewCreateResponseDto;
+import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewDeleteResponseDto;
 import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewResponseDto;
 import com.example.titto_backend.dto.response.matchingPostReviewResponse.MatchingPostReviewUpdateResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
@@ -69,4 +70,12 @@ public class MatchingBoardReviewService {
     }
 
 
+    // 삭제
+    @Transactional
+    public MatchingPostReviewDeleteResponseDto deleteReviewByReviewId(Long reviewId) {
+        MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(reviewId).orElseThrow(
+                () -> new NoSuchElementException("존재하지 않는 댓글입니다"));
+        matchingPostReviewRepository.delete(matchingPostReview);
+        return MatchingPostReviewDeleteResponseDto.of(reviewId);
+    }
 }
