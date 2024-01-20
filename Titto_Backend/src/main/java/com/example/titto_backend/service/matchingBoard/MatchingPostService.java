@@ -9,6 +9,7 @@ import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostD
 import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostResponseDto;
 import com.example.titto_backend.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.repository.MatchingBoard.MatchingPostRepository;
+import com.example.titto_backend.repository.MatchingPostReviewRepository;
 import com.example.titto_backend.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,46 +26,33 @@ import java.security.Principal;
 public class MatchingPostService {
     private final MatchingPostRepository matchingPostRepository;
     private final UserRepository userRepository;
+    private final MatchingPostReviewRepository matchingPostReviewRepository;
 
     //게시물 작성
     @Transactional
-    public MatchingPostCreateResponseDto createMatchingPost( Principal principal, MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
+    public MatchingPostCreateResponseDto createMatchingPost(Principal principal, MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
         Long userId = Long.valueOf(principal.getName());
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPost matchingPost = matchingPostCreateRequestDto.toEntity();
         matchingPostRepository.save(matchingPost);
+        Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
 
-        return MatchingPostCreateResponseDto.of(
-                matchingPost.getMatchingPostId(),
-                user.getNickname(),
-                String.valueOf(matchingPost.getCategory()),
-                String.valueOf(matchingPost.getStatus()),
-                matchingPost.getTitle(),
-                matchingPost.getContent(),
-                matchingPost.getViewCount(),
-                matchingPost.getReview_count(),
-                matchingPost.getCreateDate()
-        );
+        return MatchingPostCreateResponseDto.of(matchingPost, reviewCount);
     }
     // 게시물 조회
     @Transactional(readOnly = true)
-    public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId) {
+    public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId, HttpServletRequest request, HttpServletResponse response) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
-        return MatchingPostResponseDto.of(
-                matchingPost.getMatchingPostId(),
-                matchingPost.getUser().getNickname(),
-                matchingPost.getCategory(),
-                matchingPost.getStatus(),
-                matchingPost.getTitle(),
-                matchingPost.getContent(),
-                matchingPost.getViewCount(),
-                matchingPost.getReview_count(),
-                matchingPost.getUpdateDate()
-        );
+        Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
+        // 조회수 업데이트
+        countViews(matchingPost, request, response);
+        matchingPostRepository.save(matchingPost);  // 업데이트된 조회수를 저장합니다.
+
+        return MatchingPostResponseDto.of(matchingPost,reviewCount);
     }
     // 게시물 삭제
     @Transactional
@@ -85,18 +73,12 @@ public class MatchingPostService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
+        Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
+
         if (user.getNickname().equals(matchingPost.getUser().getNickname())) {
             return MatchingPostUpdateResponseDto.of(
-                    matchingPost.getMatchingPostId(),
-                    user.getNickname(),
-                    String.valueOf(matchingPost.getCategory()),
-                    String.valueOf(matchingPost.getStatus()),
-                    matchingPost.getTitle(),
-                    matchingPost.getContent(),
-                    matchingPost.getViewCount(),
-                    matchingPost.getReview_count(),
-                    matchingPost.getUpdateDate()
-            );
+                    matchingPost,
+                    reviewCount);
         }
         else throw new AuthorizationServiceException("잘못된 접근입니다");
     }

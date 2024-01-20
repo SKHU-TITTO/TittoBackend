@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 public class MatchingPostReviewDeleteResponseDto {
     private Long reviewId;
 
-    public static MatchingPostDeleteResponseDto of(Long reviewId){
-        return new MatchingPostDeleteResponseDto(reviewId);
+    public static MatchingPostReviewDeleteResponseDto of(Long reviewId){
+        return new MatchingPostReviewDeleteResponseDto(reviewId);
     }
 }
