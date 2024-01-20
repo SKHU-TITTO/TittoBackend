@@ -1,5 +1,6 @@
 package com.example.titto_backend.dto.response.matchingPostResponse;
 
+import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -18,24 +19,16 @@ public class MatchingPostUpdateResponseDto {
     private LocalDateTime updateDate;
 
     public static MatchingPostUpdateResponseDto of(
-            Long matchingPostId,
-            String author,
-            String category,
-            String status,
-            String title,
-            String content,
-            Integer viewCount,
-            Integer reviewCount,
-            LocalDateTime updateDate) {
-        return new MatchingPostUpdateResponseDto(
-                matchingPostId,
-                author,
-                category,
-                status,
-                title,
-                content,
-                viewCount,
+            MatchingPost matchingPost,
+            Integer reviewCount) {
+        return new MatchingPostUpdateResponseDto(matchingPost.getMatchingPostId(),
+                matchingPost.getUser().getNickname(),
+                String.valueOf(matchingPost.getCategory()),
+                String.valueOf(matchingPost.getStatus()),
+                matchingPost.getTitle(),
+                matchingPost.getContent(),
+                matchingPost.getViewCount(),
                 reviewCount,
-                updateDate);
+                matchingPost.getUpdateDate());
     }
 }
