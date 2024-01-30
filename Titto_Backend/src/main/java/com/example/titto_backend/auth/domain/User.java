@@ -1,6 +1,6 @@
 package com.example.titto_backend.auth.domain;
 
-import com.example.titto_backend.auth.dto.SignUpDTO;
+import com.example.titto_backend.auth.dto.request.SignUpDTO;
 import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
@@ -87,5 +87,15 @@ public class User extends BaseEntity {
     this.setNickname(signUpDTO.getNickname());
     this.setStudentNo(signUpDTO.getStudentNo());
     this.setDepartment(signUpDTO.getDepartment());
+  }
+
+  public void updateNicknameAndStudentNo(String newNickname, String newStudentNo) {
+    if (newNickname != null) {
+      this.setNickname(newNickname);
+    }
+
+    if (newStudentNo != null) {
+      this.setStudentNo(newStudentNo);
+    }
   }
 }

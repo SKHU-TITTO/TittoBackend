@@ -1,4 +1,4 @@
-package com.example.titto_backend.auth.dto;
+package com.example.titto_backend.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

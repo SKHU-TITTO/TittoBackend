@@ -13,6 +13,8 @@ public enum ErrorCode {
   INVALID_KAKAO_VALUE(HttpStatus.BAD_REQUEST, "잘못된 요청으로 카카오 서버의 응답을 받지 못했습니다."),
   INVALID_NAVER_VALUE(HttpStatus.BAD_REQUEST, "잘못된 요청으로 네이버 서버의 응답을 받지 못했습니다."),
   DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "중복된 이메일입니다."),
+  DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
+  DUPLICATED_STUDENT_NO(HttpStatus.BAD_REQUEST, "중복된 학번입니다."),
 
   /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
   INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 유효하지 않습니다."),

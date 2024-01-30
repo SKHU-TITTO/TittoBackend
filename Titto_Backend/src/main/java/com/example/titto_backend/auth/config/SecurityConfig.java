@@ -22,8 +22,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+  private static final String[] AUTH_WHITELIST = {
+          "/api/**", "/graphiql", "/graphql",
+          "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
+          "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html","/oauth/**"
+  };
   @Value("${cors.allowed-origins}")
-  String[] corsOrigins; // 허용할 Origin(요청 주소) 목록
+  String[] corsOrigins;
 
   private final TokenProvider tokenProvider;
   private final RedisTemplate<String, String> redisTemplate;
@@ -39,11 +45,12 @@ public class SecurityConfig {
             .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorizeHttpRequests) ->
                     authorizeHttpRequests
-                            .requestMatchers("/", "/swagger-ui/**", "/api-docs/**", "/oauth/**", "/user","**").permitAll() // 누구나 접근 가능한 경로
+                            .requestMatchers(AUTH_WHITELIST)
+                            .permitAll()
                             .anyRequest().authenticated()
             )
-            .cors((cors) -> cors.configurationSource(configurationSource())) // cors 설정
-            .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class) // JwtFilter 등록
+            .cors((cors) -> cors.configurationSource(configurationSource()))
+            .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
             .build();
   }
 
