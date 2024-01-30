@@ -1,6 +1,6 @@
 package com.example.titto_backend.auth.jwt;
 
-import com.example.titto_backend.auth.dto.TokenDTO;
+import com.example.titto_backend.auth.dto.response.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

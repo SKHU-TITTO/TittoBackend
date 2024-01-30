@@ -1,10 +1,11 @@
 package com.example.titto_backend.auth.controller;
 
-import com.example.titto_backend.auth.dto.TokenDTO;
-import com.example.titto_backend.auth.dto.TokenDTO.ServiceToken;
-import com.example.titto_backend.auth.dto.UserDTO;
+import com.example.titto_backend.auth.dto.response.TokenDTO;
+import com.example.titto_backend.auth.dto.response.TokenDTO.ServiceToken;
+import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.service.OAuthKakaoService;
 import com.example.titto_backend.auth.service.OAuthNaverService;
+import com.example.titto_backend.auth.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "OAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
+@Tag(name = "OAuth Controller", description = "OAuth 관련 API")
 public class OAuthController {
+  private final TokenService tokenService;
   private final OAuthKakaoService oAuthKakaoService;
   private final OAuthNaverService oAuthNaverService;
 
@@ -56,7 +58,7 @@ public class OAuthController {
 
   @PostMapping("kakao/login")
   @Operation(
-          summary = "카카오 토큰으로 로그인",
+          summary = "카카오 토큰으로 로그인 (kakaoAcessToken만 입력하세요.)",
           description = "존재하지 않은 유저일 경우 회원가입 진행 후 로그인합니다",
           responses = {
                   @ApiResponse(responseCode = "200", description = "요청 성공"),
@@ -70,7 +72,7 @@ public class OAuthController {
 
   @PostMapping("naver/login")
   @Operation(
-          summary = "네이버 토큰으로 로그인",
+          summary = "네이버 토큰으로 로그인 (naverAcessToken만 입력하세요.)",
           description = "존재하지 않은 유저일 경우 회원가입 진행 후 로그인합니다",
           responses = {
                   @ApiResponse(responseCode = "200", description = "요청 성공"),
@@ -93,7 +95,7 @@ public class OAuthController {
           })
   public ResponseEntity<TokenDTO.ServiceToken> refresh(HttpServletRequest request,
                                                        @RequestBody TokenDTO.ServiceToken dto) {
-    TokenDTO.ServiceToken serviceToken = oAuthKakaoService.refresh(request, dto);
+    TokenDTO.ServiceToken serviceToken = tokenService.refresh(request, dto);
     return ResponseEntity.ok(serviceToken);
   }
 
@@ -108,7 +110,7 @@ public class OAuthController {
           })
   public ResponseEntity<String> logout(HttpServletRequest request, @RequestBody TokenDTO.ServiceToken dto,
                                        Principal principal) {
-    oAuthKakaoService.logout(request, dto, principal);
+    tokenService.logout(request, dto, principal);
     return ResponseEntity.ok("로그아웃 완료");
   }
 
