@@ -1,4 +1,4 @@
-package com.example.titto_backend.matchingBoard.repository.MatchingBoard;
+package com.example.titto_backend.matchingBoard.repository.matchingBoard;
 
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingBoard;
 import org.springframework.data.domain.Page;

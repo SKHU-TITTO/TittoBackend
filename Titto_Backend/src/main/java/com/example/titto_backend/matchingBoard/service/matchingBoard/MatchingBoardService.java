@@ -3,7 +3,7 @@ package com.example.titto_backend.matchingBoard.service.matchingBoard;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
-import com.example.titto_backend.matchingBoard.repository.MatchingBoard.MatchingPostRepository;
+import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
