@@ -1,4 +1,4 @@
-package com.example.titto_backend.matchingBooard.domain;
+package com.example.titto_backend.common;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
