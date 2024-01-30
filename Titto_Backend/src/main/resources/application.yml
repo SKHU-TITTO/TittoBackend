@@ -1,4 +1,14 @@
 spring:
+  profiles:
+    active: local
+    include: oauth
+---
+#Cors
+cors:
+  allowed-origins: "http://localhost:3000"
+
+# DB
+spring:
   datasource:
     url: ${DB_JDBC_URL}
     username: ${DB_USER}
@@ -6,22 +16,44 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
-  jwt:
-    secret: ${JWT_SECRET}
+  # Redis
+  redis:
+    data:
+      redis:
+        port: 6379
+        host: redis
 
-oauth:
-  kakao:
-    client-id: ${KAKAO_CLIENT_ID}
-    url:
-      auth: https://kauth.kakao.com
-      api: https://kapi.kakao.com
-  naver:
-    secret: ${NAVER_CLIENT_SECRET}
-    client-id: ${NAVER_CLIENT_ID}
-    url:
-      auth: https://nid.naver.com
-      api: https://openapi.naver.com
+# JWT
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity-in-milliseconds: 86400000
+  refresh-token-validity-in-milliseconds: 2592000000
+
+# Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enable : true
+  cache:
+    disabled : true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
