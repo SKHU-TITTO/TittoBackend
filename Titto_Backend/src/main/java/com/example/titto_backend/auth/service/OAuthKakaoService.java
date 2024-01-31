@@ -1,5 +1,6 @@
 package com.example.titto_backend.auth.service;
 
+import com.example.titto_backend.auth.domain.SocialType;
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.dto.response.TokenDTO;
 import com.example.titto_backend.auth.dto.request.UserDTO;
@@ -127,6 +128,7 @@ public class OAuthKakaoService {
               .email(email)
               .profile(profileImage)
               .socialId(String.valueOf(kakaoId))
+              .socialType(SocialType.KAKAO)
               .build());
     } else {
       user = optionalUser.get();

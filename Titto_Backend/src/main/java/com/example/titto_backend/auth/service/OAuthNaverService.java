@@ -1,5 +1,6 @@
 package com.example.titto_backend.auth.service;
 
+import com.example.titto_backend.auth.domain.SocialType;
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.dto.response.TokenDTO;
 import com.example.titto_backend.auth.dto.request.UserDTO;
@@ -111,6 +112,7 @@ public class OAuthNaverService {
               .email(email)
               .profile(profileImage)
               .socialId(String.valueOf(naverId))
+              .socialType(SocialType.NAVER)
               .build());
     } else {
       user = optionalUser.get();
@@ -118,6 +120,11 @@ public class OAuthNaverService {
       if (!user.getSocialId().equals(naverId)) {
         throw new CustomException(ErrorCode.DUPLICATED_EMAIL);
       }
+
+//      // 기존에 저장된 사용자의 socialType이 설정되어 있지 않다면 업데이트
+//      if (user.getSocialType() == null) {
+//        user.setSocialType(socialType);
+//      }
     }
 
     TokenDTO.ServiceToken tokenDTO = tokenProvider.createToken(email);
