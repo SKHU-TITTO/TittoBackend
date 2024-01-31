@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,6 +61,10 @@ public class User extends BaseEntity {
   @Column(name = "social_id")
   private String socialId;
 
+  @Enumerated(EnumType.STRING)
+  private SocialType socialType; // 이 부분을 추가
+
+
 //  private Level level;
 //  //post count
 //  private Integer postCount;
@@ -76,10 +82,12 @@ public class User extends BaseEntity {
   private List<MatchingPostReview> matchingPostReviews;
 
   @Builder
-  public User(String email, String profile, String socialId) {
+  public User(String email, String profile, String socialId, SocialType socialType) {
     this.email = email;
     this.profile = profile;
     this.socialId = socialId;
+    this.socialType = socialType;
+
   }
 
   public void signupUser(SignUpDTO signUpDTO) {
