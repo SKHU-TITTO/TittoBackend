@@ -8,10 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,6 +51,41 @@ public class UserController {
           Principal principal) {
     String userEmail = principal.getName();
     userService.updateNicknameAndStudentNo(userEmail, requestDTO);
-    return ResponseEntity.ok("updated successfully");
+    return ResponseEntity.ok(" updated successfully");
+  }
+
+  @GetMapping("/check/nickname")
+  @Operation(
+          summary = "닉네임 중복 확인",
+          description = "닉네임 중복 여부를 확인합니다.",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+    if (userService.isDuplicatedNickname(nickname)) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Nickname is already taken");
+    } else {
+      return ResponseEntity.ok("Nickname is available");
+    }
+  }
+
+
+  @GetMapping("/check/studentNo")
+  @Operation(
+          summary = "학번 중복 확인",
+          description = "학번 중복 여부를 확인합니다.",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<String> checkStudentNo(@RequestParam String studentNo) {
+    if (userService.isDuplicatedStudentNo(studentNo)) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Student number is already taken");
+    } else {
+      return ResponseEntity.ok("Student number is available");
+    }
   }
 }
