@@ -2,10 +2,13 @@ package com.example.titto_backend.auth.service;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.dto.request.SignUpDTO;
+import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
+import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +26,15 @@ public class UserService {
     user.signupUser(signUpDTO);
   }
 
+  //유저 정보 불러오기
+  @Transactional(readOnly = true)
+  public UserInfoDTO getUser(String email) {
+    Optional<User> userOptional = userRepository.findByEmail(email);
+    return userOptional.map(UserInfoDTO::new).orElse(null);
+  }
+
   @Transactional
-  public void updateNicknameAndStudentNo(String email, UserInfoUpdateDTO requestDTO) {
+  public void updateNickname(String email, UserInfoUpdateDTO requestDTO) {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -32,18 +42,19 @@ public class UserService {
       throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
     }
 
-    if (requestDTO.getNewStudentNo() != null && isDuplicatedStudentNo(requestDTO.getNewStudentNo())) {
-      throw new CustomException(ErrorCode.DUPLICATED_STUDENT_NO);
-    }
-
-    // 둘 다 null이거나 중복되지 않은 경우에만 업데이트 수행
     if (requestDTO.getNewNickname() != null) {
       user.setNickname(requestDTO.getNewNickname());
     }
+  }
 
-    if (requestDTO.getNewStudentNo() != null) {
-      user.setStudentNo(requestDTO.getNewStudentNo());
-    }
+  //유저 프로필(한줄소개, 자기소개) 수정
+  @Transactional
+  public void updateUserProfile(String email, UserProfileUpdateDTO userProfileUpdateDTO) {
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+    user.setOneLineIntro(userProfileUpdateDTO.getOneLineIntro());
+    user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
   }
 
   //닉네임 중복 여부

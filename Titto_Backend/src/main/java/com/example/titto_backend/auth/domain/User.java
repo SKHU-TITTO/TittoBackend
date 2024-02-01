@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +39,6 @@ public class User extends BaseEntity {
   @NotBlank(message = "이메일은 필수!")
   private String email;
 
-  //profile image
   @Column(name = "profile", nullable = true)
   private String profile;
 
@@ -62,14 +62,22 @@ public class User extends BaseEntity {
   private String socialId;
 
   @Enumerated(EnumType.STRING)
-  private SocialType socialType; // 이 부분을 추가
+  private SocialType socialType;
 
+  @Setter
+  @Column(name = "one_line_intro")
+  private String oneLineIntro;
 
-//  private Level level;
+  @Setter
+  @Column(name = "self_intro", columnDefinition = "TEXT")
+  private String selfIntro;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private Set<Badge> badges;
+
 //  //post count
 //  private Integer postCount;
-//  //badge
-//  private Badge badge;
+
 //  //available point
 //  private Integer availablePoint;
 
@@ -87,7 +95,6 @@ public class User extends BaseEntity {
     this.profile = profile;
     this.socialId = socialId;
     this.socialType = socialType;
-
   }
 
   public void signupUser(SignUpDTO signUpDTO) {
@@ -95,15 +102,5 @@ public class User extends BaseEntity {
     this.setNickname(signUpDTO.getNickname());
     this.setStudentNo(signUpDTO.getStudentNo());
     this.setDepartment(signUpDTO.getDepartment());
-  }
-
-  public void updateNicknameAndStudentNo(String newNickname, String newStudentNo) {
-    if (newNickname != null) {
-      this.setNickname(newNickname);
-    }
-
-    if (newStudentNo != null) {
-      this.setStudentNo(newStudentNo);
-    }
   }
 }
