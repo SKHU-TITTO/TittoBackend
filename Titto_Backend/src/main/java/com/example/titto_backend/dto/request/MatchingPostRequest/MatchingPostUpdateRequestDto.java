@@ -3,10 +3,16 @@ package com.example.titto_backend.dto.request.MatchingPostRequest;
 import com.example.titto_backend.domain.matchingBoard.Category;
 import com.example.titto_backend.domain.matchingBoard.MatchingPost;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MatchingPostUpdateRequestDto {
     @NotNull
-    private Category category;
+    private String category;
 
     @NotNull
     private String title;
@@ -16,7 +22,7 @@ public class MatchingPostUpdateRequestDto {
 
     public MatchingPost toEntity() {
         return MatchingPost.builder()
-                .category(category)
+                .category(Category.valueOf(category))
                 .title(title)
                 .content(content)
                 .build();

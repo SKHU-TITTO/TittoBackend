@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MatchingPostReviewCreateRequestDto {
-
     @NotNull
     private Long postId;
     @NotNull

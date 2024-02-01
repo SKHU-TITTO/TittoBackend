@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 public class MatchingPostCreateRequestDto {
 
     @NotNull
-    private Category category;
+    private String category;
 
     @NotNull
     private String title;
@@ -19,7 +19,7 @@ public class MatchingPostCreateRequestDto {
 
     public MatchingPost toEntity() {
         return MatchingPost.builder()
-                .category(category)
+                .category(Category.valueOf(category))
                 .title(title)
                 .content(content)
                 .build();
