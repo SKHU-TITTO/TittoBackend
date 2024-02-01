@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserInfoUpdateDTO {
-  private String newNickname;
+public class UserProfileUpdateDTO {
+  private String oneLineIntro;
+  private String selfIntro;
 }
