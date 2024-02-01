@@ -1,4 +1,4 @@
-package com.example.titto_backend.service.matchingBoardReview;
+package com.example.titto_backend.service.matchingPostReview;
 
 import com.example.titto_backend.domain.User;
 import com.example.titto_backend.domain.matchingBoard.MatchingPost;
@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class MatchingBoardReviewService {
+public class MatchingPostReviewService {
     private final MatchingPostReviewRepository matchingPostReviewRepository;
     private final UserRepository userRepository;
     private final MatchingPostRepository matchingPostRepository;
@@ -41,6 +41,7 @@ public class MatchingBoardReviewService {
                 .reviewAuthor(user)
                 .content(matchingPostReviewCreateRequestDto.getContent())
                 .build();
+
         return new MatchingPostReviewCreateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
     // 조회
@@ -49,6 +50,7 @@ public class MatchingBoardReviewService {
                 .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
 
         List<MatchingPostReview> matchingPostReviews = matchingPostReviewRepository.findAllByMatchingPost(matchingPost);
+
         return new ArrayList<>();
     }
 
@@ -66,6 +68,7 @@ public class MatchingBoardReviewService {
                 .reviewAuthor(user)
                 .content(matchingPostReviewUpdateRequestDto.getContent())
                 .build();
+
         return new MatchingPostReviewUpdateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
 
@@ -76,6 +79,7 @@ public class MatchingBoardReviewService {
         MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(reviewId).orElseThrow(
                 () -> new NoSuchElementException("존재하지 않는 댓글입니다"));
         matchingPostReviewRepository.delete(matchingPostReview);
+
         return MatchingPostReviewDeleteResponseDto.of(reviewId);
     }
 }

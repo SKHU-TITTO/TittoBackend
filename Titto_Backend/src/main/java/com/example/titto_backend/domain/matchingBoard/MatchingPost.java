@@ -31,10 +31,11 @@ public class MatchingPost extends BaseEntity {
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
 //    @Convert(converter = CategoryToIntegerConverter.class)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     // 상태(모집중, 모집 완료)
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     // 제목
