@@ -18,3 +18,4 @@ public class MatchingBoardController {
     public MatchingPostPagingResponseDto getAllMatchingPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
         return matchingBoardService.findAllPosts(matchingPostPagingRequestDto);
     }
+}
