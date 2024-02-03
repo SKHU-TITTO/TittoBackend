@@ -1,7 +1,7 @@
 package com.example.titto_backend.matchingBoard.domain.review;
 
-import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.auth.domain.User;
+import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

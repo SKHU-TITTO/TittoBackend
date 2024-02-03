@@ -1,7 +1,8 @@
 package com.example.titto_backend.matchingBoard.service.matchingBoard;
 
-import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.auth.domain.User;
+import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostCreateRequestDto;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostUpdateRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostCreateResponseDto;
@@ -9,7 +10,6 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostResponseDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
-import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.matchingBoard.repository.review.MatchingPostReviewRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
