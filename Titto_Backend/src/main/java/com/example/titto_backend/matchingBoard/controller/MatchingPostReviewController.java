@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/matching-board-reviews")
 @RequiredArgsConstructor
+
 public class MatchingPostReviewController {
     private final MatchingBoardReviewService matchingBoardReviewService;
 
