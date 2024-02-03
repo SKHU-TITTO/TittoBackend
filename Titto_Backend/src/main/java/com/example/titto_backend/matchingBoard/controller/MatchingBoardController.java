@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/matching-board")
 @RequiredArgsConstructor
+
 public class MatchingBoardController {
     private final MatchingBoardService matchingBoardService;
 
