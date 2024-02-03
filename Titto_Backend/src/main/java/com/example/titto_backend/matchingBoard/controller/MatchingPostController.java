@@ -7,6 +7,9 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostResponseDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingPostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,38 +21,79 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/matchingposts")
+@RequestMapping("/matching-posts")
 @RequiredArgsConstructor
-
+@Tag(name = "Matching Post Controller", description = "매칭 게시글 관련 API")
 public class MatchingPostController {
-    private final MatchingPostService matchingPostService;
+  private final MatchingPostService matchingPostService;
 
-    @PostMapping
-    public ResponseEntity<MatchingPostCreateResponseDto> createMatchingPost(Principal principal, @RequestBody MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
-        MatchingPostCreateResponseDto responseDto = matchingPostService.createMatchingPost(principal, matchingPostCreateRequestDto);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    }
+  @PostMapping
+  @Operation(
+          summary = "매칭 게시글 작성",
+          description = "매칭 게시글을 작성합니다",
+          responses = {
+                  @ApiResponse(responseCode = "201", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<MatchingPostCreateResponseDto> createMatchingPost(Principal principal,
+                                                                          @RequestBody MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
+    MatchingPostCreateResponseDto responseDto = matchingPostService.createMatchingPost(principal,
+            matchingPostCreateRequestDto);
+    return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+  }
 
-    @GetMapping("/{matchingPostId}")
-    public ResponseEntity<MatchingPostResponseDto> getMatchingPostByMatchingPostId(@PathVariable Long matchingPostId, HttpServletRequest request, HttpServletResponse response) {
-        MatchingPostResponseDto responseDto = matchingPostService.getMatchingPostByMatchingPostId(matchingPostId, request, response);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  @GetMapping("/{matchingPostId}")
+  @Operation(
+          summary = "매칭 게시글 조회",
+          description = "특정 매칭 게시글을 조회합니다",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<MatchingPostResponseDto> getMatchingPostByMatchingPostId(@PathVariable Long matchingPostId,
+                                                                                 HttpServletRequest request,
+                                                                                 HttpServletResponse response) {
+    MatchingPostResponseDto responseDto = matchingPostService.getMatchingPostByMatchingPostId(matchingPostId, request,
+            response);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-    @DeleteMapping("/{matchingPostId}")
-    public ResponseEntity<MatchingPostDeleteResponseDto> deleteMatchingPostByMatchingPostId(@PathVariable Long matchingPostId) {
-        MatchingPostDeleteResponseDto responseDto = matchingPostService.deleteMatchingPostByMatchingPostId(matchingPostId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  @PutMapping("/{matchingPostId}")
+  @Operation(
+          summary = "매칭 게시글 수정",
+          description = "특정 매칭 게시글을 수정합니다",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<MatchingPostUpdateResponseDto> updateMatchingPost(@PathVariable Long matchingPostId,
+                                                                          Principal principal,
+                                                                          @RequestBody MatchingPostUpdateRequestDto matchingPostUpdateRequestDto) {
+    MatchingPostUpdateResponseDto responseDto = matchingPostService.updateMatchingPost(matchingPostId, principal,
+            matchingPostUpdateRequestDto);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-    @PutMapping("/{matchingPostId}")
-    public ResponseEntity<MatchingPostUpdateResponseDto> updateMatchingPost(@PathVariable Long matchingPostId, Principal principal, @RequestBody MatchingPostUpdateRequestDto matchingPostUpdateRequestDto) {
-        MatchingPostUpdateResponseDto responseDto = matchingPostService.updateMatchingPost(matchingPostId, principal, matchingPostUpdateRequestDto);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  @DeleteMapping("/{matchingPostId}")
+  @Operation(
+          summary = "매칭 게시글 삭제",
+          description = "특정 매칭 게시글을 삭제합니다",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "요청 성공"),
+                  @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                  @ApiResponse(responseCode = "500", description = "관리자 문의")
+          })
+  public ResponseEntity<MatchingPostDeleteResponseDto> deleteMatchingPostByMatchingPostId(
+          @PathVariable Long matchingPostId) {
+    MatchingPostDeleteResponseDto responseDto = matchingPostService.deleteMatchingPostByMatchingPostId(matchingPostId);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-    @ExceptionHandler(value = AuthorizationServiceException.class)
-    public ResponseEntity<String> handleAuthorizationException(AuthorizationServiceException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-    }
+  @ExceptionHandler(value = AuthorizationServiceException.class)
+  public ResponseEntity<String> handleAuthorizationException(AuthorizationServiceException e) {
+    return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+  }
 }

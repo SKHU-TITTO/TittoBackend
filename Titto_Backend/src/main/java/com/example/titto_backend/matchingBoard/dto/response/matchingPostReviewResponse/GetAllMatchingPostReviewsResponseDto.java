@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllMatchingPostReviewsResponseDto {
+
     private List<MatchingPostReviewResponseDto> matchingPostReviewResponseDtos;
 
     public static GetAllMatchingPostReviewsResponseDto of(List<MatchingPostReviewResponseDto> postReviewResponseDtos) {

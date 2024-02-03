@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class MatchingPostPagingResponseDto {
+
     private List<MatchingPost> content;
     private int totalPages;
     private long totalElements;

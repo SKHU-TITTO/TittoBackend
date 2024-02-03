@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MatchingBoard {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "matchingBoard_id")
     private Integer matchingBoardId;
