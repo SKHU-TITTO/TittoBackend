@@ -2,6 +2,7 @@ package com.example.titto_backend.auth.config;
 
 import com.example.titto_backend.auth.jwt.JwtFilter;
 import com.example.titto_backend.auth.jwt.TokenProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity

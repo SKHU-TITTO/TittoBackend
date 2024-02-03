@@ -4,13 +4,26 @@ import com.example.titto_backend.auth.dto.request.SignUpDTO;
 import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
+import com.example.titto_backend.message.domain.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-
 import java.util.List;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -63,12 +76,6 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Set<Badge> badges;
 
-//  //post count
-//  private Integer postCount;
-
-//  //available point
-//  private Integer availablePoint;
-
   @JsonIgnore
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<MatchingPost> matchingPosts;
@@ -76,6 +83,14 @@ public class User extends BaseEntity {
   @JsonIgnore
   @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<MatchingPostReview> matchingPostReviews;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Message> sentMessages;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<Message> receivedMessages;
 
   @Builder
   public User(String email, String profile, String socialId, SocialType socialType) {

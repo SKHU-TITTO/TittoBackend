@@ -3,6 +3,7 @@ package com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.Status;
+
 import jakarta.validation.constraints.NotNull;
 
 public class MatchingPostUpdateRequestDto {

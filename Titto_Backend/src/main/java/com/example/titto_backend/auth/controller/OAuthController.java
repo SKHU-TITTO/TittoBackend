@@ -1,8 +1,8 @@
 package com.example.titto_backend.auth.controller;
 
-import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.dto.response.TokenDTO;
 import com.example.titto_backend.auth.dto.response.TokenDTO.ServiceToken;
+import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.service.OAuthKakaoService;
 import com.example.titto_backend.auth.service.OAuthNaverService;
 import com.example.titto_backend.auth.service.TokenService;
@@ -10,11 +10,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +66,7 @@ public class OAuthController {
                   @ApiResponse(responseCode = "403", description = "인증 오류 (토큰)")
           })
   public ResponseEntity<ServiceToken> kakaoLogin(@RequestBody UserDTO.LoginRequest dto) {
-    ServiceToken serviceToken = oAuthKakaoService.joinAndLogin(dto);
+    TokenDTO.ServiceToken serviceToken = oAuthKakaoService.joinAndLogin(dto);
     return ResponseEntity.ok(serviceToken);
   }
 
@@ -75,7 +80,7 @@ public class OAuthController {
                   @ApiResponse(responseCode = "403", description = "인증 오류 (토큰)")
           })
   public ResponseEntity<ServiceToken> naverLogin(@RequestBody UserDTO.LoginRequest dto) {
-    ServiceToken serviceToken = oAuthNaverService.joinAndLogin(dto);
+    TokenDTO.ServiceToken serviceToken = oAuthNaverService.joinAndLogin(dto);
     return ResponseEntity.ok(serviceToken);
   }
 
@@ -88,9 +93,9 @@ public class OAuthController {
                   @ApiResponse(responseCode = "400", description = "리프레시 토큰 만료"),
                   @ApiResponse(responseCode = "403", description = "인증 오류 (토큰)")
           })
-  public ResponseEntity<ServiceToken> refresh(HttpServletRequest request,
-                                              @RequestBody ServiceToken dto) {
-    ServiceToken serviceToken = tokenService.refresh(request, dto);
+  public ResponseEntity<TokenDTO.ServiceToken> refresh(HttpServletRequest request,
+                                                       @RequestBody TokenDTO.ServiceToken dto) {
+    TokenDTO.ServiceToken serviceToken = tokenService.refresh(request, dto);
     return ResponseEntity.ok(serviceToken);
   }
 
@@ -103,7 +108,7 @@ public class OAuthController {
                   @ApiResponse(responseCode = "403", description = "인증 오류 (토큰)"),
                   @ApiResponse(responseCode = "500", description = "관리자 문의")
           })
-  public ResponseEntity<String> logout(HttpServletRequest request, @RequestBody ServiceToken dto,
+  public ResponseEntity<String> logout(HttpServletRequest request, @RequestBody TokenDTO.ServiceToken dto,
                                        Principal principal) {
     tokenService.logout(request, dto, principal);
     return ResponseEntity.ok("로그아웃 완료");

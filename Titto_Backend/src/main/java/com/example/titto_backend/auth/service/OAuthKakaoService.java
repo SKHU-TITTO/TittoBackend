@@ -2,19 +2,22 @@ package com.example.titto_backend.auth.service;
 
 import com.example.titto_backend.auth.domain.SocialType;
 import com.example.titto_backend.auth.domain.User;
-import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.dto.response.TokenDTO;
+import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.jwt.TokenProvider;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor

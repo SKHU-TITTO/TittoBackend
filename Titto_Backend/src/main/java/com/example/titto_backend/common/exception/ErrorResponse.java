@@ -1,10 +1,9 @@
 package com.example.titto_backend.common.exception;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder

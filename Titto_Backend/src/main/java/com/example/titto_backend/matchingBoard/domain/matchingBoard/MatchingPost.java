@@ -2,8 +2,8 @@ package com.example.titto_backend.matchingBoard.domain.matchingBoard;
 
 //import com.example.titto_backend.converter.CategoryToIntegerConverter;
 
-import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
+import com.example.titto_backend.auth.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +32,7 @@ public class MatchingPost extends BaseEntity {
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
 //    @Convert(converter = CategoryToIntegerConverter.class)
+  
     @Enumerated(EnumType.STRING)
     private Category category;
 
