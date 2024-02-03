@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 public class MatchingPostResponseDto {
+
     private Long matchingPostId;
     private String authorNickName;
     private String category;
