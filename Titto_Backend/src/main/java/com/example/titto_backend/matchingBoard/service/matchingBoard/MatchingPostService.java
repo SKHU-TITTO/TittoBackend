@@ -31,8 +31,8 @@ public class MatchingPostService {
     //게시물 작성
     @Transactional
     public MatchingPostCreateResponseDto createMatchingPost(Principal principal, MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPost matchingPost = matchingPostCreateRequestDto.toEntity();
@@ -69,8 +69,8 @@ public class MatchingPostService {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
