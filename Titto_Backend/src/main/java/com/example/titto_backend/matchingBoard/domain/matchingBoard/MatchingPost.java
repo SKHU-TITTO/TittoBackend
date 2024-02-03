@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MatchingPost extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "matchingPost_id")
@@ -60,4 +61,5 @@ public class MatchingPost extends BaseEntity {
     public void updateViewCount() {
         this.viewCount++;
     }
+
 }
