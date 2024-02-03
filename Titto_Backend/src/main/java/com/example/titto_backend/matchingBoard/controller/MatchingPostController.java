@@ -20,6 +20,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/matchingposts")
 @RequiredArgsConstructor
+
 public class MatchingPostController {
     private final MatchingPostService matchingPostService;
 
