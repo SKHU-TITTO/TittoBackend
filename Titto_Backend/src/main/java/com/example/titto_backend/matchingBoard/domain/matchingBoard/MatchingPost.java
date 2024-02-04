@@ -51,15 +51,20 @@ public class MatchingPost extends BaseEntity {
     private String content;
 
     // 조회수
-    @Column(name = "view_count", columnDefinition = "integer default 0", nullable = false)
+    @Column(name = "view_count", columnDefinition = "integer default 0")
     private Integer viewCount;
 
     // 댓글 수
-    @Column(name = "reivew_count", columnDefinition = "integer default 0", nullable = false)
+    @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer review_count;
 
     public void updateViewCount() {
         this.viewCount++;
     }
 
+    @PrePersist
+    public void prePersist() {
+        this.viewCount = this.viewCount == null ? 0 : this.viewCount;
+        this.review_count = this.review_count == null ? 0 : this.review_count;
+    }
 }
