@@ -27,7 +27,7 @@ import java.security.Principal;
 public class MatchingPostController {
   private final MatchingPostService matchingPostService;
 
-  @PostMapping
+  @PostMapping("/create")
   @Operation(
           summary = "매칭 게시글 작성",
           description = "매칭 게시글을 작성합니다",
@@ -43,7 +43,7 @@ public class MatchingPostController {
     return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
   }
 
-  @GetMapping("/{matchingPostId}")
+  @GetMapping("/get/{matchingPostId}")
   @Operation(
           summary = "매칭 게시글 조회",
           description = "특정 매칭 게시글을 조회합니다",
@@ -60,7 +60,7 @@ public class MatchingPostController {
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
 
-  @PutMapping("/{matchingPostId}")
+  @PutMapping("/update/{matchingPostId}")
   @Operation(
           summary = "매칭 게시글 수정",
           description = "특정 매칭 게시글을 수정합니다",
@@ -77,7 +77,7 @@ public class MatchingPostController {
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
 
-  @DeleteMapping("/{matchingPostId}")
+  @DeleteMapping("/delete/{matchingPostId}")
   @Operation(
           summary = "매칭 게시글 삭제",
           description = "특정 매칭 게시글을 삭제합니다",
