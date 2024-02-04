@@ -67,4 +67,11 @@ public class MatchingPost extends BaseEntity {
         this.viewCount = this.viewCount == null ? 0 : this.viewCount;
         this.review_count = this.review_count == null ? 0 : this.review_count;
     }
+
+    public void update(Category category, String title, String content, Status status) {
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.status = status;
+    }
 }
