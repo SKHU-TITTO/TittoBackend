@@ -5,7 +5,15 @@ import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.Status;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MatchingPostUpdateRequestDto {
     @NotNull
     private String category;
