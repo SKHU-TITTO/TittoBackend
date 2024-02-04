@@ -31,15 +31,14 @@ public class MatchingPostService {
     //게시물 작성
     @Transactional
     public MatchingPostCreateResponseDto createMatchingPost(Principal principal, MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
-        MatchingPost matchingPost = matchingPostCreateRequestDto.toEntity();
+        MatchingPost matchingPost = matchingPostCreateRequestDto.toEntity(user);
         matchingPostRepository.save(matchingPost);
-        Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
 
-        return MatchingPostCreateResponseDto.of(matchingPost, reviewCount);
+        return MatchingPostCreateResponseDto.of(matchingPost);
     }
     // 게시물 조회
     @Transactional(readOnly = true)
@@ -52,7 +51,7 @@ public class MatchingPostService {
         countViews(matchingPost, request, response);
         matchingPostRepository.save(matchingPost);  // 업데이트된 조회수를 저장합니다.
 
-        return MatchingPostResponseDto.of(matchingPost,reviewCount);
+        return MatchingPostResponseDto.of(matchingPost, reviewCount);
     }
     // 게시물 삭제
     @Transactional
@@ -69,8 +68,8 @@ public class MatchingPostService {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수

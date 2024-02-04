@@ -7,7 +7,7 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewRe
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewDeleteResponseDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewResponseDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewUpdateResponseDto;
-import com.example.titto_backend.matchingBoard.service.matchingBoardReview.MatchingBoardReviewService;
+import com.example.titto_backend.matchingBoard.service.matchingBoardReview.MatchingPostReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Matching Post Review Controller", description = "매칭 게시글 리뷰 관련 API")
 public class MatchingPostReviewController {
-  private final MatchingBoardReviewService matchingBoardReviewService;
+  private final MatchingPostReviewService matchingBoardReviewService;
 
-  @PostMapping
+  @PostMapping("/create")
   @Operation(
           summary = "매칭 게시글 리뷰 작성",
           description = "매칭 게시글에 리뷰를 작성합니다",
@@ -42,7 +42,7 @@ public class MatchingPostReviewController {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
   }
 
-  @GetMapping("/{postId}")
+  @GetMapping("/get/{postId}")
   @Operation(
           summary = "매칭 게시글 리뷰 전체 조회",
           description = "특정 매칭 게시글에 대한 전체 리뷰를 조회합니다",
@@ -58,7 +58,7 @@ public class MatchingPostReviewController {
     return ResponseEntity.ok(responseDtoList);
   }
 
-  @PutMapping("/{reviewId}")
+  @PutMapping("/update/{reviewId}")
   @Operation(
           summary = "매칭 게시글 리뷰 수정",
           description = "매칭 게시글에 작성된 리뷰를 수정합니다",
@@ -74,7 +74,7 @@ public class MatchingPostReviewController {
     return ResponseEntity.ok(responseDto);
   }
 
-  @DeleteMapping("/{reviewId}")
+  @DeleteMapping("/delete/{reviewId}")
   @Operation(
           summary = "매칭 게시글 리뷰 삭제",
           description = "매칭 게시글에 작성된 리뷰를 삭제합니다",

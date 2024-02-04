@@ -2,6 +2,7 @@ package com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest;
 
 import lombok.Data;
 
+
 @Data
 public class MatchingPostPagingRequestDto {
 

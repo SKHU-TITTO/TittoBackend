@@ -1,6 +1,8 @@
 package com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse;
 
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,7 +10,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class MatchingPostPagingResponseDto {
 
     private List<MatchingPost> content;

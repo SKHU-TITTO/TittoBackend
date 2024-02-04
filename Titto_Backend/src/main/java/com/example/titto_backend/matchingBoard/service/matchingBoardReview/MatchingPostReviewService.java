@@ -31,9 +31,9 @@ public class MatchingBoardReviewService {
     // 생성
     @Transactional
     public MatchingPostReviewCreateResponseDto createReview(Principal principal, MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .matchingPost(matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
@@ -55,9 +55,9 @@ public class MatchingBoardReviewService {
     // 수정
     @Transactional
     public MatchingPostReviewUpdateResponseDto updateReview(Principal principal, MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .review_id(matchingPostReviewUpdateRequestDto.getReviewId())
