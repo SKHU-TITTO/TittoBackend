@@ -2,7 +2,9 @@ package com.example.titto_backend.matchingBoard.service.matchingBoard;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Status;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostCreateRequestDto;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostUpdateRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostCreateResponseDto;
@@ -74,12 +76,23 @@ public class MatchingPostService {
         Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
 
         if (user.getNickname().equals(matchingPost.getUser().getNickname())) {
+            // 게시물 내용 수정
+            matchingPost.update(
+                    Category.valueOf(matchingPostUpdateRequestDto.getCategory()),
+                    matchingPostUpdateRequestDto.getTitle(),
+                    matchingPostUpdateRequestDto.getContent(),
+                    Status.valueOf(matchingPostUpdateRequestDto.getStatus())
+            );
+
             return MatchingPostUpdateResponseDto.of(
                     matchingPost,
                     reviewCount);
         }
         else throw new AuthorizationServiceException("잘못된 접근입니다");
     }
+
+
+
     // 게시글 조회수 연산
     private void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = null;
