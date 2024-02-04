@@ -2,9 +2,15 @@ package com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewR
 
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class MatchingPostReviewResponseDto {
 
