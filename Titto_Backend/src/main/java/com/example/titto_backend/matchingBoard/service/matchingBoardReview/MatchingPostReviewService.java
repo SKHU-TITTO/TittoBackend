@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class MatchingBoardReviewService {
+public class MatchingPostReviewService {
     private final MatchingPostReviewRepository matchingPostReviewRepository;
     private final UserRepository userRepository;
     private final MatchingPostRepository matchingPostRepository;
@@ -49,7 +49,11 @@ public class MatchingBoardReviewService {
                 .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
 
         List<MatchingPostReview> matchingPostReviews = matchingPostReviewRepository.findAllByMatchingPost(matchingPost);
-        return new ArrayList<>();
+        List<MatchingPostReviewResponseDto> responses = new ArrayList<>();
+        for (MatchingPostReview matchingPostReview : matchingPostReviews) {
+            responses.add(new MatchingPostReviewResponseDto(matchingPostReview));
+        }
+        return responses;
     }
 
     // 수정

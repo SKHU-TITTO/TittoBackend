@@ -41,7 +41,6 @@ public class MatchingPostService {
         return MatchingPostCreateResponseDto.of(matchingPost);
     }
     // 게시물 조회
-    @Transactional(readOnly = true)
     public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId, HttpServletRequest request, HttpServletResponse response) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
@@ -86,7 +85,9 @@ public class MatchingPostService {
         Cookie cookie = null;
         Cookie[] cookies = request.getCookies();
         if (matchingPost != null) {
+            String postId = "POST[" + matchingPost.getMatchingPostId() + "]";
             if (cookies != null) {
+                // 쿠키 중에서 "postViews" 쿠키를 찾습니다.
                 for (Cookie oldCookie : cookies) {
                     if (oldCookie.getName().equals("postViews")) {
                         cookie = oldCookie;
@@ -95,17 +96,19 @@ public class MatchingPostService {
                 }
             }
             if (cookie != null) {
-                if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
+                // "postViews" 쿠키가 있는 경우
+                if (!cookie.getValue().contains(postId)) {
+                    // 쿠키의 값에 현재 게시물의 ID가 없다면 조회수를 증가시키고 쿠키를 업데이트합니다.
                     matchingPost.updateViewCount();
-                    matchingPostRepository.save(matchingPost);
-                    cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
+                    cookie.setValue(cookie.getValue() + postId);
                 }
             } else {
+                // "postViews" 쿠키가 없는 경우 쿠키를 생성하고 조회수를 증가시킵니다.
                 matchingPost.updateViewCount();
-                matchingPostRepository.save(matchingPost);
-                cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
+                cookie = new Cookie("postViews", postId);
             }
-            response.addCookie(setCookieValue(cookie));
+            response.addCookie(setCookieValue(cookie));  // 쿠키를 응답에 추가합니다.
+            matchingPostRepository.save(matchingPost);  // 게시물을 저장하여 조회수를 업데이트합니다.
         }
     }
     // 쿠키 설정
