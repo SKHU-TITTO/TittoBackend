@@ -49,8 +49,6 @@ jobs:
         spring.datasource.username: ${{ secrets.DB_USER }} 
         spring.datasource.password: ${{ secrets.DB_PASSWORD }} 
         jwt.secret: ${{ secrets.JWT_SECRET }}
-        naver.map.client.id: ${{ secrets.NAVER_CLIENT_ID }}
-        naver.map.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
         
     # (4) apllicataion-oauth.yml파일 환경변수 설정
     - name: Set apllicataion-oauth yml file 
