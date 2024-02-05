@@ -42,7 +42,7 @@ jobs:
     - name: Set apllicataion yml file 
       uses: microsoft/variable-substitution@v1
       with:
-        files: ./src/main/resources/application.yml 
+        files: ./Titto_Backend/src/main/resources/application.yml 
       env:
         spring.datasource.url: ${{ secrets.DB_JDBC_URL }} 
         spring.datasource.username: ${{ secrets.DB_USER }} 
@@ -53,7 +53,7 @@ jobs:
     - name: Set apllicataion-oauth yml file 
       uses: microsoft/variable-substitution@v1
       with:
-        files: ./src/main/resources/application-oauth.yml 
+        files: ./Titto_Backend/src/main/resources/application-oauth.yml 
       env:
         oauth.naver.client.id: ${{ secrets.NAVER_CLIENT_ID }}
         oauth.naver.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
