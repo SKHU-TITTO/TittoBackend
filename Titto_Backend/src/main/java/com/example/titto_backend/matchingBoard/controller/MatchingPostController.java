@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/matching-posts")
+@RequestMapping("/matching-post")
 @RequiredArgsConstructor
 @Tag(name = "Matching Post Controller", description = "매칭 게시글 관련 API")
 public class MatchingPostController {
