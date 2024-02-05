@@ -20,7 +20,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/matching-board-reviews")
+@RequestMapping("/matching-board-review")
 @RequiredArgsConstructor
 @Tag(name = "Matching Post Review Controller", description = "매칭 게시글 리뷰 관련 API")
 public class MatchingPostReviewController {
