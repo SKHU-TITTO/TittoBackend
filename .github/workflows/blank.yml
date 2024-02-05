@@ -12,8 +12,9 @@ env:
   S3_BUCKET_NAME: tittodeploybucket
   CODE_DEPLOY_APPLICATION_NAME: TittoCodeDeploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: titto-codedeploy-group
-  DB_RESOURCE_PATH: ./TittoBackend/Titto_Backend/src/main/resources/application.yml
-  OAUTH_RESOURCE_PATH: ./TittoBackend/Titto_Backend/src/main/resources/application-oauth.yml
+  DB_RESOURCE_PATH: ./Titto_Backend/src/main/resources/application.yml
+  OAUTH_RESOURCE_PATH: ./Titto_Backend/src/main/resources/application-oauth.yml
+  
 permissions:
   contents: read
 
@@ -54,7 +55,7 @@ jobs:
     - name: Set apllicataion-oauth yml file 
       uses: microsoft/variable-substitution@v1
       with:
-        files: ${{ env.RESOURCE_PATH }} 
+        files: ${{ env.OAUTH_RESOURCE_PATH }} 
       env:
         oauth.naver.client.id: ${{ secrets.NAVER_CLIENT_ID }}
         oauth.naver.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
