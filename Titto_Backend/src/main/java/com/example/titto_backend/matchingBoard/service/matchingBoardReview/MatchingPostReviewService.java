@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class MatchingBoardReviewService {
+public class MatchingPostReviewService {
     private final MatchingPostReviewRepository matchingPostReviewRepository;
     private final UserRepository userRepository;
     private final MatchingPostRepository matchingPostRepository;
@@ -31,9 +31,9 @@ public class MatchingBoardReviewService {
     // 생성
     @Transactional
     public MatchingPostReviewCreateResponseDto createReview(Principal principal, MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .matchingPost(matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
@@ -49,15 +49,19 @@ public class MatchingBoardReviewService {
                 .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
 
         List<MatchingPostReview> matchingPostReviews = matchingPostReviewRepository.findAllByMatchingPost(matchingPost);
-        return new ArrayList<>();
+        List<MatchingPostReviewResponseDto> responses = new ArrayList<>();
+        for (MatchingPostReview matchingPostReview : matchingPostReviews) {
+            responses.add(new MatchingPostReviewResponseDto(matchingPostReview));
+        }
+        return responses;
     }
 
     // 수정
     @Transactional
     public MatchingPostReviewUpdateResponseDto updateReview(Principal principal, MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
-        Long userId = Long.valueOf(principal.getName());
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        String userEmail = principal.getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .review_id(matchingPostReviewUpdateRequestDto.getReviewId())

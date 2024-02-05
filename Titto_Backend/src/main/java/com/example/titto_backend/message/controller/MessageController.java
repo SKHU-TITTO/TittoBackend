@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/user/messages", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/message", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Message Controller", description = "메시지 관련 API")
 public class MessageController {
 
