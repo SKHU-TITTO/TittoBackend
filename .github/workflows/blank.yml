@@ -12,7 +12,8 @@ env:
   S3_BUCKET_NAME: tittodeploybucket
   CODE_DEPLOY_APPLICATION_NAME: TittoCodeDeploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: titto-codedeploy-group
-
+  DB_RESOURCE_PATH: ./TittoBackend/Titto_Backend/src/main/resources/application.yml
+  OAUTH_RESOURCE_PATH: ./TittoBackend/Titto_Backend/src/main/resources/application-oauth.yml
 permissions:
   contents: read
 
@@ -38,14 +39,42 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - run: gradle init
     
-    # (3) Gradle build (Test 제외)
+    # (3) apllicataion.yml파일 환경변수 설정
+    - name: Set apllicataion yml file 
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ${{ env.RESOURCE_PATH }} 
+      env:
+        spring.datasource.url: ${{ secrets.DB_JDBC_URL }} 
+        spring.datasource.username: ${{ secrets.DB_USER }} 
+        spring.datasource.password: ${{ secrets.DB_PASSWORD }} 
+        jwt.secret: ${{ secrets.JWT_SECRET }}
+        naver.map.client.id: ${{ secrets.NAVER_CLIENT_ID }}
+        naver.map.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+        
+    # (4) apllicataion-oauth.yml파일 환경변수 설정
+    - name: Set apllicataion-oauth yml file 
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ${{ env.RESOURCE_PATH }} 
+      env:
+        oauth.naver.client.id: ${{ secrets.NAVER_CLIENT_ID }}
+        oauth.naver.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+        oauth.kakao.client.id: ${{ secrets.KAKAO_CLIENT_ID }}
+        oauth.kakao.client.secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      
+    # (5) Gradle build (Test 제외)
+    - name: Add permission
+      run: chmod +x gradlew
+      working-directory: ./Titto_Backend
+      
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         gradle-version: 8.5
         arguments: build
 
-    # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
+    # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -53,7 +82,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # (5) 빌드 결과물을 S3 버킷에 업로드
+    # (7) 빌드 결과물을 S3 버킷에 업로드
     - name: Upload to AWS S3
       run: |
         aws deploy push \
@@ -62,7 +91,7 @@ jobs:
           --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
           --source .
 
-    # (6) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
+    # (8) S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
     - name: Deploy to AWS EC2 from S3
       run: |
         aws deploy create-deployment \
