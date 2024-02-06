@@ -7,8 +7,7 @@ spring:
 cors:
   allowed-origins: "http://localhost:3000"
 
-# DB
-spring:
+  # DB
   datasource:
     url: ${DB_JDBC_URL}
     username: ${DB_USER}
