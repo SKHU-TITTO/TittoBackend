@@ -2,8 +2,6 @@ spring:
   profiles:
     active: local
     include: oauth
----
-spring:
   # DB
   datasource:
     url: ${DB_JDBC_URL}
