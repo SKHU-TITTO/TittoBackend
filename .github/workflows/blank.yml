@@ -67,6 +67,7 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew clean build -x test
+      working-directory: ./Titto_Backend
 
     # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials
