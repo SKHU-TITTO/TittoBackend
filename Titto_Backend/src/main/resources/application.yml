@@ -2,11 +2,6 @@ spring:
   profiles:
     active: local
     include: oauth
----
-#Cors
-cors:
-  allowed-origins: "http://localhost:3000"
-
   # DB
   datasource:
     url: ${DB_JDBC_URL}
@@ -56,3 +51,7 @@ springdoc:
     disabled : true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+#Cors
+cors:
+  allowed-origins: "http://localhost:3000"
