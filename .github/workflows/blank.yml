@@ -69,6 +69,11 @@ jobs:
       run: ./gradlew clean build -x test
       working-directory: ./Titto_Backend
 
+      # build한 후 프로젝트를 압축합니다.
+    - name: Make zip file
+      run: zip -r ./Titto_Backend.zip .
+      shell: bash
+
     # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
