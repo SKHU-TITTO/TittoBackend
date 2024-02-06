@@ -49,3 +49,7 @@ tasks.named('test') {
 jar {
     enabled = false
 }
+
+task clean(type: Delete) {
+    delete 'build' // 또는 정리하고 싶은 디렉토리나 파일을 여기에 추가
+}
