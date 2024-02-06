@@ -55,10 +55,10 @@ jobs:
       with:
         files: ./Titto_Backend/src/main/resources/application-oauth.yml 
       env:
-        oauth.naver.client.id: ${{ secrets.NAVER_CLIENT_ID }}
-        oauth.naver.client.secret: ${{ secrets.NAVER_CLIENT_SECRET }}
-        oauth.kakao.client.id: ${{ secrets.KAKAO_CLIENT_ID }}
-        oauth.kakao.client.secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+        oauth.naver.client-id: ${{ secrets.NAVER_CLIENT_ID }}
+        oauth.naver.client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+        oauth.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+        oauth.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
       
     # (5) Gradle build (Test 제외)
     - name: Add permission
