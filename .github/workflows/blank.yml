@@ -33,10 +33,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        
-    - name: init with Gradle
-      uses: gradle/gradle-build-action@v2
-    - run: gradle init
     
     # (3) apllicataion.yml파일 환경변수 설정
     - name: Set apllicataion yml file 
@@ -66,10 +62,8 @@ jobs:
       working-directory: ./Titto_Backend
       
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-      with:
-        gradle-version: 8.5
-        arguments: build
+      run: ./gradlew clean build -x test
+      working-directory: ./Titto_Backend
 
     # (6) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials
