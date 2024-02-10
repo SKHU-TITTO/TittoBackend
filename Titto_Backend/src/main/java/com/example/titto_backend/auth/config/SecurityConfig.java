@@ -29,8 +29,6 @@ public class SecurityConfig {
           "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
           "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html","/oauth/**"
   };
-  @Value("${cors.allowed-origins}")
-  String[] corsOrigins;
 
   private final TokenProvider tokenProvider;
   private final RedisTemplate<String, String> redisTemplate;
@@ -59,7 +57,7 @@ public class SecurityConfig {
   public CorsConfigurationSource configurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.setAllowedOriginPatterns(List.of(corsOrigins));
+    configuration.setAllowedOriginPatterns(List.of("http://localhost:8080","http://localhost:3000/", "https://titto.world/"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
