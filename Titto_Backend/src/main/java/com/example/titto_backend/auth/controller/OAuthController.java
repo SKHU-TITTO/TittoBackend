@@ -56,7 +56,7 @@ public class OAuthController {
     return oAuthNaverService.getToken(code, state);
   }
 
-  @PostMapping("kakao/login")
+  @PostMapping("/kakao/login")
   @Operation(
           summary = "카카오 토큰으로 로그인 (kakaoAcessToken만 입력하세요.)",
           description = "존재하지 않은 유저일 경우 회원가입 진행 후 로그인합니다",
@@ -70,7 +70,7 @@ public class OAuthController {
     return ResponseEntity.ok(serviceToken);
   }
 
-  @PostMapping("naver/login")
+  @PostMapping("/naver/login")
   @Operation(
           summary = "네이버 토큰으로 로그인 (naverAcessToken만 입력하세요.)",
           description = "존재하지 않은 유저일 경우 회원가입 진행 후 로그인합니다",
