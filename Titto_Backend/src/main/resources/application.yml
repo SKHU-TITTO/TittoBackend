@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: local
-    include: oauth
+    include: oauth, production
   # DB
   datasource:
     url: ${DB_JDBC_URL}
@@ -54,4 +54,6 @@ springdoc:
 
 #Cors
 cors:
-  allowed-origins: "*"
+  allowed-origins:
+    - http://localhost:3000
+    - https://titto.world/
