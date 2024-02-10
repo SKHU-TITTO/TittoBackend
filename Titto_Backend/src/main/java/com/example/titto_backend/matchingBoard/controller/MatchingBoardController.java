@@ -1,13 +1,8 @@
 package com.example.titto_backend.matchingBoard.controller;
 
-import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
-import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MatchingBoardController {
   private final MatchingBoardService matchingBoardService;
 
-  @GetMapping("/posts")
+/*  @GetMapping("/posts")
   @Operation(
           summary = "매칭 게시판 전체 조회",
           description = "매칭 게시판의 전체 게시글을 조회합니다",
@@ -29,5 +24,5 @@ public class MatchingBoardController {
           })
   public MatchingPostPagingResponseDto getAllMatchingPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
     return matchingBoardService.findAllPosts(matchingPostPagingRequestDto);
-  }
+  }*/
 }
