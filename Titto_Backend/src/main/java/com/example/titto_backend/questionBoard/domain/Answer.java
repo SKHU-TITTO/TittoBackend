@@ -12,26 +12,26 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
-public class Answer extends BaseEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @JoinColumn(name = "author")
-  @ManyToOne
-  private User author;
-
-  @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
-  private String content;
-
-  @JoinColumn(name = "question_id")
-  @ManyToOne
-  private Question question;
-
-  //채택 여부
-  @Column(name = "is_adopted")
-  private boolean isAdopted;
-}
+//@Entity
+//@Getter
+//@Setter
+//public class Answer extends BaseEntity {
+//  @Id
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  private Long id;
+//
+//  @JoinColumn(name = "author")
+//  @ManyToOne
+//  private User author;
+//
+//  @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
+//  private String content;
+//
+//  @JoinColumn(name = "question_id")
+//  @ManyToOne
+//  private Question question;
+//
+//  //채택 여부
+//  @Column(name = "is_adopted")
+//  private boolean isAdopted;
+//}
