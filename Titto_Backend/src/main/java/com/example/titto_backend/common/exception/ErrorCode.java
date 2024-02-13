@@ -22,8 +22,11 @@ public enum ErrorCode {
 
   /* 404 NOT_FOUND : 리소스를 찾을 수 없음 */
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 정보를 찾을 수 없습니다."),
+  USER_NOT_MATCH(HttpStatus.NOT_FOUND, "사용자의 정보가 일치하지 않습니다."),
   EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 이메일을 찾을 수 없습니다."),
-  PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 프로필 이미지를 찾을 수 없습니다.");
+  PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 프로필 이미지를 찾을 수 없습니다."),
+
+  QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다.");
 
   private final HttpStatus httpStatus;
   private final String message;
