@@ -1,5 +1,0 @@
-oauth:
-  kakao:
-    redirect-uri: ${PRODUCTION_REDIRECT_URI_KAKAO}
-  naver:
-    redirect-uri: ${PRODUCTION_REDIRECT_URI_NAVER}

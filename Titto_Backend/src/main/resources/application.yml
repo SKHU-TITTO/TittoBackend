@@ -1,7 +1,8 @@
 spring:
   profiles:
     active: local
-    include: oauth, production
+    include: oauth
+
   # DB
   datasource:
     url: ${DB_JDBC_URL}
