@@ -8,10 +8,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
-@RequiredArgsConstructor
+@Table(name = "questionPosts")
+@AllArgsConstructor
+@NoArgsConstructor
 public class QuestionPost extends BaseEntity {
 
   @Id
