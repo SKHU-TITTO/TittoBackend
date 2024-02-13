@@ -55,6 +55,14 @@ jobs:
         oauth.naver.client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
         oauth.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
         oauth.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+
+    - name: Set apllicataion-production yml file 
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./Titto_Backend/src/main/resources/application-production.yml 
+      env:
+        oauth.kakao.redirect-uri: ${{ secrets.PRODUCTION_REDIRECT_URI_KAKAO }}
+        oauth.naver.redirect-uri: ${{ secrets.PRODUCTION_REDIRECT_URI_NAVER }}
       
     # (5) Gradle build (Test 제외)
     - name: Add permission
