@@ -7,5 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-  Page<Question> findByDepartment(Pageable pageable, Department category);
+  Page<Question> findByDepartmentOrderByCreateDateDesc(Pageable pageable, Department category);
+  Page<Question> findAllByOrderByCreateDateDesc(Pageable pageable);
 }

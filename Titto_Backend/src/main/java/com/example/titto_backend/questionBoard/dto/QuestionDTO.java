@@ -9,14 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class QuestionDTO {
 
-  @Getter
-  @Setter
+  @Data
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
@@ -51,8 +49,7 @@ public class QuestionDTO {
     }
   }
 
-  @Getter
-  @Setter
+  @Data
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Schema(description = "질문 글 조회")
   public static class Response {
@@ -92,14 +89,15 @@ public class QuestionDTO {
     }
   }
 
-  @Getter
-  @Setter
+  @Data
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
   @Schema(description = "질문 글 수정")
   public static class Update {
     @Schema(description = "제목")
+//    @Valid
+//    @Validated
     private String title;
     @Schema(description = "내용")
     private String content;

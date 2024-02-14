@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Matching Board Controller", description = "매칭 게시판 관련 API")
 public class MatchingBoardController {
+
     private final MatchingBoardService matchingBoardService;
 
     @GetMapping("/posts")
