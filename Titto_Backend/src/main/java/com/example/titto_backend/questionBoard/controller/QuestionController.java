@@ -9,19 +9,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,7 +29,7 @@ public class QuestionController {
 
   private final QuestionService questionService;
 
-
+  // Create
   @PostMapping("/create")
   @Operation(
           summary = "질문 작성",
@@ -43,20 +40,13 @@ public class QuestionController {
           })
   public ResponseEntity<QuestionDTO.Response> createQuestion(@RequestBody QuestionDTO.Request request,
                                                              Principal principal) {
-    String email = principal.getName(); // 사용자의 이메일을 가져옴
+    String email = principal.getName();
 
     QuestionDTO.Response savedQuestion = questionService.save(email, request);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedQuestion);
-//    try {
-//      QuestionDTO.Response savedQuestion = questionService.save(email, request);
-//      return ResponseEntity.status(HttpStatus.CREATED).body(savedQuestion);
-//    } catch (Exception e) {
-//      System.out.println(e.getMessage());
-//      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//    }
   }
 
-  @ResponseBody
+  // Read
   @GetMapping("/posts")
   @Operation(
           summary = "질문 목록 조회",
@@ -65,12 +55,11 @@ public class QuestionController {
                   @ApiResponse(responseCode = "200", description = "요청 성공"),
                   @ApiResponse(responseCode = "500", description = "관리자 문의")
           })
-  public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@PageableDefault(size=20, sort="createdAt", direction = Sort.Direction.DESC) @Parameter(hidden = true) Pageable pageable) {
+  public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@Parameter(hidden = true) Pageable pageable) {
     Page<QuestionDTO.Response> questions = questionService.findAll(pageable);
     return ResponseEntity.ok(questions);
   }
 
-  @ResponseBody
   @GetMapping("/{postId}")
   @Operation(
           summary = "질문 상세 조회",
@@ -88,7 +77,6 @@ public class QuestionController {
     }
   }
 
-  @ResponseBody
   @GetMapping("/category/{category}")
   @Operation(
           summary = "카테고리별 질문 조회",
@@ -98,10 +86,39 @@ public class QuestionController {
                   @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
           })
   public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByCategory(@PathVariable("category") String category,
-                                                                           Pageable pageable) {
+                                                                           @Parameter(hidden = true) Pageable pageable) {
     Page<QuestionDTO.Response> questions = questionService.findByCategory(pageable, category);
     return ResponseEntity.ok(questions);
   }
-  // Update method here
-  // Delete method here
+
+  // Update
+  @PutMapping("/{postId}")
+  @Operation(
+          summary = "질문 수정",
+          description = "질문을 수정합니다",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "질문 수정 성공"),
+                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+          })
+  public ResponseEntity<String> updateQuestion(@PathVariable("postId") Long postId,
+                                               @RequestBody QuestionDTO.Update update,
+                                               Principal principal) {
+    String email = principal.getName();
+    questionService.update(email, update, postId);
+    return ResponseEntity.ok("질문 수정 성공");
+  }
+
+  // Delete
+  @DeleteMapping("/{postId}")
+  @Operation(
+          summary = "질문 삭제",
+          description = "질문을 삭제합니다",
+          responses = {
+                  @ApiResponse(responseCode = "204", description = "질문 삭제 성공"),
+                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+          })
+  public ResponseEntity<Void> deleteQuestion(@PathVariable("postId") Long postId) {
+    questionService.delete(postId);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+  }
 }
