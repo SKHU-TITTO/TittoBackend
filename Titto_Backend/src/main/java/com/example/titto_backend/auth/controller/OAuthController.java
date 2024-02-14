@@ -1,8 +1,8 @@
 package com.example.titto_backend.auth.controller;
 
+import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.dto.response.TokenDTO;
 import com.example.titto_backend.auth.dto.response.TokenDTO.ServiceToken;
-import com.example.titto_backend.auth.dto.request.UserDTO;
 import com.example.titto_backend.auth.service.OAuthKakaoService;
 import com.example.titto_backend.auth.service.OAuthNaverService;
 import com.example.titto_backend.auth.service.TokenService;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/oauth")
 @Tag(name = "OAuth Controller", description = "OAuth 관련 API")
 public class OAuthController {
+
   private final TokenService tokenService;
   private final OAuthKakaoService oAuthKakaoService;
   private final OAuthNaverService oAuthNaverService;
 
-  @ResponseBody
   @GetMapping("/kakao")
   @Operation(
           summary = "카카오 토큰 발급",
@@ -43,7 +42,6 @@ public class OAuthController {
     return oAuthKakaoService.getToken(code);
   }
 
-  @ResponseBody
   @GetMapping("/naver")
   @Operation(
           summary = "네이버 토큰 발급",
