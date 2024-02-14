@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDTO {
+
   private String title;
   private String content;
   private Long receiverId;

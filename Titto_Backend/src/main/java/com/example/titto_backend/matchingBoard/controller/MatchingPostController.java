@@ -25,6 +25,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Tag(name = "Matching Post Controller", description = "매칭 게시글 관련 API")
 public class MatchingPostController {
+
   private final MatchingPostService matchingPostService;
 
   @PostMapping("/create")

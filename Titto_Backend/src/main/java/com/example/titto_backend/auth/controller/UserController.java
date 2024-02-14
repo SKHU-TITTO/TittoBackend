@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "User Controller", description = "유저 관련 API")
 public class UserController {
+
   private final UserService userService;
 
   @PutMapping("/signup")
@@ -59,7 +60,6 @@ public class UserController {
     UserInfoDTO userInfo = userService.getUser(email);
     return ResponseEntity.ok(userInfo);
   }
-
 
   @PutMapping("/update")
   @PreAuthorize("isAuthenticated()")

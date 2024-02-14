@@ -16,6 +16,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
+
   private final TokenProvider tokenProvider;
   private final RedisTemplate<String, String> redisTemplate;
 
