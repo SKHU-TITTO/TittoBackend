@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(value = {AuditingEntityListener.class})
 public class BaseEntity {
+
     @Column(name = "create_date", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createDate;

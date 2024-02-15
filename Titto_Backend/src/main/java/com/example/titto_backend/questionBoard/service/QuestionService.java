@@ -10,7 +10,6 @@ import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
+
   private final QuestionRepository questionRepository;
   private final UserRepository userRepository;
 
@@ -28,16 +28,6 @@ public class QuestionService {
   public QuestionDTO.Response save(String email, QuestionDTO.Request request) throws CustomException {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-    System.out.println("여긴 지나감");
-
-    System.out.println(request.getDepartment());
-    System.out.println(request.getStatus());
-    System.out.println(request.getTitle());
-    System.out.println(request.getContent());
-    for (String image : request.getImageList()) {
-      System.out.println(image);
-    }
 
     Question question = Question.builder()
             .title(request.getTitle())
@@ -51,7 +41,7 @@ public class QuestionService {
 
   @Transactional(readOnly = true)
   public Page<Response> findAll(Pageable pageable) {
-    return questionRepository.findAll(pageable).map(QuestionDTO.Response::new);
+    return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
   }
 
   @Transactional(readOnly = true)
@@ -63,29 +53,28 @@ public class QuestionService {
 
   @Transactional(readOnly = true)
   public Page<QuestionDTO.Response> findByCategory(Pageable pageable, String category) {
-    return questionRepository.findByDepartment(pageable, Department.valueOf(category.toUpperCase()))
+    return questionRepository.findByDepartmentOrderByCreateDateDesc(pageable, Department.valueOf(category.toUpperCase()))
             .map(QuestionDTO.Response::new);
   }
 
-  //Update
-  @Transactional
-  public QuestionDTO.Response update(String email, QuestionDTO.Update update, Long id) throws CustomException {
+  // Update
+  // 작성자만 수정이 가능하도록!
+  @Transactional //더티 체킹 후 알아서 update 쿼리 생성해서 db로 commit을 날려줌!! -> 변경사항 적용
+  public void update(String email, QuestionDTO.Update update, Long id) throws CustomException {
     Question oldQuestion = questionRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-    Question newQuestion;
-    if (oldQuestion.getAuthor().getEmail().equals(email)) {
-      newQuestion = Question.builder()
-              .id(id)
-              .title(update.getTitle())
-              .content(update.getContent())
-              .department(Department.valueOf(String.valueOf(update.getDepartment())))
-              .status(Status.valueOf(String.valueOf(update.getStatus())))
-              .build();
-    } else {
-      throw new CustomException(ErrorCode.USER_NOT_MATCH);
-    }
-    return new Response(newQuestion);
+    oldQuestion.update(
+            update.getTitle(),
+            update.getContent(),
+            Department.valueOf(String.valueOf(update.getDepartment())),
+            Status.valueOf(String.valueOf(update.getStatus()))
+    );
   }
 
-  //Delete
+  // Delete
+  // 작성자만 삭제가 가능하도록!
+  @Transactional
+  public void delete(Long id) {
+    questionRepository.deleteById(id);
+  }
 }

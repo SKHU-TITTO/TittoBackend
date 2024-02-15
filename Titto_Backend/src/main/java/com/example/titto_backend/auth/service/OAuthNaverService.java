@@ -29,10 +29,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OAuthNaverService {
+
   private final UserRepository userRepository;
   private final TokenProvider tokenProvider;
   private final RedisTemplate<String, Object> redisTemplate;
-
 
   @Value("${oauth.naver.client-id}")
   private String NAVER_CLIENT_ID;
@@ -120,11 +120,6 @@ public class OAuthNaverService {
       if (!user.getSocialId().equals(naverId)) {
         throw new CustomException(ErrorCode.DUPLICATED_EMAIL);
       }
-
-//      // 기존에 저장된 사용자의 socialType이 설정되어 있지 않다면 업데이트
-//      if (user.getSocialType() == null) {
-//        user.setSocialType(socialType);
-//      }
     }
 
     TokenDTO.ServiceToken tokenDTO = tokenProvider.createToken(email);
@@ -134,6 +129,5 @@ public class OAuthNaverService {
     redisTemplate.opsForValue().set(tokenDTO.getRefreshToken(), "refreshToken", expireTime, TimeUnit.MILLISECONDS);
 
     return tokenDTO;
-
   }
 }

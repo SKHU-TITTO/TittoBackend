@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Matching Post Review Controller", description = "매칭 게시글 리뷰 관련 API")
 public class MatchingPostReviewController {
+
   private final MatchingPostReviewService matchingBoardReviewService;
 
   @PostMapping("/create")

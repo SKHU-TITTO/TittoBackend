@@ -2,7 +2,6 @@ package com.example.titto_backend.questionBoard.domain;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,26 +11,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Question extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "questionPost_id")
+  @Column(name = "question_id")
   private Long id;
 
   @ManyToOne
@@ -50,6 +44,13 @@ public class Question extends BaseEntity {
 
   @Column(name = "question_content", nullable = false, columnDefinition = "TEXT")
   private String content;
+
+  public void update(String title, String content, Department department, Status status) {
+    this.title = title;
+    this.content = content;
+    this.department = department;
+    this.status = status;
+  }
 
   //TODO: 이미지, 조회수, 댓글은 나중에 추가
 //  @Column(name = "image_url")
