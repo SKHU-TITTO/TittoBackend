@@ -16,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MatchingBoardService {
     private final MatchingPostRepository matchingPostRepository;
+
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findAllPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
-        Sort sort = Sort.by(Sort.Direction.fromString(matchingPostPagingRequestDto.getSort()), "matchingPostId");
-        Pageable pageable = PageRequest.of(matchingPostPagingRequestDto.getPage(), matchingPostPagingRequestDto.getSize(), sort);
+        Sort sort = Sort.by(Sort.Direction.ASC, "matchingPostId");
+        Pageable pageable = PageRequest.of(matchingPostPagingRequestDto.getPage(), 10, sort); // 페이지 크기를 고정값인 10으로 설정
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
-        return new MatchingPostPagingResponseDto(matchingPosts);
+        return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 }
+
