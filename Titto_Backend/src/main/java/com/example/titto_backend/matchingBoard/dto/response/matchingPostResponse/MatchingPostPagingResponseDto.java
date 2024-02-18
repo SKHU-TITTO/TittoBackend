@@ -14,18 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class MatchingPostPagingResponseDto {
-
     private List<MatchingPost> content;
     private int totalPages;
     private long totalElements;
     private int pageNumber;
     private boolean existNextPage;
 
-    public MatchingPostPagingResponseDto(Page<MatchingPost> postPages) {
-        this.content = postPages.getContent();
-        this.totalPages = postPages.getTotalPages();
-        this.totalElements = postPages.getTotalElements();
-        this.pageNumber = postPages.getNumber();
-        this.existNextPage = postPages.hasNext();
+    public static MatchingPostPagingResponseDto from(Page<MatchingPost> postPages) {
+        return MatchingPostPagingResponseDto.builder()
+                .content(postPages.getContent())
+                .totalPages(postPages.getTotalPages())
+                .totalElements(postPages.getTotalElements())
+                .pageNumber(postPages.getNumber())
+                .existNextPage(postPages.hasNext())
+                .build();
     }
 }
