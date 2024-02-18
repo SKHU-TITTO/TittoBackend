@@ -5,6 +5,7 @@ import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,31 +23,26 @@ public class QuestionDTO {
   public static class Request {
 
     @Schema(description = "제목")
+    @NotBlank
     private String title;
 
     @Schema(description = "내용")
+    @NotBlank
     private String content;
 
     @Schema(description = "이미지")
     private List<String> imageList;
 
     @Schema(description = "카테고리")
+    @NotBlank
     private String department;
 
-    @Schema(description = "상태", example = "ACTIVE or INACTIVE")
+    @Schema(description = "상태", example = "SOLVED or UNSOLVED")
+    @NotBlank
     private String status;
 
     @Schema(description = "조회수", defaultValue = "1")
     private int view;
-
-    public Question toEntity() {
-      return Question.builder()
-              .title(title)
-              .content(content)
-              .department(Department.valueOf(department.toUpperCase()))
-              .status(Status.valueOf(status.toUpperCase()))
-              .build();
-    }
   }
 
   @Data
@@ -96,10 +92,10 @@ public class QuestionDTO {
   @Schema(description = "질문 글 수정")
   public static class Update {
     @Schema(description = "제목")
-//    @Valid
-//    @Validated
+    @NotBlank
     private String title;
     @Schema(description = "내용")
+    @NotBlank
     private String content;
     //    private List<String> imageList;
     @Schema(description = "카테고리")
