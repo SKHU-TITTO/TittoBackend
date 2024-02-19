@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +81,22 @@ public class AnswerController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+  }
+
+  @PutMapping("/{answerId}")
+  @Operation(
+          summary = "답변 채택",
+          description = "답변을 채택합니다",
+          responses = {
+                  @ApiResponse(responseCode = "200", description = "답변 채택 성공"),
+                  @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
+          })
+  public ResponseEntity<String> acceptAnswer(@PathVariable("answerId") Long answerId) {
+    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    User currentUser = userRepository.findByEmail(currentEmail)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    answerService.acceptAnswer(answerId, currentUser.getId());
+    return ResponseEntity.ok("답변 채택 성공");
   }
 
   // Delete

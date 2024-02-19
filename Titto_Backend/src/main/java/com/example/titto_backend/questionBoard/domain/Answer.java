@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
@@ -39,6 +40,7 @@ public class Answer extends BaseEntity {
 
   // 채택 여부
   @Column(name = "is_accepted")
+  @Setter
   private boolean isAccepted;
 
 }
