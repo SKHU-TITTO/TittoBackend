@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,7 +29,11 @@ public class MatchingBoardController {
                     @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public MatchingPostPagingResponseDto getAllMatchingPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
-        return matchingBoardService.findAllPosts(matchingPostPagingRequestDto);
+    public MatchingPostPagingResponseDto getAllMatchingPosts(
+            @RequestParam("page") int page
+    ) {
+        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
+        requestDto.setPage(page + 1); // 페이지 번호를 1부터 시작하도록 조정
+        return matchingBoardService.findAllPosts(requestDto);
     }
 }
