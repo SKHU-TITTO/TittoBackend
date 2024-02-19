@@ -53,14 +53,21 @@ public class QuestionService {
 
   @Transactional(readOnly = true)
   public Page<QuestionDTO.Response> findByCategory(Pageable pageable, String category) {
-    return questionRepository.findByDepartmentOrderByCreateDateDesc(pageable, Department.valueOf(category.toUpperCase()))
+    return questionRepository.findByDepartmentOrderByCreateDateDesc(pageable,
+                    Department.valueOf(category.toUpperCase()))
             .map(QuestionDTO.Response::new);
   }
 
   // Update
-  // 작성자만 수정이 가능하도록!
-  @Transactional //더티 체킹 후 알아서 update 쿼리 생성해서 db로 commit을 날려줌!! -> 변경사항 적용
-  public void update(String email, QuestionDTO.Update update, Long id) throws CustomException {
+  @Transactional
+  public void update(QuestionDTO.Update update, Long id, Long userId) throws CustomException {
+
+    // 현재 사용자가 작성자인지 확인
+    if (!isAuthor(id, userId)) {
+      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+    }
+
+    // 작성자일 경우에만 수정 가능하도록 처리
     Question oldQuestion = questionRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
     oldQuestion.update(
@@ -72,9 +79,22 @@ public class QuestionService {
   }
 
   // Delete
-  // 작성자만 삭제가 가능하도록!
   @Transactional
-  public void delete(Long id) {
+  public void delete(Long id, Long userId) {
+
+    if (!isAuthor(id, userId)) {
+      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+    }
+
     questionRepository.deleteById(id);
   }
+
+  public boolean isAuthor(Long id, Long userId) {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    Question question = questionRepository.findById(id)
+            .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+    return question.getAuthor().getId().equals(user.getId());
+  }
+
 }
