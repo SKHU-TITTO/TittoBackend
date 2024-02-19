@@ -15,6 +15,7 @@ public class MatchingPostCreateResponseDto {
 
     private Long matchingPostId;
     private String author;
+    private String profile;
     private String category;
     private String status;
     private String title;
@@ -27,6 +28,7 @@ public class MatchingPostCreateResponseDto {
             MatchingPost matchingPost) {
         return new MatchingPostCreateResponseDto(matchingPost.getMatchingPostId(),
                 matchingPost.getUser().getNickname(),
+                matchingPost.getUser().getProfile(),
                 String.valueOf(matchingPost.getCategory()),
                 String.valueOf(matchingPost.getStatus()),
                 matchingPost.getTitle(),
