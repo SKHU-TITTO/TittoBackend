@@ -16,6 +16,7 @@ public class MatchingPostUpdateResponseDto {
 
     private Long matchingPostId;
     private String author;
+    private String profile;
     private String category;
     private String status;
     private String title;
@@ -29,6 +30,7 @@ public class MatchingPostUpdateResponseDto {
             Integer reviewCount) {
         return new MatchingPostUpdateResponseDto(matchingPost.getMatchingPostId(),
                 matchingPost.getUser().getNickname(),
+                matchingPost.getUser().getProfile(),
                 String.valueOf(matchingPost.getCategory()),
                 String.valueOf(matchingPost.getStatus()),
                 matchingPost.getTitle(),
