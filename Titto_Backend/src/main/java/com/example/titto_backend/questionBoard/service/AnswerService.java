@@ -61,6 +61,23 @@ public class AnswerService {
     answerRepository.deleteById(id);
   }
 
+  @Transactional
+  public void acceptAnswer(Long id, Long userId) {
+    if (!isAuthor(id, userId)) {
+      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+    }
+    Answer answer = answerRepository.findById(id)
+            .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+    verifyAcceptedAnswer(answer.getQuestion().getId());
+    answer.setAccepted(true);
+  }
+
+  public void verifyAcceptedAnswer(Long postId) {
+    if (answerRepository.existsByQuestionIdAndIsAcceptedTrue(postId)) {
+      throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
+    }
+  }
+
   public boolean isAuthor(Long id, Long userId) {
     User user = userRepository.findById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
