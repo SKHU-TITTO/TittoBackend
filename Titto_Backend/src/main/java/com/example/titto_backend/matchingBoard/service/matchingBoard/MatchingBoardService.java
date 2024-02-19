@@ -20,7 +20,7 @@ public class MatchingBoardService {
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findAllPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
         Sort sort = Sort.by(Sort.Direction.ASC, "matchingPostId");
-        Pageable pageable = PageRequest.of(matchingPostPagingRequestDto.getPage(), 10, sort); // 페이지 크기를 고정값인 10으로 설정
+        Pageable pageable = PageRequest.of(matchingPostPagingRequestDto.getPage() + 1, 10, sort); // 페이지 크기를 고정값인 10으로 설정
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
