@@ -13,11 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
@@ -48,6 +51,12 @@ public class Question extends BaseEntity {
   @Column(name = "question_content", nullable = false, columnDefinition = "TEXT")
   private String content;
 
+  // 채택된 답변 ID
+  @Setter
+  @OneToOne
+  @JoinColumn(name = "accepted_answer")
+  private Answer acceptedAnswer;
+
   public void update(String title, String content, Department department, Status status) {
     this.title = title;
     this.content = content;
@@ -63,6 +72,6 @@ public class Question extends BaseEntity {
 //  private int view;
 //
   @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
-  private List<Answer> answerList;
+  private List<Answer> answers = new ArrayList<>();
 
 }

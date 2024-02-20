@@ -7,12 +7,9 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
-import com.example.titto_backend.questionBoard.dto.AnswerDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,64 +23,64 @@ public class AnswerService {
 
   // Create
   @Transactional
-  public AnswerDTO.Response save(AnswerDTO.Request request, Long postId, String email) throws CustomException {
+  public AnswerDTO.Response save(AnswerDTO.Request request, Long questionId, String email) throws CustomException {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
     Answer answer = Answer.builder()
-            .question(questionRepository.findById(postId)
+            .question(questionRepository.findById(questionId)
                     .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND)))
             .author(user)
             .content(request.getContent())
-            .isAccepted(false)
             .build();
     return new AnswerDTO.Response(answerRepository.save(answer));
   }
 
-  @Transactional(readOnly = true)
-  public Page<Response> findAll(Pageable pageable) {
-    return answerRepository.findAllByOrderByCreateDateDesc(pageable).map(AnswerDTO.Response::new);
-  }
-
-  @Transactional(readOnly = true)
-  public AnswerDTO.Response findById(Long postId) {
-    Answer answer = answerRepository.findById(postId)
+  //Update
+  @Transactional
+  public AnswerDTO.Response update(Long id, AnswerDTO.Request request, Long userId) throws CustomException {
+    validateAuthorIsLoggedInUser(id, userId);
+    Answer answer = answerRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
-    return new Response(answer);
+    answer.setContent(request.getContent());
+    return new AnswerDTO.Response(answer);
   }
 
   // Delete
   @Transactional
   public void delete(Long id, Long userId) throws CustomException {
-    if (!isAuthor(id, userId)) {
-      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
-    }
+    validateAuthorIsLoggedInUser(id, userId);
     answerRepository.deleteById(id);
   }
 
   @Transactional
-  public void acceptAnswer(Long id, Long userId) {
-    if (!isAuthor(id, userId)) {
-      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
-    }
-    Answer answer = answerRepository.findById(id)
+  public void acceptAnswer(Long questionId, Long answerId, Long userId) {
+    validateAuthorIsLoggedInUser(answerId, userId);
+    Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+    verifyAcceptedAnswer(questionId);
+    Answer answer = answerRepository.findById(answerId)
             .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
-    verifyAcceptedAnswer(answer.getQuestion().getId());
     answer.setAccepted(true);
+    question.setAcceptedAnswer(answer);
   }
 
-  public void verifyAcceptedAnswer(Long postId) {
-    if (answerRepository.existsByQuestionIdAndIsAcceptedTrue(postId)) {
+  @Transactional(readOnly = true)
+  protected void verifyAcceptedAnswer(Long questionId) {
+    if (questionRepository.existsByIdAndAcceptedAnswerIsNotNull(questionId)) {
       throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
     }
   }
 
-  public boolean isAuthor(Long id, Long userId) {
+  @Transactional(readOnly = true)
+  protected void validateAuthorIsLoggedInUser(Long id, Long userId) {
     User user = userRepository.findById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     Answer answer = answerRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-    return answer.getAuthor().getId().equals(user.getId());
+            .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+    if (answer.getAuthor().getId().equals(user.getId())) {
+      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+    }
   }
 
 }

@@ -25,18 +25,18 @@ public class QuestionService {
 
   //Create
   @Transactional
-  public QuestionDTO.Response save(String email, QuestionDTO.Request request) throws CustomException {
+  public String save(String email, QuestionDTO.Request request) throws CustomException {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-    Question question = Question.builder()
+    questionRepository.save(Question.builder()
             .title(request.getTitle())
             .author(user)
             .content(request.getContent())
             .department(Department.valueOf(request.getDepartment().toUpperCase()))
             .status(Status.valueOf(request.getStatus().toUpperCase()))
-            .build();
-    return new Response(questionRepository.save(question));
+            .build());
+    return "질문이 성공적으로 등록되었습니다.";
   }
 
   @Transactional(readOnly = true)
@@ -48,6 +48,7 @@ public class QuestionService {
   public Response findById(Long postId) {
     Question question = questionRepository.findById(postId)
             .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+    System.out.println(question.getAcceptedAnswer());
     return new Response(question);
   }
 
@@ -61,13 +62,7 @@ public class QuestionService {
   // Update
   @Transactional
   public void update(QuestionDTO.Update update, Long id, Long userId) throws CustomException {
-
-    // 현재 사용자가 작성자인지 확인
-    if (!isAuthor(id, userId)) {
-      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
-    }
-
-    // 작성자일 경우에만 수정 가능하도록 처리
+    validateAuthorIsLoggedInUser(id, userId);
     Question oldQuestion = questionRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
     oldQuestion.update(
@@ -81,20 +76,20 @@ public class QuestionService {
   // Delete
   @Transactional
   public void delete(Long id, Long userId) {
-
-    if (!isAuthor(id, userId)) {
-      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
-    }
-
+    validateAuthorIsLoggedInUser(id, userId);
     questionRepository.deleteById(id);
   }
 
-  public boolean isAuthor(Long id, Long userId) {
+  // 글을 쓴 사람과 현재 로그인한 사람이 같은지 확인
+  @Transactional(readOnly = true)
+  protected void validateAuthorIsLoggedInUser(Long id, Long userId) {
     User user = userRepository.findById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     Question question = questionRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-    return question.getAuthor().getId().equals(user.getId());
+    if(question.getAuthor().getId().equals(user.getId())) {
+      throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+    }
   }
 
 }
