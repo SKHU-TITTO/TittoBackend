@@ -1,11 +1,12 @@
 package com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse;
 
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
