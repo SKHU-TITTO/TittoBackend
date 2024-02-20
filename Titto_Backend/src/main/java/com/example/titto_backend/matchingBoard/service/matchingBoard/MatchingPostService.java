@@ -16,12 +16,11 @@ import com.example.titto_backend.matchingBoard.repository.review.MatchingPostRev
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,8 @@ public class MatchingPostService {
 
     //게시물 작성
     @Transactional
-    public MatchingPostCreateResponseDto createMatchingPost(Principal principal, MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
+    public MatchingPostCreateResponseDto createMatchingPost(Principal principal,
+                                                            MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
         String userEmail = principal.getName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
@@ -42,8 +42,10 @@ public class MatchingPostService {
 
         return MatchingPostCreateResponseDto.of(matchingPost);
     }
+
     // 게시물 조회
-    public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId, HttpServletRequest request, HttpServletResponse response) {
+    public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId, HttpServletRequest request,
+                                                                   HttpServletResponse response) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
@@ -54,6 +56,7 @@ public class MatchingPostService {
 
         return MatchingPostResponseDto.of(matchingPost, reviewCount);
     }
+
     // 게시물 삭제
     @Transactional
     public MatchingPostDeleteResponseDto deleteMatchingPostByMatchingPostId(Long matchingPostId) {
@@ -63,9 +66,11 @@ public class MatchingPostService {
 
         return MatchingPostDeleteResponseDto.of(matchingPostId);
     }
+
     // 게시물 수정
     @Transactional
-    public MatchingPostUpdateResponseDto updateMatchingPost(Long matchingPostId, Principal principal, MatchingPostUpdateRequestDto matchingPostUpdateRequestDto) {
+    public MatchingPostUpdateResponseDto updateMatchingPost(Long matchingPostId, Principal principal,
+                                                            MatchingPostUpdateRequestDto matchingPostUpdateRequestDto) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
@@ -87,11 +92,10 @@ public class MatchingPostService {
             return MatchingPostUpdateResponseDto.of(
                     matchingPost,
                     reviewCount);
+        } else {
+            throw new AuthorizationServiceException("잘못된 접근입니다");
         }
-        else throw new AuthorizationServiceException("잘못된 접근입니다");
     }
-
-
 
     // 게시글 조회수 연산
     private void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
@@ -124,6 +128,7 @@ public class MatchingPostService {
             matchingPostRepository.save(matchingPost);  // 게시물을 저장하여 조회수를 업데이트합니다.
         }
     }
+
     // 쿠키 설정
     private Cookie setCookieValue(Cookie cookie) {
         cookie.setPath("/");
