@@ -23,6 +23,7 @@ import lombok.Setter;
 public class Answer extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "answer_id")
   private Long id;
 
   @ManyToOne
@@ -36,11 +37,10 @@ public class Answer extends BaseEntity {
 
   // 답글 내용
   @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
+  @Setter
   private String content;
 
-  // 채택 여부
   @Column(name = "is_accepted")
   @Setter
   private boolean isAccepted;
-
 }
