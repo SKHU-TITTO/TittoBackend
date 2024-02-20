@@ -5,7 +5,7 @@ spring:
 
   # DB
   datasource:
-    url: ${DB_JDBC_URL}
+    url: ${DB_JDBC_URL}?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver

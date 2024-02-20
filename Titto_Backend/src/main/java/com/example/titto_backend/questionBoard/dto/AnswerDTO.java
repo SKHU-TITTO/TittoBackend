@@ -19,7 +19,7 @@ public class AnswerDTO {
   public static class Request {
 
     @Schema(description = "질문 ID")
-    private Long postId;
+    private Long questionId;
 
     @Schema(description = "답변 내용")
     @NotBlank

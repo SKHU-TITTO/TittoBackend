@@ -44,12 +44,10 @@ public class QuestionController {
                   @ApiResponse(responseCode = "201", description = "질문 작성 성공"),
                   @ApiResponse(responseCode = "500", description = "관리자 문의")
           })
-  public ResponseEntity<QuestionDTO.Response> createQuestion(@RequestBody QuestionDTO.Request request,
+  public ResponseEntity<String> createQuestion(@RequestBody QuestionDTO.Request request,
                                                              Principal principal) {
     String email = principal.getName();
-
-    QuestionDTO.Response savedQuestion = questionService.save(email, request);
-    return ResponseEntity.status(HttpStatus.CREATED).body(savedQuestion);
+    return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
   }
 
   // Read
