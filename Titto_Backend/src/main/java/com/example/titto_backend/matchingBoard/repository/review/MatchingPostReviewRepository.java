@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface MatchingPostReviewRepository extends JpaRepository<MatchingPostReview, Long> {
     List<MatchingPostReview> findAllByMatchingPost(MatchingPost matchingPost);
+
+    void deleteAllByMatchingPost(MatchingPost matchingPost);
 }
