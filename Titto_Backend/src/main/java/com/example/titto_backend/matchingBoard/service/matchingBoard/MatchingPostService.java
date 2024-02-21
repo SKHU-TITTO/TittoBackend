@@ -16,11 +16,12 @@ import com.example.titto_backend.matchingBoard.repository.review.MatchingPostRev
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +63,8 @@ public class MatchingPostService {
     public MatchingPostDeleteResponseDto deleteMatchingPostByMatchingPostId(Long matchingPostId) {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
+        matchingPostReviewRepository.deleteAllByMatchingPost(matchingPost);
         matchingPostRepository.delete(matchingPost);
-
         return MatchingPostDeleteResponseDto.of(matchingPostId);
     }
 
