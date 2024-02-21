@@ -1,22 +1,36 @@
 package com.example.titto_backend.level.domain;
 
-import com.example.titto_backend.auth.domain.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "experience")
-    private User user;
-
     @Column(name = "total_experience")
-    private int totalExperience; // 사용자의 누적 경험치
+    private Integer totalExperience = 0; // 사용자의 누적 경험치
 
     @Column(name = "current_experience")
-    private int currentExperience; // 사용자의 현재 경험치
+    private Integer currentExperience = 0; // 사용자의 현재 경험치
 
-    @Column(name = "required_experience")
-    private int requiredExperience;
+
+    public void setCurrentExperience(int newCurrentExperience) {
+        this.currentExperience = newCurrentExperience;
+    }
+
+    public void setTotalExperience(int newTotalExperience) {
+        this.totalExperience = newTotalExperience;
+    }
+
 }
