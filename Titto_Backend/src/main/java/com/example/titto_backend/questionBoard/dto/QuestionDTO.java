@@ -72,6 +72,12 @@ public class QuestionDTO {
     @Schema(description = "작성일")
     private LocalDateTime createdDate;
 
+    @Schema(description = "답변 목록")
+    private List<AnswerDTO.Response> answerList;
+
+    @Schema(description = "채택 여부")
+    private boolean isAccepted;
+
     public Response(Question question) {
       this.id = question.getId();
       this.authorId = question.getAuthor().getId();
@@ -80,6 +86,8 @@ public class QuestionDTO {
       this.status = question.getStatus().toString();
       this.title = question.getTitle();
       this.content = question.getContent();
+      this.answerList = question.getAnswers().stream().map(AnswerDTO.Response::new).toList();
+      this.isAccepted = question.getAcceptedAnswer() != null;
     }
   }
 

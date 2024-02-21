@@ -56,8 +56,7 @@ public class Question extends BaseEntity {
 //
 //  @Column(name = "view")
 //  private int view;
-//
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
-
 }
