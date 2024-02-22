@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessageDTO {
 
-  private String title;
-  private String content;
-  private Long receiverId;
+    private String title;
+    private String content;
+    private Long receiverId;
 
-  public static MessageDTO toDto(Message message) {
-    return new MessageDTO(
-            message.getTitle(),
-            message.getContent(),
-            message.getReceiver().getId()
-    );
-  }
+    public static MessageDTO toDto(Message message) {
+        return new MessageDTO(
+                message.getTitle(),
+                message.getContent(),
+                message.getReceiver().getId()
+        );
+    }
 
 }

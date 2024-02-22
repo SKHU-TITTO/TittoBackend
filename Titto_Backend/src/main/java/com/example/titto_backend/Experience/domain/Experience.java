@@ -1,4 +1,4 @@
-package com.example.titto_backend.level.domain;
+package com.example.titto_backend.Experience.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +23,6 @@ public class Experience {
 
     @Column(name = "current_experience")
     private Integer currentExperience = 0; // 사용자의 현재 경험치
-
 
     public void setCurrentExperience(int newCurrentExperience) {
         this.currentExperience = newCurrentExperience;

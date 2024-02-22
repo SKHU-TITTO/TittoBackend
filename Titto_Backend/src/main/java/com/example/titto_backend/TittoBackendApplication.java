@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class TittoBackendApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(TittoBackendApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(TittoBackendApplication.class, args);
+    }
 
-  @PostConstruct
-  public void started() {
-    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-  }
+    @PostConstruct
+    public void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
 }
