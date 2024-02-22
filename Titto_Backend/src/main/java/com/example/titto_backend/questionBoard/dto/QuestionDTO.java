@@ -6,12 +6,10 @@ import com.example.titto_backend.questionBoard.domain.Status;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class QuestionDTO {
 
@@ -19,6 +17,7 @@ public class QuestionDTO {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
+  @Getter
   @Schema(description = "질문 글 작성")
   public static class Request {
 
@@ -41,6 +40,10 @@ public class QuestionDTO {
     @Schema(description = "상태", example = "SOLVED or UNSOLVED")
     @NotBlank
     private String status;
+
+    @Schema(description = "줄 포인트")
+    @NotBlank
+    private Integer sendExperience;
   }
 
   @Data
