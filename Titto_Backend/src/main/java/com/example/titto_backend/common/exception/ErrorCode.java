@@ -29,7 +29,8 @@ public enum ErrorCode {
   QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
   ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "답변을 찾을 수 없습니다."),
   MISMATCH_AUTHOR(HttpStatus.BAD_REQUEST, "권한이 없습니다."),
-  ALREADY_ACCEPTED_ANSWER(HttpStatus.BAD_REQUEST, "이미 채택된 답변이 존재합니다.");
+  ALREADY_ACCEPTED_ANSWER(HttpStatus.BAD_REQUEST, "이미 채택된 답변이 존재합니다."),
+  INSUFFICIENT_EXPERIENCE(HttpStatus.BAD_REQUEST, "차감할 경험치가 부족합니다.");
 
   private final HttpStatus httpStatus;
   private final String message;
