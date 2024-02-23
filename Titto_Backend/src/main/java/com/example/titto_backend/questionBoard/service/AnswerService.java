@@ -71,7 +71,10 @@ public class AnswerService {
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
 
-        experienceService.addExperience(answer.getAuthor(), 35 + question.getSendExperience());
+        User questionAuthor = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        experienceService.deductExperience(answer.getAuthor(), question.getSendExperience());
+        experienceService.addExperience(questionAuthor, 35 + question.getSendExperience());
     }
 
 
