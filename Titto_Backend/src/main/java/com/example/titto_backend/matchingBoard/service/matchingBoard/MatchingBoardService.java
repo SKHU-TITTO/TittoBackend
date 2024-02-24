@@ -1,5 +1,6 @@
 package com.example.titto_backend.matchingBoard.service.matchingBoard;
 
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
@@ -37,6 +38,14 @@ public class MatchingBoardService {
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
+    public MatchingPostPagingResponseDto findByCategory(MatchingPostPagingRequestDto matchingPostPagingRequestDto, Category category) {
+        int page = matchingPostPagingRequestDto.getPage() - 1;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(category, pageable);
+        return MatchingPostPagingResponseDto.from(matchingPosts);
+    }
 }
 
 

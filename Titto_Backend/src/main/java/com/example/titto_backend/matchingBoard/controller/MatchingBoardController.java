@@ -1,5 +1,6 @@
 package com.example.titto_backend.matchingBoard.controller;
 
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
@@ -53,4 +54,19 @@ public class MatchingBoardController {
         return matchingBoardService.searchByKeyWord(requestDto, keyWord);
     }
 
+    @GetMapping("/category")
+    @Operation(
+            summary = "매칭 게시판 카테고리 분류",
+            description = "카테고리 별로 결과를 출력합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public MatchingPostPagingResponseDto findByCategory(@RequestParam("page") int page,
+                                                        @RequestParam Category category) {
+        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
+        requestDto.setPage(page + 1);
+        return matchingBoardService.findByCategory(requestDto, category);
+    }
 }
