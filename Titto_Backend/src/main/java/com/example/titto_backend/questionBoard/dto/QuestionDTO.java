@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class QuestionDTO {
@@ -19,6 +20,7 @@ public class QuestionDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Getter
     @Schema(description = "질문 글 작성")
     public static class Request {
 
@@ -42,7 +44,8 @@ public class QuestionDTO {
         @NotBlank
         private String status;
 
-        @Schema(description = "내공")
+        @Schema(description = "줄 포인트")
+        @NotBlank
         private Integer sendExperience;
     }
 
@@ -107,12 +110,14 @@ public class QuestionDTO {
         @Schema(description = "제목")
         @NotBlank
         private String title;
+
         @Schema(description = "내용")
         @NotBlank
         private String content;
-        //    private List<String> imageList;
+
         @Schema(description = "카테고리")
         private Department department;
+
         @Schema(description = "상태")
         private Status status;
     }

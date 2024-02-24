@@ -1,5 +1,6 @@
 package com.example.titto_backend.matchingBoard.service.matchingBoard;
 
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
@@ -19,11 +20,31 @@ public class MatchingBoardService {
 
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findAllPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
-        int page = matchingPostPagingRequestDto.getPage() - 1; // 페이지 번호를 0부터 시작하도록 조정
+        int page = matchingPostPagingRequestDto.getPage() - 1;
 
-        Sort sort = Sort.by(Sort.Direction.ASC, "matchingPostId");
-        Pageable pageable = PageRequest.of(page, 10, sort); // 페이지 크기를 고정값인 10으로 설정
+        Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
+        Pageable pageable = PageRequest.of(page, 10, sort);
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
+        return MatchingPostPagingResponseDto.from(matchingPosts);
+    }
+
+    public MatchingPostPagingResponseDto searchByKeyWord(MatchingPostPagingRequestDto matchingPostPagingRequestDto,
+                                                         String keyword) {
+        int page = matchingPostPagingRequestDto.getPage() - 1;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<MatchingPost> matchingPosts = matchingPostRepository.findByTitleContaining(keyword, pageable);
+        return MatchingPostPagingResponseDto.from(matchingPosts);
+    }
+
+    public MatchingPostPagingResponseDto findByCategory(MatchingPostPagingRequestDto matchingPostPagingRequestDto,
+                                                        String category) {
+        int page = matchingPostPagingRequestDto.getPage() - 1;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(Category.valueOf(category), pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 }

@@ -8,7 +8,6 @@ import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.repository.MessageRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +54,9 @@ public class MessageService {
     }
 
     private List<MessageDTO> convertMessagesToDTO(List<Message> messages) {
-        return messages.stream().map(MessageDTO::toDto).collect(Collectors.toList());
+        return messages.stream()
+                .map(MessageDTO::toDto)
+                .toList();
     }
-
 }
 

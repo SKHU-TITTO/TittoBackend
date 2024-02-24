@@ -2,6 +2,7 @@ package com.example.titto_backend.questionBoard.service;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.domain.Answer;
@@ -20,10 +21,11 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final ExperienceService experienceService;
 
     // Create
     @Transactional
-    public AnswerDTO.Response save(AnswerDTO.Request request, Long questionId, String email) throws CustomException {
+    public AnswerDTO.Response save(AnswerDTO.Request request, Long questionId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -33,7 +35,13 @@ public class AnswerService {
                 .author(user)
                 .content(request.getContent())
                 .build();
-        return new AnswerDTO.Response(answerRepository.save(answer));
+
+        Answer savedAnswer = answerRepository.save(answer);
+
+        // 답변을 작성한 사용자의 경험치 추가
+        experienceService.addExperience(user, 20);
+
+        return new AnswerDTO.Response(savedAnswer);
     }
 
     //Update
@@ -63,17 +71,21 @@ public class AnswerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
+
+        User questionAuthor = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        experienceService.deductExperience(answer.getAuthor(), question.getSendExperience());
+        experienceService.addExperience(questionAuthor, 35 + question.getSendExperience());
     }
 
-    @Transactional(readOnly = true)
-    protected void verifyAcceptedAnswer(Long questionId) {
+    private void verifyAcceptedAnswer(Long questionId) {
         if (questionRepository.existsByIdAndAcceptedAnswerIsNotNull(questionId)) {
             throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
         }
     }
 
-    @Transactional(readOnly = true)
-    protected void validateAuthorIsLoggedInUser(Long id, Long userId) {
+    private void validateAuthorIsLoggedInUser(Long id, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Answer answer = answerRepository.findById(id)
