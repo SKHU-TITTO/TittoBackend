@@ -20,7 +20,7 @@ public class MatchingBoardController {
 
     private final MatchingBoardService matchingBoardService;
 
-    @GetMapping("/posts")
+    @GetMapping("/all")
     @Operation(
             summary = "매칭 게시판 전체 조회",
             description = "매칭 게시판의 전체 게시글을 조회합니다",
@@ -33,7 +33,24 @@ public class MatchingBoardController {
             @RequestParam("page") int page
     ) {
         MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
-        requestDto.setPage(page + 1); // 페이지 번호를 1부터 시작하도록 조정
+        requestDto.setPage(page + 1);
         return matchingBoardService.findAllPosts(requestDto);
     }
+
+    @GetMapping("/search")
+    @Operation(
+            summary = "매칭 게시판 검색",
+            description = "키워드로 검색하여 결과를 출력합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public MatchingPostPagingResponseDto searchByKeyWord(@RequestParam("page") int page,
+                                                         @RequestParam String keyWord) {
+        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
+        requestDto.setPage(page + 1);
+        return matchingBoardService.searchByKeyWord(requestDto, keyWord);
+    }
+
 }

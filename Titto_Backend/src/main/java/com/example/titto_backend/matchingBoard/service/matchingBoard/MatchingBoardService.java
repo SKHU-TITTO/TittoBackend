@@ -19,13 +19,24 @@ public class MatchingBoardService {
 
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findAllPosts(MatchingPostPagingRequestDto matchingPostPagingRequestDto) {
-        int page = matchingPostPagingRequestDto.getPage() - 1; // 페이지 번호를 0부터 시작하도록 조정
+        int page = matchingPostPagingRequestDto.getPage() - 1;
 
         Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
-        Pageable pageable = PageRequest.of(page, 10, sort); // 페이지 크기를 고정값인 10으로 설정
+        Pageable pageable = PageRequest.of(page, 10, sort);
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
+
+    public MatchingPostPagingResponseDto searchByKeyWord(MatchingPostPagingRequestDto matchingPostPagingRequestDto,
+                                                         String keyword) {
+        int page = matchingPostPagingRequestDto.getPage() - 1;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<MatchingPost> matchingPosts = matchingPostRepository.findByTitleContaining(keyword, pageable);
+        return MatchingPostPagingResponseDto.from(matchingPosts);
+    }
+
 }
 
 
