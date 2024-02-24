@@ -38,12 +38,13 @@ public class MatchingBoardService {
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
-    public MatchingPostPagingResponseDto findByCategory(MatchingPostPagingRequestDto matchingPostPagingRequestDto, Category category) {
+    public MatchingPostPagingResponseDto findByCategory(MatchingPostPagingRequestDto matchingPostPagingRequestDto,
+                                                        String category) {
         int page = matchingPostPagingRequestDto.getPage() - 1;
 
         Sort sort = Sort.by(Sort.Direction.DESC, "matchingPostId");
         Pageable pageable = PageRequest.of(page, 10, sort);
-        Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(category, pageable);
+        Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(Category.valueOf(category), pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 }

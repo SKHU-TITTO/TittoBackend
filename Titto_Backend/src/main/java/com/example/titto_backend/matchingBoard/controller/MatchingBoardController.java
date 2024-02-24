@@ -1,6 +1,5 @@
 package com.example.titto_backend.matchingBoard.controller;
 
-import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
@@ -64,7 +63,7 @@ public class MatchingBoardController {
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
     public MatchingPostPagingResponseDto findByCategory(@RequestParam("page") int page,
-                                                        @RequestParam Category category) {
+                                                        @RequestParam String category) {
         MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
         requestDto.setPage(page + 1);
         return matchingBoardService.findByCategory(requestDto, category);
