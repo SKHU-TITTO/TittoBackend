@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserProfileUpdateDTO {
-  private String oneLineIntro;
-  private String selfIntro;
+    private String oneLineIntro;
+    private String selfIntro;
 }
