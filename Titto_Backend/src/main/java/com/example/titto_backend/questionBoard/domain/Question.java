@@ -53,10 +53,13 @@ public class Question extends BaseEntity {
         this.status = status;
     }
 
-// 조회수
-//  @Column(name = "view")
-//  private int view;
+    @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer viewCount;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
+
+    public void addViewCount() {
+        this.viewCount++;
+    }
 }

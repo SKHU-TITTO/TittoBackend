@@ -41,6 +41,9 @@ public class QuestionDTO {
         @Schema(description = "상태", example = "SOLVED or UNSOLVED")
         @NotBlank
         private String status;
+
+        @Schema(description = "내공")
+        private Integer sendExperience;
     }
 
     @Data
@@ -78,6 +81,9 @@ public class QuestionDTO {
         @Schema(description = "채택 여부")
         private boolean isAccepted;
 
+        @Schema(description = "조회수")
+        private Integer viewCount;
+
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -88,6 +94,7 @@ public class QuestionDTO {
             this.content = question.getContent();
             this.answerList = question.getAnswers().stream().map(AnswerDTO.Response::new).toList();
             this.isAccepted = question.getAcceptedAnswer() != null;
+            this.viewCount = question.getViewCount();
         }
     }
 
