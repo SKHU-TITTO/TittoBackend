@@ -27,70 +27,71 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Answer Controller", description = "게시글 답변 관련 API")
 public class AnswerController {
 
-  private final AnswerService answerService;
-  private final UserRepository userRepository;
+    private final AnswerService answerService;
+    private final UserRepository userRepository;
 
-  @PostMapping("/create")
-  @Operation(
-          summary = "답변 작성",
-          description = "답변을 작성합니다",
-          responses = {
-                  @ApiResponse(responseCode = "201", description = "답변 작성 성공"),
-                  @ApiResponse(responseCode = "500", description = "관리자 문의")
-          })
-  public ResponseEntity<AnswerDTO.Response> createAnswer(@RequestBody AnswerDTO.Request request, Principal principal) {
-    String email = principal.getName();
-    AnswerDTO.Response savedAnswer = answerService.save(request, request.getQuestionId(), email);
+    @PostMapping("/create")
+    @Operation(
+            summary = "답변 작성",
+            description = "답변을 작성합니다",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "답변 작성 성공"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<AnswerDTO.Response> createAnswer(@RequestBody AnswerDTO.Request request,
+                                                           Principal principal) {
+        String email = principal.getName();
+        AnswerDTO.Response savedAnswer = answerService.save(request, request.getQuestionId(), email);
 
-    return ResponseEntity.status(201).body(savedAnswer);
-  }
+        return ResponseEntity.status(201).body(savedAnswer);
+    }
 
-  @PutMapping("/accept/{answerId}")
-  @Operation(
-          summary = "답변 채택",
-          description = "답변을 채택합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "답변 채택 성공"),
-                  @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
-          })
-  public ResponseEntity<String> acceptAnswer(Long questionId, @PathVariable("answerId") Long answerId) {
-    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-    User currentUser = userRepository.findByEmail(currentEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    answerService.acceptAnswer(questionId, answerId, currentUser.getId());
-    return ResponseEntity.ok("답변 채택 성공");
-  }
+    @PutMapping("/accept/{answerId}")
+    @Operation(
+            summary = "답변 채택",
+            description = "답변을 채택합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "답변 채택 성공"),
+                    @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
+            })
+    public ResponseEntity<String> acceptAnswer(Long questionId, @PathVariable("answerId") Long answerId) {
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        answerService.acceptAnswer(questionId, answerId, currentUser.getId());
+        return ResponseEntity.ok("답변 채택 성공");
+    }
 
-  @PutMapping("/{answerId}")
-  @Operation(
-          summary = "답변 수정",
-          description = "답변을 수정합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "답변 수정 성공"),
-                  @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
-          })
-  public ResponseEntity<AnswerDTO.Response> updateAnswer(@PathVariable("answerId") Long answerId,
-                                                         @RequestBody AnswerDTO.Request request) {
-    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-    User currentUser = userRepository.findByEmail(currentEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    return ResponseEntity.ok(answerService.update(answerId, request, currentUser.getId()));
-  }
+    @PutMapping("/{answerId}")
+    @Operation(
+            summary = "답변 수정",
+            description = "답변을 수정합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "답변 수정 성공"),
+                    @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
+            })
+    public ResponseEntity<AnswerDTO.Response> updateAnswer(@PathVariable("answerId") Long answerId,
+                                                           @RequestBody AnswerDTO.Request request) {
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return ResponseEntity.ok(answerService.update(answerId, request, currentUser.getId()));
+    }
 
-  @DeleteMapping("/{answerId}")
-  @Operation(
-          summary = "답변 삭제",
-          description = "답변을 삭제합니다",
-          responses = {
-                  @ApiResponse(responseCode = "204", description = "답변 삭제 성공"),
-                  @ApiResponse(responseCode = "500", description = "관리자 문의")
-          })
-  public ResponseEntity<Void> deleteAnswer(@PathVariable("answerId") Long answerId) {
-    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-    User currentUser = userRepository.findByEmail(currentEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    answerService.delete(answerId, currentUser.getId());
-    return ResponseEntity.noContent().build();
-  }
+    @DeleteMapping("/{answerId}")
+    @Operation(
+            summary = "답변 삭제",
+            description = "답변을 삭제합니다",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "답변 삭제 성공"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<Void> deleteAnswer(@PathVariable("answerId") Long answerId) {
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        answerService.delete(answerId, currentUser.getId());
+        return ResponseEntity.noContent().build();
+    }
 
 }

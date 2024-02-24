@@ -25,7 +25,6 @@ public enum ErrorCode {
     USER_NOT_MATCH(HttpStatus.NOT_FOUND, "사용자의 정보가 일치하지 않습니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 이메일을 찾을 수 없습니다."),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 프로필 이미지를 찾을 수 없습니다."),
-
     QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "답변을 찾을 수 없습니다."),
     MISMATCH_AUTHOR(HttpStatus.BAD_REQUEST, "권한이 없습니다."),

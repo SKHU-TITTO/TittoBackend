@@ -6,12 +6,24 @@ import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.message.domain.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-
 import java.util.List;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -87,6 +99,12 @@ public class User extends BaseEntity {
     @Setter
     @Column(name = "current_experience")
     private Integer currentExperience; // 사용자의 현재 경험치
+
+    @Column(name = "count_answer")
+    private Integer countAnswer;
+
+    @Column(name = "count_accept")
+    private Integer countAccept;
 
     @Builder
     public User(String email, String profile, String socialId, SocialType socialType) {

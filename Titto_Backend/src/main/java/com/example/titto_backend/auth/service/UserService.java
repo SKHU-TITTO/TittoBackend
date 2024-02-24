@@ -17,54 +17,54 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Transactional
-  public void signUp(SignUpDTO signUpDTO, String email) {
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    @Transactional
+    public void signUp(SignUpDTO signUpDTO, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-    user.signupUser(signUpDTO);
-  }
-
-  //유저 정보 불러오기
-  @Transactional(readOnly = true)
-  public UserInfoDTO getUser(String email) {
-    Optional<User> userOptional = userRepository.findByEmail(email);
-    return userOptional.map(UserInfoDTO::new).orElse(null);
-  }
-
-  @Transactional
-  public void updateNickname(String email, UserInfoUpdateDTO requestDTO) {
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-    if (requestDTO.getNewNickname() != null && isDuplicatedNickname(requestDTO.getNewNickname())) {
-      throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+        user.signupUser(signUpDTO);
     }
 
-    if (requestDTO.getNewNickname() != null) {
-      user.setNickname(requestDTO.getNewNickname());
+    //유저 정보 불러오기
+    @Transactional(readOnly = true)
+    public UserInfoDTO getUser(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        return userOptional.map(UserInfoDTO::new).orElse(null);
     }
-  }
 
-  //유저 프로필(한줄소개, 자기소개) 수정
-  @Transactional
-  public void updateUserProfile(String email, UserProfileUpdateDTO userProfileUpdateDTO) {
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    @Transactional
+    public void updateNickname(String email, UserInfoUpdateDTO requestDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-    user.setOneLineIntro(userProfileUpdateDTO.getOneLineIntro());
-    user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
-  }
+        if (requestDTO.getNewNickname() != null && isDuplicatedNickname(requestDTO.getNewNickname())) {
+            throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+        }
 
-  //닉네임 중복 여부
-  public boolean isDuplicatedNickname(String nickname) {
-    return userRepository.existsByNickname(nickname);
-  }
+        if (requestDTO.getNewNickname() != null) {
+            user.setNickname(requestDTO.getNewNickname());
+        }
+    }
 
-  //학번 중복 여부
-  public boolean isDuplicatedStudentNo(String studentNo) {
-    return userRepository.existsByStudentNo(studentNo);
-  }
+    //유저 프로필(한줄소개, 자기소개) 수정
+    @Transactional
+    public void updateUserProfile(String email, UserProfileUpdateDTO userProfileUpdateDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        user.setOneLineIntro(userProfileUpdateDTO.getOneLineIntro());
+        user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
+    }
+
+    //닉네임 중복 여부
+    public boolean isDuplicatedNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    //학번 중복 여부
+    public boolean isDuplicatedStudentNo(String studentNo) {
+        return userRepository.existsByStudentNo(studentNo);
+    }
 }

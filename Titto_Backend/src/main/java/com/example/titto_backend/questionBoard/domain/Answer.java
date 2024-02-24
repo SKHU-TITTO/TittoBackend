@@ -21,26 +21,26 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Answer extends BaseEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "answer_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "answer_id")
+    private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "question_id")
-  private Question question;
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 
-  // 답글 작성자
-  @ManyToOne
-  @JoinColumn(name = "author")
-  private User author;
+    // 답글 작성자
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User author;
 
-  // 답글 내용
-  @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
-  @Setter
-  private String content;
+    // 답글 내용
+    @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
+    @Setter
+    private String content;
 
-  @Column(name = "is_accepted")
-  @Setter
-  private boolean isAccepted;
+    @Column(name = "is_accepted")
+    @Setter
+    private boolean isAccepted;
 }

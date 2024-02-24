@@ -67,13 +67,13 @@ public class Question extends BaseEntity {
         this.status = status;
     }
 
-    //TODO: 이미지, 조회수, 댓글은 나중에 추가
-//  @Column(name = "image_url")
-//  private String imageUrl;
-//
-//  @Column(name = "view")
-//  private int view;
+    @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer viewCount;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
+
+    public void addViewCount() {
+        this.viewCount++;
+    }
 }

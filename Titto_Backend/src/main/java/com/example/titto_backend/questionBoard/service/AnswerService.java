@@ -35,6 +35,7 @@ public class AnswerService {
                 .author(user)
                 .content(request.getContent())
                 .build();
+
         Answer savedAnswer = answerRepository.save(answer);
 
         // 답변을 작성한 사용자의 경험치 추가
@@ -78,13 +79,11 @@ public class AnswerService {
         experienceService.addExperience(questionAuthor, 35 + question.getSendExperience());
     }
 
-
     private void verifyAcceptedAnswer(Long questionId) {
         if (questionRepository.existsByIdAndAcceptedAnswerIsNotNull(questionId)) {
             throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
         }
     }
-
 
     private void validateAuthorIsLoggedInUser(Long id, Long userId) {
         User user = userRepository.findById(userId)

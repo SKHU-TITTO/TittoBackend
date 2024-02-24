@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserInfoUpdateDTO {
-  private String newNickname;
+    private String newNickname;
 }
