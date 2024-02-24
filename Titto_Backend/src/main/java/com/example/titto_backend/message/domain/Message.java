@@ -28,35 +28,35 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Message extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "message_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_id")
+    private Long id;
 
-  // FetchType.LAZY로 바꿔야할지 고민중
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "sender_id")
-  private User sender;
+    // FetchType.LAZY로 바꿔야할지 고민중
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "receiver_id")
-  private User receiver;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
-  @Column(name = "title", nullable = false, length = 100)
-  private String title;
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
 
-  @Column(name = "content", columnDefinition = "TEXT", nullable = false)
-  private String content;
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+    private String content;
 
-  @Column(name = "sent_time")
-  private LocalDateTime sentAt;
+    @Column(name = "sent_time")
+    private LocalDateTime sentAt;
 
-  @Builder
-  public Message(User sender, User receiver, String title, String content) {
-    this.sender = sender;
-    this.receiver = receiver;
-    this.title = title;
-    this.content = content;
-    this.sentAt = LocalDateTime.now();
-  }
+    @Builder
+    public Message(User sender, User receiver, String title, String content) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.title = title;
+        this.content = content;
+        this.sentAt = LocalDateTime.now();
+    }
 }

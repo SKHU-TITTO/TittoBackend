@@ -4,13 +4,21 @@ import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,104 +40,106 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Question Controller", description = "질문 게시판 관련 API")
 public class QuestionController {
 
-  private final QuestionService questionService;
-  private final UserRepository userRepository;
+    private final QuestionService questionService;
+    private final UserRepository userRepository;
 
-  // Create
-  @PostMapping("/create")
-  @Operation(
-          summary = "질문 작성",
-          description = "질문을 작성합니다",
-          responses = {
-                  @ApiResponse(responseCode = "201", description = "질문 작성 성공"),
-                  @ApiResponse(responseCode = "500", description = "관리자 문의")
-          })
-  public ResponseEntity<String> createQuestion(@RequestBody QuestionDTO.Request request,
-                                                             Principal principal) {
-    String email = principal.getName();
-    return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
-  }
-
-  // Read
-  @GetMapping("/posts")
-  @Operation(
-          summary = "질문 목록 조회",
-          description = "질문 목록을 조회합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "요청 성공"),
-                  @ApiResponse(responseCode = "500", description = "관리자 문의")
-          })
-  public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@Parameter(hidden = true) Pageable pageable) {
-    Page<QuestionDTO.Response> questions = questionService.findAll(pageable);
-    return ResponseEntity.ok(questions);
-  }
-
-  @GetMapping("/{postId}")
-  @Operation(
-          summary = "질문 상세 조회",
-          description = "질문 상세 내용을 조회합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "요청 성공"),
-                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-          })
-  public ResponseEntity<QuestionDTO.Response> getQuestionById(@PathVariable("postId") Long postId) {
-    try {
-      QuestionDTO.Response question = questionService.findById(postId);
-      return ResponseEntity.ok(question);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    // Create
+    @PostMapping("/create")
+    @Operation(
+            summary = "질문 작성",
+            description = "질문을 작성합니다",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "질문 작성 성공"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<String> createQuestion(@RequestBody QuestionDTO.Request request,
+                                                 Principal principal) {
+        String email = principal.getName();
+        return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
     }
-  }
 
-  @GetMapping("/category/{category}")
-  @Operation(
-          summary = "카테고리별 질문 조회",
-          description = "카테고리별 질문을 조회합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "요청 성공"),
-                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-          })
-  public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByCategory(@PathVariable("category") String category,
-                                                                           @Parameter(hidden = true) Pageable pageable) {
-    Page<QuestionDTO.Response> questions = questionService.findByCategory(pageable, category);
-    return ResponseEntity.ok(questions);
-  }
+    // Read
+    @GetMapping("/posts")
+    @Operation(
+            summary = "질문 목록 조회",
+            description = "질문 목록을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@Parameter(hidden = true) Pageable pageable) {
+        Page<QuestionDTO.Response> questions = questionService.findAll(pageable);
+        return ResponseEntity.ok(questions);
+    }
 
-  // Update
-  @PutMapping("/{postId}")
-  @Operation(
-          summary = "질문 수정",
-          description = "질문을 수정합니다",
-          responses = {
-                  @ApiResponse(responseCode = "200", description = "질문 수정 성공"),
-                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-          })
-  public ResponseEntity<String> updateQuestion(@PathVariable("postId") Long postId,
-                                               @RequestBody QuestionDTO.Update update) {
+    @GetMapping("/{postId}")
+    @Operation(
+            summary = "질문 상세 조회",
+            description = "질문 상세 내용을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<QuestionDTO.Response> getQuestionById(@PathVariable("postId") Long postId,
+                                                               HttpServletRequest request,
+                                                               HttpServletResponse response) {
+        try {
+            QuestionDTO.Response question = questionService.findById(postId, request, response);
+            return ResponseEntity.ok(question);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
-    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-    User currentUser = userRepository.findByEmail(currentEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    @GetMapping("/category/{category}")
+    @Operation(
+            summary = "카테고리별 질문 조회",
+            description = "카테고리별 질문을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByCategory(@PathVariable("category") String category,
+                                                                             @Parameter(hidden = true) Pageable pageable) {
+        Page<QuestionDTO.Response> questions = questionService.findByCategory(pageable, category);
+        return ResponseEntity.ok(questions);
+    }
 
-    questionService.update(update, postId, currentUser.getId());
+    // Update
+    @PutMapping("/{postId}")
+    @Operation(
+            summary = "질문 수정",
+            description = "질문을 수정합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "질문 수정 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<String> updateQuestion(@PathVariable("postId") Long postId,
+                                                 @RequestBody QuestionDTO.Update update) {
 
-    return ResponseEntity.ok("질문 수정 성공");
-  }
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-  // Delete
-  @DeleteMapping("/{postId}")
-  @Operation(
-          summary = "질문 삭제",
-          description = "질문을 삭제합니다",
-          responses = {
-                  @ApiResponse(responseCode = "204", description = "질문 삭제 성공"),
-                  @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-          })
-  public ResponseEntity<Void> deleteQuestion(@PathVariable("postId") Long postId) {
-    String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 사용자의 이메일 주소 가져오기
-    User currentUser = userRepository.findByEmail(currentEmail)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-    questionService.delete(postId, currentUser.getId()); // 현재 사용자의 ID를 전달하여 삭제 메소드 호출
-    return ResponseEntity.noContent().build();
-  }
+        questionService.update(update, postId, currentUser.getId());
+
+        return ResponseEntity.ok("질문 수정 성공");
+    }
+
+    // Delete
+    @DeleteMapping("/{postId}")
+    @Operation(
+            summary = "질문 삭제",
+            description = "질문을 삭제합니다",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "질문 삭제 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<Void> deleteQuestion(@PathVariable("postId") Long postId) {
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 사용자의 이메일 주소 가져오기
+        User currentUser = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        questionService.delete(postId, currentUser.getId()); // 현재 사용자의 ID를 전달하여 삭제 메소드 호출
+        return ResponseEntity.noContent().build();
+    }
 }

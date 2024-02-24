@@ -84,6 +84,9 @@ public class QuestionDTO {
         @Schema(description = "채택 여부")
         private boolean isAccepted;
 
+        @Schema(description = "조회수")
+        private Integer viewCount;
+
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -94,6 +97,7 @@ public class QuestionDTO {
             this.content = question.getContent();
             this.answerList = question.getAnswers().stream().map(AnswerDTO.Response::new).toList();
             this.isAccepted = question.getAcceptedAnswer() != null;
+            this.viewCount = question.getViewCount();
         }
     }
 
@@ -106,12 +110,14 @@ public class QuestionDTO {
         @Schema(description = "제목")
         @NotBlank
         private String title;
+
         @Schema(description = "내용")
         @NotBlank
         private String content;
-        //    private List<String> imageList;
+
         @Schema(description = "카테고리")
         private Department department;
+
         @Schema(description = "상태")
         private Status status;
     }

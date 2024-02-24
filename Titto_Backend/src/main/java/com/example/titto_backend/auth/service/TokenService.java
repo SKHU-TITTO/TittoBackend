@@ -17,27 +17,27 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class TokenService {
 
-  private final TokenProvider tokenProvider;
-  private final RedisTemplate<String, Object> redisTemplate;
+    private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-  public TokenDTO.ServiceToken refresh(HttpServletRequest request, TokenDTO.ServiceToken dto) {
-    String refreshToken = dto.getRefreshToken();
+    public TokenDTO.ServiceToken refresh(HttpServletRequest request, TokenDTO.ServiceToken dto) {
+        String refreshToken = dto.getRefreshToken();
 
-    String isValidate = (String) redisTemplate.opsForValue().get(refreshToken);
-    if (ObjectUtils.isEmpty(isValidate)) {
-      throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        String isValidate = (String) redisTemplate.opsForValue().get(refreshToken);
+        if (ObjectUtils.isEmpty(isValidate)) {
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+        return tokenProvider.createAccessTokenByRefreshToken(request, refreshToken);
     }
-    return tokenProvider.createAccessTokenByRefreshToken(request, refreshToken);
-  }
 
-  public void logout(HttpServletRequest request, TokenDTO.ServiceToken dto, Principal principal) {
-    String accessToken = tokenProvider.resolveToken(request);
+    public void logout(HttpServletRequest request, TokenDTO.ServiceToken dto, Principal principal) {
+        String accessToken = tokenProvider.resolveToken(request);
 
-    Long expireTime = tokenProvider.getExpiration(accessToken);
+        Long expireTime = tokenProvider.getExpiration(accessToken);
 
-    redisTemplate.opsForValue().set(accessToken, "logout", expireTime, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(accessToken, "logout", expireTime, TimeUnit.MILLISECONDS);
 
-    redisTemplate.delete(dto.getRefreshToken());
-  }
+        redisTemplate.delete(dto.getRefreshToken());
+    }
 }
 

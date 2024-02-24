@@ -10,6 +10,14 @@ import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +44,7 @@ public class QuestionService {
                 .department(Department.valueOf(request.getDepartment().toUpperCase()))
                 .status(Status.valueOf(request.getStatus().toUpperCase()))
                 .sendExperience(request.getSendExperience())
+                .viewCount(0)
                 .build());
         return "질문이 성공적으로 등록되었습니다.";
     }
@@ -45,11 +54,11 @@ public class QuestionService {
         return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
     }
 
-    @Transactional(readOnly = true)
-    public Response findById(Long postId) {
+    @Transactional
+    public Response findById(Long postId, HttpServletRequest request, HttpServletResponse response) {
         Question question = questionRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        System.out.println(question.getAcceptedAnswer());
+        validViewCount(question, request, response);
         return new Response(question);
     }
 
@@ -90,6 +99,35 @@ public class QuestionService {
         if (question.getAuthor().getId().equals(user.getId())) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
+    }
+
+    // 조회수 증가
+    private void validViewCount(Question question, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        System.out.println("cookies = " + Arrays.toString(cookies));
+        Cookie cookie = null;
+        boolean isCookie = false;
+        for (Cookie value : cookies) {
+            if (value.getName().equals("viewCookie")) {
+                cookie = value;
+                if (!cookie.getValue().contains("[" + question.getId() + "]")) {
+                    question.addViewCount();
+                    cookie.setValue(cookie.getValue() + "[" + question.getId() + "]");
+                }
+                isCookie = true;
+                break;
+            }
+        }
+        System.out.println("isCookie = " + isCookie);
+        if (!isCookie) {
+            question.addViewCount();
+            cookie = new Cookie("viewCookie", "[" + question.getId() + "]");
+        }
+        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
+        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        cookie.setPath("/");
+        cookie.setMaxAge((int) (todayEndSecond - currentSecond));
+        response.addCookie(cookie);
     }
 
 }

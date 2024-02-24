@@ -10,12 +10,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SignUpDTO {
 
-  @NotBlank
-  private String name;
-  @NotBlank
-  private String nickname;
-  @NotBlank
-  private String studentNo;
-  @NotBlank
-  private String department;
+    @NotBlank
+    private String name;
+    @NotBlank
+    private String nickname;
+    @NotBlank
+    private String studentNo;
+    @NotBlank
+    private String department;
 }
