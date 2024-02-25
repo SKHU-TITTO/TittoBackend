@@ -59,6 +59,7 @@ public class UserService {
         user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
     }
 
+    // 유저 프로필 조회
     public UserProfileViewDto userProfileView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));

@@ -38,6 +38,17 @@ public class ExperienceService {
         int newCurrentExperience = currentExperience - deductedExperience;
         user.setCurrentExperience(newCurrentExperience);
     }
+
+    @Transactional
+    public void levelUp(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Integer level = user.getLevel();
+
+        if (level < 5) {
+            user.setLevel(level + 1);
+        }
+    }
 }
 
 
