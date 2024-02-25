@@ -16,12 +16,11 @@ import com.example.titto_backend.matchingBoard.repository.review.MatchingPostRev
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +50,8 @@ public class MatchingPostService {
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다"));
 
         Integer reviewCount = matchingPostReviewRepository.findAllByMatchingPost(matchingPost).size();  // 댓글 수
-        // 조회수 업데이트
-        countViews(matchingPost, request, response);
-        matchingPostRepository.save(matchingPost);  // 업데이트된 조회수를 저장합니다.
+        countViews(matchingPost, request, response); // 조회수 업데이트
+        matchingPostRepository.save(matchingPost);
 
         return MatchingPostResponseDto.of(matchingPost, reviewCount);
     }

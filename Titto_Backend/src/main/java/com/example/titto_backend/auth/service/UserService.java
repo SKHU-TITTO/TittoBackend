@@ -2,9 +2,10 @@ package com.example.titto_backend.auth.service;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.dto.request.SignUpDTO;
-import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
 import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
+import com.example.titto_backend.auth.dto.response.UserInfoDTO;
+import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
@@ -56,6 +57,13 @@ public class UserService {
 
         user.setOneLineIntro(userProfileUpdateDTO.getOneLineIntro());
         user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
+    }
+
+    public UserProfileViewDto userProfileView(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return UserProfileViewDto.of(user);
     }
 
     //닉네임 중복 여부
