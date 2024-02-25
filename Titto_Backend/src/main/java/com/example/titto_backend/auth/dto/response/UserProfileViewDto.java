@@ -25,7 +25,7 @@ public class UserProfileViewDto {
     private Integer countAccept;
     private Integer level;
 
-    public static UserProfileViewDto of(User user, Integer level) {
+    public static UserProfileViewDto of(User user) {
         return new UserProfileViewDto(
                 user.getProfile(),
                 user.getName(),
@@ -39,7 +39,7 @@ public class UserProfileViewDto {
                 user.getCurrentExperience(),
                 user.getCountAnswer(),
                 user.getCountAccept(),
-                level
+                user.getLevel()
         );
     }
 

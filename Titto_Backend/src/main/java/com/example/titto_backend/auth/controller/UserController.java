@@ -142,15 +142,15 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<UserProfileViewDto> getUserProfile(@RequestParam Long userId, @RequestParam Integer level) {
-        UserProfileViewDto userProfileViewDto = userService.userProfileView(userId, level);
+    public ResponseEntity<UserProfileViewDto> getUserProfile(@RequestParam Long userId) {
+        UserProfileViewDto userProfileViewDto = userService.userProfileView(userId);
         return new ResponseEntity<>(userProfileViewDto, HttpStatus.OK);
     }
 
     @GetMapping("level/update")
     @Operation(
             summary = "사용자 레벨업",
-            description = "사용자 레벨업 시킵니다",
+            description = "사용자 레벨을 1증가 시킵니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),

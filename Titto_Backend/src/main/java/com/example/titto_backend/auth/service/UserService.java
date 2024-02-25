@@ -60,11 +60,11 @@ public class UserService {
     }
 
     // 유저 프로필 조회
-    public UserProfileViewDto userProfileView(Long userId, Integer level) {
+    public UserProfileViewDto userProfileView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return UserProfileViewDto.of(user, level);
+        return UserProfileViewDto.of(user);
     }
 
     //닉네임 중복 여부
