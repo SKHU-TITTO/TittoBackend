@@ -32,9 +32,7 @@ public class MatchingPostReviewService {
     @Transactional
     public MatchingPostReviewCreateResponseDto createReview(Principal principal,
                                                             MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
-        String userEmail = principal.getName();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = getCurrentUser(principal);
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .matchingPost(matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
@@ -62,9 +60,7 @@ public class MatchingPostReviewService {
     @Transactional
     public MatchingPostReviewUpdateResponseDto updateReview(Principal principal,
                                                             MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
-        String userEmail = principal.getName();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = getCurrentUser(principal);
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .review_id(matchingPostReviewUpdateRequestDto.getReviewId())
@@ -84,5 +80,11 @@ public class MatchingPostReviewService {
                 () -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
         matchingPostReviewRepository.delete(matchingPostReview);
         return MatchingPostReviewDeleteResponseDto.of(reviewId);
+    }
+
+    private User getCurrentUser(Principal principal) {
+        String userEmail = principal.getName();
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }
