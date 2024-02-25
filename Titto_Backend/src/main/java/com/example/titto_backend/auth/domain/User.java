@@ -108,6 +108,10 @@ public class User extends BaseEntity {
     @Column(name = "count_accept")
     private Integer countAccept;  // 채택 개수
 
+    @Setter
+    @Column(name = "level")
+    private Integer level;
+
     @Builder
     public User(String email, String profile, String socialId, SocialType socialType) {
         this.email = email;
@@ -125,5 +129,6 @@ public class User extends BaseEntity {
         this.setCurrentExperience(0);
         this.setCountAnswer(0);
         this.setCountAccept(0);
+        this.setLevel(0);
     }
 }

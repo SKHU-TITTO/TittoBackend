@@ -5,6 +5,7 @@ import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
 import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
 import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
+import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.auth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final ExperienceService experienceService;
 
     @PutMapping("/signup")
     @PreAuthorize("isAuthenticated()")
@@ -140,8 +142,22 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<UserProfileViewDto> getUserProfile(@RequestParam Long userId) {
-        UserProfileViewDto userProfileViewDto = userService.userProfileView(userId);
+    public ResponseEntity<UserProfileViewDto> getUserProfile(@RequestParam Long userId, @RequestParam Integer level) {
+        UserProfileViewDto userProfileViewDto = userService.userProfileView(userId, level);
         return new ResponseEntity<>(userProfileViewDto, HttpStatus.OK);
+    }
+
+    @GetMapping("level/update")
+    @Operation(
+            summary = "사용자 레벨업",
+            description = "사용자 레벨업 시킵니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<String> userLevelUp(@RequestParam Long userId) {
+        experienceService.levelUp(userId);
+        return ResponseEntity.ok("사용자 레벨업이 완료되었습니다");
     }
 }

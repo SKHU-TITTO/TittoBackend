@@ -59,11 +59,12 @@ public class UserService {
         user.setSelfIntro(userProfileUpdateDTO.getSelfIntro());
     }
 
-    public UserProfileViewDto userProfileView(Long userId) {
+    // 유저 프로필 조회
+    public UserProfileViewDto userProfileView(Long userId, Integer level) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return UserProfileViewDto.of(user);
+        return UserProfileViewDto.of(user, level);
     }
 
     //닉네임 중복 여부
