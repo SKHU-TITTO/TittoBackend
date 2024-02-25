@@ -87,6 +87,12 @@ public class QuestionDTO {
         @Schema(description = "조회수")
         private Integer viewCount;
 
+        @Schema(description = "생성 날짜")
+        private LocalDateTime createDate;
+
+        @Schema(description = "수정 날짜")
+        private LocalDateTime updateDate;
+
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -98,6 +104,8 @@ public class QuestionDTO {
             this.answerList = question.getAnswers().stream().map(AnswerDTO.Response::new).toList();
             this.isAccepted = question.getAcceptedAnswer() != null;
             this.viewCount = question.getViewCount();
+            this.createDate = question.getCreateDate();
+            this.updateDate = question.getUpdateDate();
         }
     }
 
