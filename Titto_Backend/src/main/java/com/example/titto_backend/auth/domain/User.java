@@ -100,11 +100,13 @@ public class User extends BaseEntity {
     @Column(name = "current_experience")
     private Integer currentExperience; // 사용자의 현재 경험치
 
+    @Setter
     @Column(name = "count_answer")
-    private Integer countAnswer;
+    private Integer countAnswer;  // 답변 개수
 
+    @Setter
     @Column(name = "count_accept")
-    private Integer countAccept;
+    private Integer countAccept;  // 채택 개수
 
     @Builder
     public User(String email, String profile, String socialId, SocialType socialType) {
@@ -121,5 +123,7 @@ public class User extends BaseEntity {
         this.setDepartment(signUpDTO.getDepartment());
         this.setTotalExperience(0);
         this.setCurrentExperience(0);
+        this.setCountAnswer(0);
+        this.setCountAccept(0);
     }
 }

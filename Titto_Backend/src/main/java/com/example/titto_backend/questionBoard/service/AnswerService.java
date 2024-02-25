@@ -37,6 +37,8 @@ public class AnswerService {
                 .build();
 
         Answer savedAnswer = answerRepository.save(answer);
+        Integer updateUserCountAnswer = user.getCountAnswer() + 1;
+        user.setCountAnswer(updateUserCountAnswer);
 
         // 답변을 작성한 사용자의 경험치 추가
         experienceService.addExperience(user, 20);
@@ -58,6 +60,10 @@ public class AnswerService {
     @Transactional
     public void delete(Long id, Long userId) throws CustomException {
         validateAuthorIsLoggedInUser(id, userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Integer updateCountAnswer = user.getCountAnswer() - 1;
+        user.setCountAnswer(updateCountAnswer);
         answerRepository.deleteById(id);
     }
 
@@ -72,11 +78,11 @@ public class AnswerService {
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
 
-        User questionAuthor = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Integer updateCountAccept = answer.getAuthor().getCountAccept() + 1;
+        answer.getAuthor().setCountAccept(updateCountAccept);
 
         experienceService.deductExperience(answer.getAuthor(), question.getSendExperience());
-        experienceService.addExperience(questionAuthor, 35 + question.getSendExperience());
+        experienceService.addExperience(question.getAuthor(), 35 + question.getSendExperience());
     }
 
     private void verifyAcceptedAnswer(Long questionId) {
