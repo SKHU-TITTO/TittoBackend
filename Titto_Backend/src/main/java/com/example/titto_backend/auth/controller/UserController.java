@@ -1,9 +1,10 @@
 package com.example.titto_backend.auth.controller;
 
 import com.example.titto_backend.auth.dto.request.SignUpDTO;
-import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
 import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
+import com.example.titto_backend.auth.dto.response.UserInfoDTO;
+import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
 import com.example.titto_backend.auth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -128,5 +129,19 @@ public class UserController {
         } else {
             return ResponseEntity.ok("Student number is available");
         }
+    }
+
+    @GetMapping("profile")
+    @Operation(
+            summary = "사용자 프로필 조회",
+            description = "사용자의 프로필을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<UserProfileViewDto> getUserProfile(@RequestParam Long userId) {
+        UserProfileViewDto userProfileViewDto = userService.userProfileView(userId);
+        return new ResponseEntity<>(userProfileViewDto, HttpStatus.OK);
     }
 }
