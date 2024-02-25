@@ -2,6 +2,8 @@ package com.example.titto_backend.matchingBoard.service.matchingBoardReview;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.common.exception.CustomException;
+import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.matchingBoard.dto.request.matchingPostReviewRequest.MatchingPostReviewCreateRequestDto;
@@ -12,14 +14,12 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewRe
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.matchingBoard.repository.review.MatchingPostReviewRepository;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,43 +30,46 @@ public class MatchingPostReviewService {
 
     // 생성
     @Transactional
-    public MatchingPostReviewCreateResponseDto createReview(Principal principal, MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
+    public MatchingPostReviewCreateResponseDto createReview(Principal principal,
+                                                            MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
         String userEmail = principal.getName();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .matchingPost(matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
-                        .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다.")))
+                        .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND)))
                 .reviewAuthor(user)
                 .content(matchingPostReviewCreateRequestDto.getContent())
                 .build();
         return new MatchingPostReviewCreateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
+
     // 조회
     public List<MatchingPostReviewResponseDto> getAllMatchingBoardReviewsByPostId(Long postId) {
         MatchingPost matchingPost = matchingPostRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         List<MatchingPostReview> matchingPostReviews = matchingPostReviewRepository.findAllByMatchingPost(matchingPost);
-        List<MatchingPostReviewResponseDto> responses = new ArrayList<>();
-        for (MatchingPostReview matchingPostReview : matchingPostReviews) {
-            responses.add(new MatchingPostReviewResponseDto(matchingPostReview));
-        }
-        return responses;
+
+        return matchingPostReviews.stream()
+                .map(MatchingPostReviewResponseDto::new)
+                .collect(Collectors.toList());
     }
+
 
     // 수정
     @Transactional
-    public MatchingPostReviewUpdateResponseDto updateReview(Principal principal, MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
+    public MatchingPostReviewUpdateResponseDto updateReview(Principal principal,
+                                                            MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
         String userEmail = principal.getName();
-        User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .review_id(matchingPostReviewUpdateRequestDto.getReviewId())
                 .matchingPost(matchingPostRepository.findById(matchingPostReviewUpdateRequestDto.getPostId())
-                        .orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다.")))
+                        .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND)))
                 .reviewAuthor(user)
                 .content(matchingPostReviewUpdateRequestDto.getContent())
                 .build();
@@ -78,7 +81,7 @@ public class MatchingPostReviewService {
     @Transactional
     public MatchingPostReviewDeleteResponseDto deleteReviewByReviewId(Long reviewId) {
         MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(reviewId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 댓글입니다"));
+                () -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
         matchingPostReviewRepository.delete(matchingPostReview);
         return MatchingPostReviewDeleteResponseDto.of(reviewId);
     }
