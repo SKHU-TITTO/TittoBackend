@@ -60,6 +60,10 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "accepted_answer")
     private Answer acceptedAnswer;
 
+    @Setter
+    @JoinColumn(name = "is_accepted_answer")
+    private boolean isAnswerAccepted;
+
     public void update(String title, String content, Department department, Status status) {
         this.title = title;
         this.content = content;
