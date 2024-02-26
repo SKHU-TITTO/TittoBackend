@@ -65,8 +65,6 @@ public class AnswerService {
         validateAnswerAuthorIsLoggedInUser(id, userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Integer updateCountAnswer = user.getCountAnswer() - 1;
-        user.setCountAnswer(updateCountAnswer);
         answerRepository.deleteById(id);
     }
 
