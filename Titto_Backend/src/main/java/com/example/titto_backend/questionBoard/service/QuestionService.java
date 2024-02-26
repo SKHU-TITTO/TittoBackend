@@ -10,6 +10,7 @@ import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
+import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final AnswerRepository answerRepository;
 
     private final ExperienceService experienceService;
 
@@ -113,7 +115,9 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         isAcceptAnswer(question, user);
-        if (question.getAuthor().getId().equals(user.getId())) {
+
+        answerRepository.deleteAllByQuestion(question);
+        if (!question.getAuthor().getId().equals(user.getId())) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
