@@ -42,6 +42,8 @@ public class QuestionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        if (request.getSendExperience() > user.getTotalExperience()) throw new CustomException(ErrorCode.INSUFFICIENT_EXPERIENCE);
+
         experienceService.deductExperience(user, request.getSendExperience()); // 유저 경험치 차감
 
         questionRepository.save(Question.builder()
