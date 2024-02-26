@@ -99,7 +99,7 @@ public class AnswerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
-        if (answer.getAuthor().getId().equals(user.getId())) {
+        if (!answer.getAuthor().getId().equals(user.getId())) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
