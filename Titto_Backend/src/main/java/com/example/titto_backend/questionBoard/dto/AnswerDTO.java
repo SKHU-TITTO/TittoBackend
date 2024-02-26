@@ -48,6 +48,9 @@ public class AnswerDTO {
         @Schema(description = "채택 여부", defaultValue = "false")
         private boolean isAccepted;
 
+        @Schema(description = "프로필")
+        private String profile;
+
         public Response(Answer answer) {
             this.id = answer.getId();
             this.postId = answer.getQuestion().getId();
@@ -55,6 +58,7 @@ public class AnswerDTO {
             this.authorNickname = answer.getAuthor().getNickname();
             this.content = answer.getContent();
             this.isAccepted = answer.isAccepted();
+            this.profile = answer.getAuthor().getProfile();
         }
     }
 }
