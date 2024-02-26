@@ -36,6 +36,10 @@ public class ExperienceService {
     public void deductExperience(User user, Integer deductedExperience) {
         Integer currentExperience = user.getCurrentExperience();
 
+        if (deductedExperience > currentExperience) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_EXPERIENCE);
+        }
+
         Integer newCurrentExperience = currentExperience - deductedExperience;
         user.setCurrentExperience(newCurrentExperience);
     }
