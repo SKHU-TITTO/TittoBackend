@@ -52,7 +52,7 @@ public class AnswerService {
     //Update
     @Transactional
     public AnswerDTO.Response update(Long id, AnswerDTO.Request request, Long userId) throws CustomException {
-        validateAuthorIsLoggedInUser(id, userId);
+        validateAnswerAuthorIsLoggedInUser(id, userId);
         Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setContent(request.getContent());
@@ -62,7 +62,7 @@ public class AnswerService {
     // Delete
     @Transactional
     public void delete(Long id, Long userId) throws CustomException {
-        validateAuthorIsLoggedInUser(id, userId);
+        validateAnswerAuthorIsLoggedInUser(id, userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Integer updateCountAnswer = user.getCountAnswer() - 1;
@@ -72,7 +72,7 @@ public class AnswerService {
 
     @Transactional
     public void acceptAnswer(Long questionId, Long answerId, Long userId) {
-        validateAuthorIsLoggedInUser(questionId, userId);
+        validateQuestionAuthorIsLoggedInUser(questionId, userId);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         verifyAcceptedAnswer(questionId);
@@ -95,7 +95,7 @@ public class AnswerService {
         }
     }
 
-    private void validateAuthorIsLoggedInUser(Long questionId, Long userId) {
+    private void validateQuestionAuthorIsLoggedInUser(Long questionId, Long userId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         User user = userRepository.findById(userId)
@@ -104,5 +104,16 @@ public class AnswerService {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
+
+    private void validateAnswerAuthorIsLoggedInUser(Long answerId, Long userId) {
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if (!answer.getAuthor().equals(user)) {
+            throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+        }
+    }
+
 
 }
