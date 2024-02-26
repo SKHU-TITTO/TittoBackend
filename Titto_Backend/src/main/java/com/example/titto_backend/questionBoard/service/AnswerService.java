@@ -7,6 +7,7 @@ import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
+import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
@@ -51,7 +52,7 @@ public class AnswerService {
     //Update
     @Transactional
     public AnswerDTO.Response update(Long id, AnswerDTO.Request request, Long userId) throws CustomException {
-        validateAuthorIsLoggedInUser(id, userId);
+        validateAnswerAuthorIsLoggedInUser(id, userId);
         Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setContent(request.getContent());
@@ -61,17 +62,13 @@ public class AnswerService {
     // Delete
     @Transactional
     public void delete(Long id, Long userId) throws CustomException {
-        validateAuthorIsLoggedInUser(id, userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Integer updateCountAnswer = user.getCountAnswer() - 1;
-        user.setCountAnswer(updateCountAnswer);
+        validateAnswerAuthorIsLoggedInUser(id, userId);
         answerRepository.deleteById(id);
     }
 
     @Transactional
     public void acceptAnswer(Long questionId, Long answerId, Long userId) {
-        validateAuthorIsLoggedInUser(questionId, userId);
+        validateQuestionAuthorIsLoggedInUser(questionId, userId);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         verifyAcceptedAnswer(questionId);
@@ -79,7 +76,7 @@ public class AnswerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
-
+        question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
 
         Integer updateCountAccept = answer.getAuthor().getCountAccept() + 1;
@@ -94,7 +91,7 @@ public class AnswerService {
         }
     }
 
-    private void validateAuthorIsLoggedInUser(Long questionId, Long userId) {
+    private void validateQuestionAuthorIsLoggedInUser(Long questionId, Long userId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         User user = userRepository.findById(userId)
@@ -103,5 +100,16 @@ public class AnswerService {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
+
+    private void validateAnswerAuthorIsLoggedInUser(Long answerId, Long userId) {
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        if (!answer.getAuthor().equals(user)) {
+            throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+        }
+    }
+
 
 }
