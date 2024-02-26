@@ -29,9 +29,11 @@ public class AnswerService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+
         Answer answer = Answer.builder()
-                .question(questionRepository.findById(questionId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND)))
+                .question(question)
                 .author(user)
                 .content(request.getContent())
                 .build();
@@ -41,7 +43,7 @@ public class AnswerService {
         user.setCountAnswer(updateUserCountAnswer);
 
         // 답변을 작성한 사용자의 경험치 추가
-        experienceService.addExperience(user, 20);
+        experienceService.addExperience(question.getAuthor(), user, 20);
 
         return new AnswerDTO.Response(savedAnswer);
     }
@@ -78,11 +80,12 @@ public class AnswerService {
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
 
+        question.setAnswerAccepted(true);  // 일단 임시 추가
+
         Integer updateCountAccept = answer.getAuthor().getCountAccept() + 1;
         answer.getAuthor().setCountAccept(updateCountAccept);
 
-        experienceService.deductExperience(answer.getAuthor(), question.getSendExperience());
-        experienceService.addExperience(question.getAuthor(), 35 + question.getSendExperience());
+        experienceService.addExperience(question.getAuthor(), answer.getAuthor(), 35 + question.getSendExperience());
     }
 
     private void verifyAcceptedAnswer(Long questionId) {
