@@ -4,6 +4,7 @@ import com.example.titto_backend.questionBoard.domain.Answer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,6 +52,12 @@ public class AnswerDTO {
         @Schema(description = "프로필")
         private String profile;
 
+        @Schema(description = "생성 날짜")
+        private LocalDateTime createDate;
+
+        @Schema(description = "수정 날짜")
+        private LocalDateTime updateDate;
+
         public Response(Answer answer) {
             this.id = answer.getId();
             this.postId = answer.getQuestion().getId();
@@ -59,6 +66,8 @@ public class AnswerDTO {
             this.content = answer.getContent();
             this.isAccepted = answer.isAccepted();
             this.profile = answer.getAuthor().getProfile();
+            this.createDate = answer.getCreateDate();
+            this.updateDate = answer.getUpdateDate();
         }
     }
 }

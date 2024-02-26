@@ -101,6 +101,7 @@ public class QuestionDTO {
 
         @Schema(description = "줄 포인트")
         private Integer sendExperience;
+
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
