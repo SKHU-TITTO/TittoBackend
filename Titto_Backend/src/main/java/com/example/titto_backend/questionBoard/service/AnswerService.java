@@ -71,7 +71,7 @@ public class AnswerService {
 
     @Transactional
     public void acceptAnswer(Long questionId, Long answerId, Long userId) {
-        validateAuthorIsLoggedInUser(answerId, userId);
+        validateAuthorIsLoggedInUser(questionId, userId);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         verifyAcceptedAnswer(questionId);
@@ -94,12 +94,12 @@ public class AnswerService {
         }
     }
 
-    private void validateAuthorIsLoggedInUser(Long id, Long userId) {
+    private void validateAuthorIsLoggedInUser(Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        if (!question.getAuthor().getId().equals(user.getId())) {
+        if (!question.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
