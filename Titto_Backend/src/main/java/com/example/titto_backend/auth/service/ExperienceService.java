@@ -15,15 +15,20 @@ public class ExperienceService {
 
     // 경험치 추가
     @Transactional
-    public void addExperience(User user, int experienceToAdd) {
-        int currentExperience = user.getCurrentExperience();
-        int totalExperience = user.getTotalExperience();
+    public void addExperience(User questionAuthor, User answerAuthor, int experienceToAdd) {
+        if (questionAuthor != answerAuthor) {
 
-        currentExperience += experienceToAdd;
-        totalExperience += experienceToAdd;
+            int currentExperience = answerAuthor.getCurrentExperience();
+            int totalExperience = answerAuthor.getTotalExperience();
 
-        user.setCurrentExperience(currentExperience);
-        user.setTotalExperience(totalExperience);
+            currentExperience += experienceToAdd;
+            totalExperience += experienceToAdd;
+
+            answerAuthor.setCurrentExperience(currentExperience);
+            answerAuthor.setTotalExperience(totalExperience);
+        } else {
+            throw new CustomException(ErrorCode.CANNOT_ACCEPTED);
+        }
     }
 
     // 경험치 차감

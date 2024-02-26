@@ -19,6 +19,8 @@ public enum ErrorCode {
     ALREADY_ACCEPTED_ANSWER(HttpStatus.BAD_REQUEST, "이미 채택된 답변이 존재합니다."),
     INSUFFICIENT_EXPERIENCE(HttpStatus.BAD_REQUEST, "차감할 경험치가 부족합니다."),
     INVALID_ACCESS(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
+    CANNOT_ACCEPTED(HttpStatus.BAD_REQUEST, "채택이 불가능합니다"),
+    DELETE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "삭제가 불가능합니다"),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 유효하지 않습니다."),
