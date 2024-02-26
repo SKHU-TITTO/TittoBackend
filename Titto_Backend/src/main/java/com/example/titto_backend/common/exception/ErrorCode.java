@@ -15,6 +15,10 @@ public enum ErrorCode {
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "중복된 이메일입니다."),
     DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
     DUPLICATED_STUDENT_NO(HttpStatus.BAD_REQUEST, "중복된 학번입니다."),
+    MISMATCH_AUTHOR(HttpStatus.BAD_REQUEST, "권한이 없습니다."),
+    ALREADY_ACCEPTED_ANSWER(HttpStatus.BAD_REQUEST, "이미 채택된 답변이 존재합니다."),
+    INSUFFICIENT_EXPERIENCE(HttpStatus.BAD_REQUEST, "차감할 경험치가 부족합니다."),
+    INVALID_ACCESS(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 유효하지 않습니다."),
@@ -27,10 +31,9 @@ public enum ErrorCode {
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 프로필 이미지를 찾을 수 없습니다."),
     QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "답변을 찾을 수 없습니다."),
-    MISMATCH_AUTHOR(HttpStatus.BAD_REQUEST, "권한이 없습니다."),
-    ALREADY_ACCEPTED_ANSWER(HttpStatus.BAD_REQUEST, "이미 채택된 답변이 존재합니다."),
-    INSUFFICIENT_EXPERIENCE(HttpStatus.BAD_REQUEST, "차감할 경험치가 부족합니다."),
-    NO_SEARCH_RESULT(HttpStatus.NOT_FOUND, "검색 결과가 없습니다.");
+    NO_SEARCH_RESULT(HttpStatus.NOT_FOUND, "검색 결과가 없습니다."),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

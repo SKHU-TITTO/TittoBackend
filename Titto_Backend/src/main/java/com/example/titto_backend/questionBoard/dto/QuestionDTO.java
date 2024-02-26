@@ -93,6 +93,12 @@ public class QuestionDTO {
         @Schema(description = "수정 날짜")
         private LocalDateTime updateDate;
 
+        @Schema(description = "사용자 레벨")
+        private Integer level;
+
+        @Schema(description = "사용자 레벨")
+        private String profile;
+
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -106,6 +112,8 @@ public class QuestionDTO {
             this.viewCount = question.getViewCount();
             this.createDate = question.getCreateDate();
             this.updateDate = question.getUpdateDate();
+            this.level = question.getAuthor().getLevel();
+            this.profile = question.getAuthor().getProfile();
         }
     }
 
