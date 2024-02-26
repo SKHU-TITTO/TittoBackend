@@ -54,7 +54,8 @@ public class AnswerController {
                     @ApiResponse(responseCode = "200", description = "답변 채택 성공"),
                     @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
             })
-    public ResponseEntity<String> acceptAnswer(Long questionId, @PathVariable("answerId") Long answerId) {
+    public ResponseEntity<String> acceptAnswer(@PathVariable("answerId") Long answerId,
+                                               @RequestBody Long questionId) {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
