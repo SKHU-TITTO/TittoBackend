@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 public class MessageDTO {
     private String title;
     private String content;
-    private Long senderId;
     private Long receiverId;
 
     public static MessageDTO toDto(Message message) {
         return new MessageDTO(
                 message.getTitle(),
                 message.getContent(),
-                message.getSender().getId(),
                 message.getReceiver().getId()
         );
     }
