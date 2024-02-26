@@ -129,6 +129,6 @@ public class User extends BaseEntity {
         this.setCurrentExperience(0);
         this.setCountAnswer(0);
         this.setCountAccept(0);
-        this.setLevel(0);
+        this.setLevel(1);
     }
 }

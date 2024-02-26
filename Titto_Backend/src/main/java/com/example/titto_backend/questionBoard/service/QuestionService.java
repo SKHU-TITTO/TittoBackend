@@ -63,8 +63,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public Response findById(Long postId, HttpServletRequest request, HttpServletResponse response) {
-        Question question = questionRepository.findById(postId)
+    public Response findById(Long Id, HttpServletRequest request, HttpServletResponse response) {
+        Question question = questionRepository.findById(Id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         validViewCount(question, request, response);
         return new Response(question);

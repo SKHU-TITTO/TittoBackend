@@ -97,9 +97,9 @@ public class AnswerService {
     private void validateAuthorIsLoggedInUser(Long id, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Answer answer = answerRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
-        if (!answer.getAuthor().getId().equals(user.getId())) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+        if (!question.getAuthor().getId().equals(user.getId())) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
