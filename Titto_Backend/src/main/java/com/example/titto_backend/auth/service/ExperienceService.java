@@ -33,14 +33,14 @@ public class ExperienceService {
 
     // 경험치 차감
     @Transactional
-    public void deductExperience(User user, int deductedExperience) {
+    public void deductExperience(User user, Integer deductedExperience) {
         Integer currentExperience = user.getCurrentExperience();
 
         if (deductedExperience > currentExperience) {
             throw new CustomException(ErrorCode.INSUFFICIENT_EXPERIENCE);
         }
 
-        int newCurrentExperience = currentExperience - deductedExperience;
+        Integer newCurrentExperience = currentExperience - deductedExperience;
         user.setCurrentExperience(newCurrentExperience);
     }
 
