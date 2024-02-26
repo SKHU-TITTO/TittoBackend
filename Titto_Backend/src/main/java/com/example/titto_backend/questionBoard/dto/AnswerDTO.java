@@ -58,6 +58,9 @@ public class AnswerDTO {
         @Schema(description = "수정 날짜")
         private LocalDateTime updateDate;
 
+        @Schema(description = "사용자 레벨")
+        private Integer level;
+
         public Response(Answer answer) {
             this.id = answer.getId();
             this.postId = answer.getQuestion().getId();
@@ -68,6 +71,7 @@ public class AnswerDTO {
             this.profile = answer.getAuthor().getProfile();
             this.createDate = answer.getCreateDate();
             this.updateDate = answer.getUpdateDate();
+            this.level = answer.getAuthor().getLevel();
         }
     }
 }
