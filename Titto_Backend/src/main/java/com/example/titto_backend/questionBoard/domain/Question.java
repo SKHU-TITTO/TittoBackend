@@ -38,6 +38,7 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "author")
     private User author;
 
+    @Setter
     @Column(name = "status")
     private Status status;
 

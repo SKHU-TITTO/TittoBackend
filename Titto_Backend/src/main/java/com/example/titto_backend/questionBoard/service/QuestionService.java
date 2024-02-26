@@ -49,7 +49,7 @@ public class QuestionService {
                 .author(user)
                 .content(request.getContent())
                 .department(Department.valueOf(request.getDepartment().toUpperCase()))
-                .status(Status.valueOf(request.getStatus().toUpperCase()))
+                .status(Status.valueOf("UNSOLVED"))
                 .sendExperience(request.getSendExperience())
                 .viewCount(0)
                 .isAnswerAccepted(false)

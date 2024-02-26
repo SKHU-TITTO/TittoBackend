@@ -7,6 +7,7 @@ import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
+import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
@@ -79,7 +80,7 @@ public class AnswerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setAccepted(true);
         question.setAcceptedAnswer(answer);
-
+        question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
 
         Integer updateCountAccept = answer.getAuthor().getCountAccept() + 1;
