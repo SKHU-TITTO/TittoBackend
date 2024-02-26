@@ -63,8 +63,6 @@ public class AnswerService {
     @Transactional
     public void delete(Long id, Long userId) throws CustomException {
         validateAnswerAuthorIsLoggedInUser(id, userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         answerRepository.deleteById(id);
     }
 
