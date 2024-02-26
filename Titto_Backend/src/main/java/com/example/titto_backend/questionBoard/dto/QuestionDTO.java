@@ -99,6 +99,8 @@ public class QuestionDTO {
         @Schema(description = "사용자 레벨")
         private String profile;
 
+        @Schema(description = "줄 포인트")
+        private Integer sendExperience;
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -114,6 +116,7 @@ public class QuestionDTO {
             this.updateDate = question.getUpdateDate();
             this.level = question.getAuthor().getLevel();
             this.profile = question.getAuthor().getProfile();
+            this.sendExperience = question.getSendExperience();
         }
     }
 
