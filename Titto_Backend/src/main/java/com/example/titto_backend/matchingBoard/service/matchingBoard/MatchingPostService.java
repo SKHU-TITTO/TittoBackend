@@ -109,6 +109,7 @@ public class MatchingPostService {
         if (postViewsCookie == null) {
             postViewsCookie = new Cookie("postViews", postId);
         } else {
+            // 쿠키가 null이 아닌 경우에도 현재 게시물을 확인하여 포함되어 있지 않으면 값을 업데이트합니다.
             if (!postViewsCookie.getValue().contains(postId)) {
                 postViewsCookie.setValue(postViewsCookie.getValue() + postId);
             }
@@ -117,6 +118,7 @@ public class MatchingPostService {
         postViewsCookie.setMaxAge(60 * 60 * 24);
         response.addCookie(postViewsCookie);
     }
+
 
     public void updatePostViews(HttpServletRequest request, HttpServletResponse response, Long matchingPostId) {
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
