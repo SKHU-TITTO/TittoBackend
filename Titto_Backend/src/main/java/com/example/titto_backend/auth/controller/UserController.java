@@ -150,7 +150,7 @@ public class UserController {
     @GetMapping("level/update")
     @Operation(
             summary = "사용자 레벨업",
-            description = "사용자 레벨을 1증가 시킵니다",
+            description = "사용자 레벨을 1 증가 시킵니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
