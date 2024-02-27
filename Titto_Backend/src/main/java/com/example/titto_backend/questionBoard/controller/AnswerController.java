@@ -59,7 +59,7 @@ public class AnswerController {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        answerService.acceptAnswer(questionId, answerId, currentUser.getId());
+        answerService.acceptAnswer(questionId, answerId, currentUser);
         return ResponseEntity.ok("답변 채택 성공");
     }
 
@@ -76,7 +76,7 @@ public class AnswerController {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return ResponseEntity.ok(answerService.update(answerId, request, currentUser.getId()));
+        return ResponseEntity.ok(answerService.update(answerId, request, currentUser));
     }
 
     @DeleteMapping("/{answerId}")
@@ -91,7 +91,7 @@ public class AnswerController {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        answerService.delete(answerId, currentUser.getId());
+        answerService.delete(answerId, currentUser);
         return ResponseEntity.noContent().build();
     }
 

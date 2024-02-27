@@ -5,6 +5,7 @@ import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Department;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +37,7 @@ public class QuestionService {
     private final AnswerRepository answerRepository;
 
     private final ExperienceService experienceService;
+    private final AnswerService answerService;
 
     //Create
     @Transactional
@@ -95,6 +98,17 @@ public class QuestionService {
     @Transactional
     public void delete(Long id, Long userId) {
         validateAuthorIsLoggedInUser(id, userId);
+
+        // 질문에 연관된 답변들을 가져옴
+        List<Answer> answers = answerRepository.findByQuestionId(id);
+
+        // 답변들을 하나씩 삭제
+        answers.forEach(answer -> {
+            User answerAuthor = answer.getAuthor();
+            answerService.delete(answer.getId(), answerAuthor);
+        });
+
+        // 질문 삭제
         questionRepository.deleteById(id);
     }
 
@@ -116,8 +130,7 @@ public class QuestionService {
 
         isAcceptAnswer(question, user);
 
-        answerRepository.deleteAllByQuestion(question);
-        if (!question.getAuthor().getId().equals(user.getId())) {
+        if (!question.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }

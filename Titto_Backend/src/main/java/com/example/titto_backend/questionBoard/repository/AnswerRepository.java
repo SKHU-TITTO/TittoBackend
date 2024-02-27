@@ -10,4 +10,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     void deleteAllByQuestion(Question question);
 
     List<Answer> findAnswerByAuthor(User user);
+
+    List<Answer> findByQuestionId(Long questionId);
 }

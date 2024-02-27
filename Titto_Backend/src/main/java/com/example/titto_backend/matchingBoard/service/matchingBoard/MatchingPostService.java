@@ -44,7 +44,7 @@ public class MatchingPostService {
     // 게시물 조회
     @Transactional(readOnly = true)
     public MatchingPostResponseDto findByMatchingPostId(Long matchingPostId, HttpServletRequest request,
-                                            HttpServletResponse response) {
+                                                        HttpServletResponse response) {
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
         Integer reviewCount = matchingPostReviewRepository.countByMatchingPost(matchingPost);
         countViews(matchingPost, request, response);
