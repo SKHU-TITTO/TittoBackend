@@ -72,9 +72,6 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer reviewCount;
 
-    public void updateViewCount() {
-        this.viewCount++;
-    }
 
     @PrePersist
     public void prePersist() {
@@ -88,12 +85,17 @@ public class MatchingPost extends BaseEntity {
         this.content = content;
         this.status = status;
     }
+    // 조회 수 증가
+    public void updateViewCount() {
+        this.viewCount++;
+    }
 
+    // 댓글 수 증가
     public void increaseReviewCount() {
         this.reviewCount++;
     }
 
-    // 댓글 수를 감소시키는 메소드
+    // 댓글 수를 감소
     public void decreaseReviewCount() {
         if (this.reviewCount != null && this.reviewCount > 0) {
             this.reviewCount--;
