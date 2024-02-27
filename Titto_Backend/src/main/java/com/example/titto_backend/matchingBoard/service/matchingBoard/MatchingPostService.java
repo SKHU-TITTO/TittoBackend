@@ -41,7 +41,7 @@ public class MatchingPostService {
     }
 
     // 게시물 조회
-    @Transactional(readOnly = true)
+    @Transactional
     public MatchingPostResponseDto findByMatchingPostId(Long matchingPostId, HttpServletRequest request,
                                                         HttpServletResponse response) {
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
@@ -96,10 +96,12 @@ public class MatchingPostService {
             if (cookie != null) {
                 if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
                     matchingPost.updateViewCount();
+                    matchingPostRepository.save(matchingPost);
                     cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
                 }
             } else {
                 matchingPost.updateViewCount();
+                matchingPostRepository.save(matchingPost);
                 cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
             }
             response.addCookie(setCookieValue(cookie));
@@ -109,7 +111,7 @@ public class MatchingPostService {
     // 쿠키 설정
     private Cookie setCookieValue(Cookie cookie) {
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
+        cookie.setMaxAge(1);
         return cookie;
     }
 

@@ -60,9 +60,9 @@ public class MatchingPostController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<MatchingPostResponseDto> getMatchingPostByMatchingPostId(@PathVariable Long matchingPostId,
-                                                                                   HttpServletRequest request,
-                                                                                   HttpServletResponse response) {
+    public ResponseEntity<MatchingPostResponseDto> findMatchingPostByMatchingPostId(@PathVariable Long matchingPostId,
+                                                                                    HttpServletRequest request,
+                                                                                    HttpServletResponse response) {
         MatchingPostResponseDto responseDto = matchingPostService.findByMatchingPostId(matchingPostId, request,
                 response);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
