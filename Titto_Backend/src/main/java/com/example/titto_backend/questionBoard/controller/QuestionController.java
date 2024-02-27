@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -61,8 +62,8 @@ public class QuestionController {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@Parameter(hidden = true) Pageable pageable) {
-        Page<QuestionDTO.Response> questions = questionService.findAll(pageable);
+    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@RequestParam(defaultValue = "0") int page) {
+        Page<QuestionDTO.Response> questions = questionService.findAll(page);
         return ResponseEntity.ok(questions);
     }
 
