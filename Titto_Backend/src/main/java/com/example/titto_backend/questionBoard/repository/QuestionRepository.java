@@ -16,4 +16,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     boolean existsByIdAndAcceptedAnswerIsNotNull(Long id); // 채택된 답변이 있는지 확인
 
     List<Question> findQuestionByAuthor(User user);
+
+
 }

@@ -2,7 +2,6 @@ package com.example.titto_backend.questionBoard.dto;
 
 import com.example.titto_backend.questionBoard.domain.Department;
 import com.example.titto_backend.questionBoard.domain.Question;
-import com.example.titto_backend.questionBoard.domain.Status;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -137,8 +136,5 @@ public class QuestionDTO {
 
         @Schema(description = "카테고리")
         private Department department;
-
-        @Schema(description = "상태")
-        private Status status;
     }
 }
