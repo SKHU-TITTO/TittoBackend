@@ -36,7 +36,7 @@ public class Answer extends BaseEntity {
     private User author;
 
     // 답글 내용
-    @Column(name = "answer_content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "answer_content", nullable = false, columnDefinition = "LONGTEXT")
     @Setter
     private String content;
 
