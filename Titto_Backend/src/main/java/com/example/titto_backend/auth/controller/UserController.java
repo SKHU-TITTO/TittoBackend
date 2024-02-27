@@ -10,6 +10,7 @@ import com.example.titto_backend.auth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -159,5 +161,33 @@ public class UserController {
     public ResponseEntity<String> userLevelUp(@RequestParam Long userId) {
         experienceService.levelUp(userId);
         return ResponseEntity.ok("사용자 레벨업이 완료되었습니다");
+    }
+
+    @GetMapping("/posts/{userId}")
+    @Operation(
+            summary = "사용자 작성 글 보기",
+            description = "사용자가 작성한 게시글을 볼 수 있습니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<List<Object>> getUserPosts(@PathVariable Long userId) {
+        List<Object> userPosts = userService.userPostsView(userId);
+        return new ResponseEntity<>(userPosts, HttpStatus.OK);
+    }
+
+    @GetMapping("/answers/{userId}")
+    @Operation(
+            summary = "사용자 작성 답글 보기",
+            description = "사용자가 작성한 답들을 볼 수 있습니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public ResponseEntity<List<Object>> getUserAnswers(@PathVariable Long userId) {
+        List<Object> userAnswers = userService.userAnswerView(userId);
+        return new ResponseEntity<>(userAnswers, HttpStatus.OK);
     }
 }
