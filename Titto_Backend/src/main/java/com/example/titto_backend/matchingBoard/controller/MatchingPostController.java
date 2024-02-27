@@ -95,9 +95,10 @@ public class MatchingPostController {
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
     public ResponseEntity<MatchingPostDeleteResponseDto> deleteMatchingPostByMatchingPostId(
-            @PathVariable Long matchingPostId) {
+            @PathVariable Long matchingPostId,
+            Principal principal) {
         MatchingPostDeleteResponseDto responseDto = matchingPostService.deleteMatchingPostByMatchingPostId(
-                matchingPostId);
+                matchingPostId, principal);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
