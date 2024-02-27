@@ -61,7 +61,8 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Response> findAll(Pageable pageable) {
+    public Page<Response> findAll(int page) {
+        Pageable pageable = Pageable.ofSize(10).withPage(page);
         return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
     }
 
