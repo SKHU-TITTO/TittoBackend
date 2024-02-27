@@ -65,11 +65,10 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "is_accepted_answer")
     private boolean isAnswerAccepted;
 
-    public void update(String title, String content, Department department, Status status) {
+    public void update(String title, String content, Department department) {
         this.title = title;
         this.content = content;
         this.department = department;
-        this.status = status;
     }
 
     @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")

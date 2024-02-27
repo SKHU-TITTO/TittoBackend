@@ -82,22 +82,22 @@ public class QuestionService {
 
     // Update
     @Transactional
-    public void update(QuestionDTO.Update update, Long id, Long userId) throws CustomException {
-        validateAuthorIsLoggedInUser(id, userId);
+    public void update(QuestionDTO.Update update, Long id, User user) throws CustomException {
+        validateAuthorIsLoggedInUser(id, user);
         Question oldQuestion = questionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+
         oldQuestion.update(
                 update.getTitle(),
                 update.getContent(),
-                Department.valueOf(String.valueOf(update.getDepartment())),
-                Status.valueOf(String.valueOf(update.getStatus()))
+                Department.valueOf(String.valueOf(update.getDepartment()))
         );
     }
 
     // Delete
     @Transactional
-    public void delete(Long id, Long userId) {
-        validateAuthorIsLoggedInUser(id, userId);
+    public void delete(Long id, User user) {
+        validateAuthorIsLoggedInUser(id, user);
 
         // 질문에 연관된 답변들을 가져옴
         List<Answer> answers = answerRepository.findByQuestionId(id);
@@ -122,9 +122,7 @@ public class QuestionService {
     }
 
     // 글을 쓴 사람과 현재 로그인한 사람이 같은지 확인
-    private void validateAuthorIsLoggedInUser(Long id, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    private void validateAuthorIsLoggedInUser(Long id, User user) {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 

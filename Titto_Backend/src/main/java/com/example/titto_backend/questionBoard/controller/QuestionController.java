@@ -4,21 +4,15 @@ import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
-import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,8 +75,8 @@ public class QuestionController {
                     @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
             })
     public ResponseEntity<QuestionDTO.Response> getQuestionById(@PathVariable("postId") Long postId,
-                                                               HttpServletRequest request,
-                                                               HttpServletResponse response) {
+                                                                HttpServletRequest request,
+                                                                HttpServletResponse response) {
         try {
             QuestionDTO.Response question = questionService.findById(postId, request, response);
             return ResponseEntity.ok(question);
@@ -121,7 +115,7 @@ public class QuestionController {
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        questionService.update(update, postId, currentUser.getId());
+        questionService.update(update, postId, currentUser);
 
         return ResponseEntity.ok("질문 수정 성공");
     }
@@ -139,7 +133,7 @@ public class QuestionController {
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 사용자의 이메일 주소 가져오기
         User currentUser = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        questionService.delete(postId, currentUser.getId()); // 현재 사용자의 ID를 전달하여 삭제 메소드 호출
+        questionService.delete(postId, currentUser); // 현재 사용자의 ID를 전달하여 삭제 메소드 호출
         return ResponseEntity.noContent().build();
     }
 }
