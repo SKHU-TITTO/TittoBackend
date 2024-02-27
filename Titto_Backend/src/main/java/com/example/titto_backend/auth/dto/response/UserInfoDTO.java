@@ -14,6 +14,7 @@ public class UserInfoDTO {
     private String socialType;
     private Integer totalExperience;
     private Integer currentExperience;
+    private Integer level;
 
     public UserInfoDTO(User user) {
         this.Id = user.getId();
@@ -23,5 +24,6 @@ public class UserInfoDTO {
         this.socialType = user.getSocialType().toString();
         this.totalExperience = user.getTotalExperience();
         this.currentExperience = user.getCurrentExperience();
+        this.level = user.getLevel();
     }
 }
