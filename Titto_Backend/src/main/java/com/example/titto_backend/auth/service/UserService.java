@@ -76,7 +76,7 @@ public class UserService {
         List<MatchingPost> matchingPosts = matchingPostRepository.findMatchingPostByUser(user);
         List<Question> questions = questionRepository.findQuestionByAuthor(user);
         List<Answer> answers = answerRepository.findAnswerByAuthor(user);
-        return UserProfileViewDto.of(user, matchingPosts, questions,answers);
+        return UserProfileViewDto.of(user, matchingPosts, questions, answers);
     }
 
     //닉네임 중복 여부
