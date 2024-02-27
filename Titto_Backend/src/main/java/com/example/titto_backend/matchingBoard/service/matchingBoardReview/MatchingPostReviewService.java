@@ -7,6 +7,7 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.matchingBoard.dto.request.matchingPostReviewRequest.MatchingPostReviewCreateRequestDto;
+import com.example.titto_backend.matchingBoard.dto.request.matchingPostReviewRequest.MatchingPostReviewDeleteRequestDto;
 import com.example.titto_backend.matchingBoard.dto.request.matchingPostReviewRequest.MatchingPostReviewUpdateRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewCreateResponseDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostReviewResponse.MatchingPostReviewDeleteResponseDto;
@@ -34,9 +35,12 @@ public class MatchingPostReviewService {
                                                             MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
         User user = getCurrentUser(principal);
 
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        matchingPost.increaseReviewCount();
+
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
-                .matchingPost(matchingPostRepository.findById(matchingPostReviewCreateRequestDto.getPostId())
-                        .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND)))
+                .matchingPost(matchingPost)
                 .reviewAuthor(user)
                 .content(matchingPostReviewCreateRequestDto.getContent())
                 .build();
@@ -61,6 +65,7 @@ public class MatchingPostReviewService {
     public MatchingPostReviewUpdateResponseDto updateReview(Principal principal,
                                                             MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
         User user = getCurrentUser(principal);
+        validateMatchingPostReviewAuthorIsLoggedInUser(matchingPostReviewUpdateRequestDto.getReviewId(), user);
 
         MatchingPostReview matchingPostReview = MatchingPostReview.builder()
                 .review_id(matchingPostReviewUpdateRequestDto.getReviewId())
@@ -75,16 +80,35 @@ public class MatchingPostReviewService {
 
     // 삭제
     @Transactional
-    public MatchingPostReviewDeleteResponseDto deleteReviewByReviewId(Long reviewId) {
-        MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(reviewId).orElseThrow(
+    public MatchingPostReviewDeleteResponseDto deleteReviewByReviewId(
+            MatchingPostReviewDeleteRequestDto matchingPostReviewDeleteRequestDto,
+            Principal principal) {
+        User user = getCurrentUser(principal);
+        validateMatchingPostReviewAuthorIsLoggedInUser(matchingPostReviewDeleteRequestDto.getReviewId(), user);
+
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostReviewDeleteRequestDto.getReviewId())
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        matchingPost.decreaseReviewCount();
+
+        MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(
+                matchingPostReviewDeleteRequestDto.getReviewId()).orElseThrow(
                 () -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
         matchingPostReviewRepository.delete(matchingPostReview);
-        return MatchingPostReviewDeleteResponseDto.of(reviewId);
+
+        return MatchingPostReviewDeleteResponseDto.of(matchingPostReviewDeleteRequestDto.getReviewId());
     }
 
     private User getCurrentUser(Principal principal) {
         String userEmail = principal.getName();
         return userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private void validateMatchingPostReviewAuthorIsLoggedInUser(Long reviewId, User user) {
+        MatchingPostReview matchingPostReview = matchingPostReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        if (!matchingPostReview.getReviewAuthor().equals(user)) {
+            throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+        }
     }
 }

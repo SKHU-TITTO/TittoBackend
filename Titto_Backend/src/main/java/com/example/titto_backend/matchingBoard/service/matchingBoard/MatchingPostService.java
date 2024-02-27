@@ -37,7 +37,6 @@ public class MatchingPostService {
         User user = getCurrentUser(principal);
         MatchingPost matchingPost = matchingPostCreateRequestDto.toEntity(user);
         matchingPostRepository.save(matchingPost);
-
         return MatchingPostCreateResponseDto.of(matchingPost);
     }
 
@@ -46,14 +45,16 @@ public class MatchingPostService {
     public MatchingPostResponseDto findByMatchingPostId(Long matchingPostId, HttpServletRequest request,
                                                         HttpServletResponse response) {
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
-        Integer reviewCount = matchingPostReviewRepository.countByMatchingPost(matchingPost);
         countViews(matchingPost, request, response);
-        return MatchingPostResponseDto.of(matchingPost, reviewCount);
+        return MatchingPostResponseDto.of(matchingPost);
     }
 
     // 게시물 삭제
     @Transactional
-    public MatchingPostDeleteResponseDto deleteMatchingPostByMatchingPostId(Long matchingPostId) {
+    public MatchingPostDeleteResponseDto deleteMatchingPostByMatchingPostId(Long matchingPostId, Principal principal) {
+        User user = getCurrentUser(principal);
+        validateMatchingPostAuthorIsLoggedInUser(matchingPostId, user);
+
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
 
         matchingPostReviewRepository.deleteAllByMatchingPost(matchingPost);
@@ -65,29 +66,22 @@ public class MatchingPostService {
     @Transactional
     public MatchingPostUpdateResponseDto updateMatchingPost(Long matchingPostId, Principal principal,
                                                             MatchingPostUpdateRequestDto matchingPostUpdateRequestDto) {
+        User user = getCurrentUser(principal);
+        validateMatchingPostAuthorIsLoggedInUser(matchingPostId, user);
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
 
-        User user = getCurrentUser(principal);
-        Integer reviewCount = matchingPostReviewRepository.countByMatchingPost(matchingPost);
-
-        if (user.getNickname().equals(matchingPost.getUser().getNickname())) {
-            // 게시물 내용 수정
-            matchingPost.update(
-                    Category.valueOf(matchingPostUpdateRequestDto.getCategory()),
-                    matchingPostUpdateRequestDto.getTitle(),
-                    matchingPostUpdateRequestDto.getContent(),
-                    Status.valueOf(matchingPostUpdateRequestDto.getStatus())
-            );
-
-            return MatchingPostUpdateResponseDto.of(
-                    matchingPost,
-                    reviewCount);
-        } else {
-            throw new CustomException(ErrorCode.INVALID_ACCESS);
-        }
+        // 게시물 내용 수정
+        matchingPost.update(
+                Category.valueOf(matchingPostUpdateRequestDto.getCategory()),
+                matchingPostUpdateRequestDto.getTitle(),
+                matchingPostUpdateRequestDto.getContent(),
+                Status.valueOf(matchingPostUpdateRequestDto.getStatus())
+        );
+        return MatchingPostUpdateResponseDto.of(matchingPost);
     }
 
-    private void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
+    @Transactional
+    public void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = null;
         Cookie[] cookies = request.getCookies();
         if (matchingPost != null) {
@@ -102,12 +96,10 @@ public class MatchingPostService {
             if (cookie != null) {
                 if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
                     matchingPost.updateViewCount();
-                    matchingPostRepository.save(matchingPost);
                     cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
                 }
             } else {
                 matchingPost.updateViewCount();
-                matchingPostRepository.save(matchingPost);
                 cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
             }
             response.addCookie(setCookieValue(cookie));
@@ -131,6 +123,14 @@ public class MatchingPostService {
     private MatchingPost findMatchingPostById(Long matchingPostId) {
         return matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    private void validateMatchingPostAuthorIsLoggedInUser(Long postId, User user) {
+        MatchingPost matchingPost = matchingPostRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        if (!matchingPost.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
+        }
     }
 }
 

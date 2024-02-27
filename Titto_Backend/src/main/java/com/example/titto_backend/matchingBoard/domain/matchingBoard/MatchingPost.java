@@ -46,8 +46,6 @@ public class MatchingPost extends BaseEntity {
     private MatchingBoard matchingBoard;
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
-//    @Convert(converter = CategoryToIntegerConverter.class)
-
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -70,8 +68,9 @@ public class MatchingPost extends BaseEntity {
     private Integer viewCount;
 
     // 댓글 수
+    @Setter
     @Column(name = "review_count", columnDefinition = "integer default 0")
-    private Integer review_count;
+    private Integer reviewCount;
 
     public void updateViewCount() {
         this.viewCount++;
@@ -80,7 +79,7 @@ public class MatchingPost extends BaseEntity {
     @PrePersist
     public void prePersist() {
         this.viewCount = this.viewCount == null ? 0 : this.viewCount;
-        this.review_count = this.review_count == null ? 0 : this.review_count;
+        this.reviewCount = this.reviewCount == null ? 0 : this.reviewCount;
     }
 
     public void update(Category category, String title, String content, Status status) {
@@ -89,4 +88,16 @@ public class MatchingPost extends BaseEntity {
         this.content = content;
         this.status = status;
     }
+
+    public void increaseReviewCount() {
+        this.reviewCount++;
+    }
+
+    // 댓글 수를 감소시키는 메소드
+    public void decreaseReviewCount() {
+        if (this.reviewCount != null && this.reviewCount > 0) {
+            this.reviewCount--;
+        }
+    }
+
 }

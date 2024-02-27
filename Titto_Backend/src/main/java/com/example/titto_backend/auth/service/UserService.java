@@ -9,12 +9,11 @@ import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
-import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.questionBoard.domain.Answer;
-import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -73,10 +72,31 @@ public class UserService {
     public UserProfileViewDto userProfileView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<MatchingPost> matchingPosts = matchingPostRepository.findMatchingPostByUser(user);
-        List<Question> questions = questionRepository.findQuestionByAuthor(user);
+        return UserProfileViewDto.of(user);
+    }
+
+    // 유저 작성 글 보기
+    public List<Object> userPostsView(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<Object> userPosts = new ArrayList<>(matchingPostRepository.findMatchingPostByUser(user));
+
+        userPosts.addAll(questionRepository.findQuestionByAuthor(user)
+                .stream()
+                .toList());
+
+        return userPosts;
+    }
+
+    // 유저 작성 답글 보기
+    public List<Object> userAnswerView(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         List<Answer> answers = answerRepository.findAnswerByAuthor(user);
-        return UserProfileViewDto.of(user, matchingPosts, questions, answers);
+
+        return new ArrayList<>(answers);
     }
 
     //닉네임 중복 여부

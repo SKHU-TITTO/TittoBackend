@@ -1,12 +1,11 @@
 package com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse;
 
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -26,8 +25,7 @@ public class MatchingPostUpdateResponseDto {
     private LocalDateTime updateDate;
 
     public static MatchingPostUpdateResponseDto of(
-            MatchingPost matchingPost,
-            Integer reviewCount) {
+            MatchingPost matchingPost) {
         return new MatchingPostUpdateResponseDto(matchingPost.getMatchingPostId(),
                 matchingPost.getUser().getNickname(),
                 matchingPost.getUser().getProfile(),
@@ -36,7 +34,7 @@ public class MatchingPostUpdateResponseDto {
                 matchingPost.getTitle(),
                 matchingPost.getContent(),
                 matchingPost.getViewCount(),
-                reviewCount,
+                matchingPost.getReviewCount(),
                 matchingPost.getUpdateDate());
     }
 }
