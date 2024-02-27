@@ -9,6 +9,11 @@ import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
+import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
+import com.example.titto_backend.questionBoard.domain.Answer;
+import com.example.titto_backend.questionBoard.repository.AnswerRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final MatchingPostRepository matchingPostRepository;
+    private final AnswerRepository answerRepository;
 
     @Transactional
     public void signUp(SignUpDTO signUpDTO, String email) {
@@ -63,8 +70,9 @@ public class UserService {
     public UserProfileViewDto userProfileView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        return UserProfileViewDto.of(user);
+        List<MatchingPost> matchingPost = matchingPostRepository.findMatchingPostByUser(user);
+        List<Answer> answers = answerRepository.findAnswerByAuthor(user);
+        return UserProfileViewDto.of(user, matchingPost, answers);
     }
 
     //닉네임 중복 여부

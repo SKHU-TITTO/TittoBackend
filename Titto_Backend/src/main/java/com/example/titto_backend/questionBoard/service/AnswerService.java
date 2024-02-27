@@ -51,8 +51,8 @@ public class AnswerService {
 
     //Update
     @Transactional
-    public AnswerDTO.Response update(Long id, AnswerDTO.Request request, Long userId) throws CustomException {
-        validateAnswerAuthorIsLoggedInUser(id, userId);
+    public AnswerDTO.Response update(Long id, AnswerDTO.Request request, User user) throws CustomException {
+        validateAnswerAuthorIsLoggedInUser(id, user);
         Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setContent(request.getContent());
@@ -61,14 +61,15 @@ public class AnswerService {
 
     // Delete
     @Transactional
-    public void delete(Long id, Long userId) throws CustomException {
-        validateAnswerAuthorIsLoggedInUser(id, userId);
+    public void delete(Long id, User user) throws CustomException {
+        validateAnswerAuthorIsLoggedInUser(id, user);
+        user.setCountAnswer(user.getCountAnswer() - 1);  // 유저 답변 수 1 감소
         answerRepository.deleteById(id);
     }
 
     @Transactional
-    public void acceptAnswer(Long questionId, Long answerId, Long userId) {
-        validateQuestionAuthorIsLoggedInUser(questionId, userId);
+    public void acceptAnswer(Long questionId, Long answerId, User user) {
+        validateQuestionAuthorIsLoggedInUser(questionId, user);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         verifyAcceptedAnswer(questionId);
@@ -91,21 +92,17 @@ public class AnswerService {
         }
     }
 
-    private void validateQuestionAuthorIsLoggedInUser(Long questionId, Long userId) {
+    private void validateQuestionAuthorIsLoggedInUser(Long questionId, User user) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if (!question.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
 
-    private void validateAnswerAuthorIsLoggedInUser(Long answerId, Long userId) {
+    private void validateAnswerAuthorIsLoggedInUser(Long answerId, User user) {
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if (!answer.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }

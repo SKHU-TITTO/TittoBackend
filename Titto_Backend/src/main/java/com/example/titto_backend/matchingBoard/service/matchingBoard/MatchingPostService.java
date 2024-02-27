@@ -43,11 +43,11 @@ public class MatchingPostService {
 
     // 게시물 조회
     @Transactional(readOnly = true)
-    public MatchingPostResponseDto getMatchingPostByMatchingPostId(Long matchingPostId, HttpServletRequest request,
-                                                                   HttpServletResponse response) {
+    public MatchingPostResponseDto findByMatchingPostId(Long matchingPostId, HttpServletRequest request,
+                                                        HttpServletResponse response) {
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
         Integer reviewCount = matchingPostReviewRepository.countByMatchingPost(matchingPost);
-        updatePostViews(request, response, matchingPostId);
+        countViews(matchingPost, request, response);
         return MatchingPostResponseDto.of(matchingPost, reviewCount);
     }
 
@@ -87,44 +87,40 @@ public class MatchingPostService {
         }
     }
 
-    // 게시글 조회수 연산
-    private void increaseViewCount(MatchingPost matchingPost) {
-        matchingPost.updateViewCount();
-        matchingPostRepository.save(matchingPost);
-    }
-
-    private void createOrUpdatePostViewsCookie(HttpServletRequest request, HttpServletResponse response,
-                                               MatchingPost matchingPost) {
+    private void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = null;
         Cookie[] cookies = request.getCookies();
-        String postId = "POST[" + matchingPost.getMatchingPostId() + "]";
-        Cookie postViewsCookie = null;
-        if (cookies != null) {
-            for (Cookie oldCookie : cookies) {
-                if (oldCookie.getName().equals("postViews")) {
-                    postViewsCookie = oldCookie;
-                    break;
+        if (matchingPost != null) {
+            if (cookies != null) {
+                for (Cookie oldCookie : cookies) {
+                    if (oldCookie.getName().equals("postViews")) {
+                        cookie = oldCookie;
+                        break;
+                    }
                 }
             }
-        }
-        if (postViewsCookie == null) {
-            postViewsCookie = new Cookie("postViews", postId);
-        } else {
-            // 쿠키가 null이 아닌 경우에도 현재 게시물을 확인하여 포함되어 있지 않으면 값을 업데이트합니다.
-            if (!postViewsCookie.getValue().contains(postId)) {
-                postViewsCookie.setValue(postViewsCookie.getValue() + postId);
+            if (cookie != null) {
+                if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
+                    matchingPost.updateViewCount();
+                    matchingPostRepository.save(matchingPost);
+                    cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
+                }
+            } else {
+                matchingPost.updateViewCount();
+                matchingPostRepository.save(matchingPost);
+                cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
             }
+            response.addCookie(setCookieValue(cookie));
         }
-        postViewsCookie.setPath("/");
-        postViewsCookie.setMaxAge(60 * 60 * 24);
-        response.addCookie(postViewsCookie);
     }
 
-
-    public void updatePostViews(HttpServletRequest request, HttpServletResponse response, Long matchingPostId) {
-        MatchingPost matchingPost = findMatchingPostById(matchingPostId);
-        increaseViewCount(matchingPost);
-        createOrUpdatePostViewsCookie(request, response, matchingPost);
+    // 쿠키 설정
+    private Cookie setCookieValue(Cookie cookie) {
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        return cookie;
     }
+
 
     private User getCurrentUser(Principal principal) {
         String userEmail = principal.getName();
