@@ -3,6 +3,7 @@ package com.example.titto_backend.auth.dto.response;
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.questionBoard.domain.Answer;
+import com.example.titto_backend.questionBoard.domain.Question;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +29,11 @@ public class UserProfileViewDto {
     private Integer countAccept;
     private Integer level;
     private List<MatchingPost> matchingPosts;
+    private List<Question> questions;
     private List<Answer> answers;
 
-    public static UserProfileViewDto of(User user, List<MatchingPost> matchingPosts, List<Answer> answers) {
+    public static UserProfileViewDto of(User user, List<MatchingPost> matchingPosts, List<Question> questions,
+                                        List<Answer> answers) {
         return new UserProfileViewDto(
                 user.getProfile(),
                 user.getName(),
@@ -46,6 +49,7 @@ public class UserProfileViewDto {
                 user.getCountAccept(),
                 user.getLevel(),
                 matchingPosts,
+                questions,
                 answers
         );
     }

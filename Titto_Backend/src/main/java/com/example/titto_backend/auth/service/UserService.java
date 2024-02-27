@@ -12,7 +12,9 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.questionBoard.domain.Answer;
+import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
+import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
 
     @Transactional
     public void signUp(SignUpDTO signUpDTO, String email) {
@@ -70,9 +73,10 @@ public class UserService {
     public UserProfileViewDto userProfileView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<MatchingPost> matchingPost = matchingPostRepository.findMatchingPostByUser(user);
+        List<MatchingPost> matchingPosts = matchingPostRepository.findMatchingPostByUser(user);
+        List<Question> questions = questionRepository.findQuestionByAuthor(user);
         List<Answer> answers = answerRepository.findAnswerByAuthor(user);
-        return UserProfileViewDto.of(user, matchingPost, answers);
+        return UserProfileViewDto.of(user, matchingPosts, questions,answers);
     }
 
     //닉네임 중복 여부
