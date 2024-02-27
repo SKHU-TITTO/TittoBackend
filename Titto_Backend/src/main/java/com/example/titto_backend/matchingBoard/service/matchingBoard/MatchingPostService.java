@@ -111,7 +111,7 @@ public class MatchingPostService {
     // 쿠키 설정
     private Cookie setCookieValue(Cookie cookie) {
         cookie.setPath("/");
-        cookie.setMaxAge(1);
+        cookie.setMaxAge(60 * 60 * 24);
         return cookie;
     }
 
