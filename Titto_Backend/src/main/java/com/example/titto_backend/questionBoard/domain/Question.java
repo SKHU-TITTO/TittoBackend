@@ -49,7 +49,7 @@ public class Question extends BaseEntity {
     @Column(name = "question_title", nullable = false)
     private String title;
 
-    @Column(name = "question_content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "question_content", nullable = false, columnDefinition = "LONGTEXT")
     private String content;
 
     @Column(name = "send_Experience", nullable = false)
