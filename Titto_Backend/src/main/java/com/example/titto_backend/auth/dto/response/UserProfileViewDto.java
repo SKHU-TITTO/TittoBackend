@@ -29,6 +29,7 @@ public class UserProfileViewDto {
     private Integer level;
     private List<MatchingPost> matchingPosts;
     private List<Answer> answers;
+
     public static UserProfileViewDto of(User user, List<MatchingPost> matchingPosts, List<Answer> answers) {
         return new UserProfileViewDto(
                 user.getProfile(),
