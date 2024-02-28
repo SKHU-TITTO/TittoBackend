@@ -51,7 +51,7 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
     }
 
-    // Read
+   /* // Read
     @GetMapping("/posts")
     @Operation(
             summary = "질문 목록 조회",
@@ -64,7 +64,7 @@ public class QuestionController {
                                                                       @RequestParam(defaultValue = "", value = "keyword") String keyword) {
         Page<QuestionDTO.Response> questions = questionService.findAll(page, keyword);
         return ResponseEntity.ok(questions);
-    }
+    }*/
 
     @GetMapping("/{postId}")
     @Operation(
@@ -96,6 +96,20 @@ public class QuestionController {
     public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByCategory(@PathVariable("category") String category,
                                                                              @RequestParam(defaultValue = "0") int page) {
         Page<QuestionDTO.Response> questions = questionService.findByCategory(page, category);
+        return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/status/{status}")
+    @Operation(
+            summary = "상태별 질문 조회",
+            description = "상태별 질문을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByStatus(@PathVariable("status") String status,
+                                                                           @RequestParam(defaultValue = "0") int page) {
+        Page<QuestionDTO.Response> questions = questionService.findByStatus(page, status);
         return ResponseEntity.ok(questions);
     }
 

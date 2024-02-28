@@ -13,16 +13,9 @@ import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,7 +25,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,7 +60,7 @@ public class QuestionService {
         return "질문이 성공적으로 등록되었습니다.";
     }
 
-    // Keyword가 null이면 전체목록, 있으면 검색
+    /*// Keyword가 null이면 전체목록, 있으면 검색
     @Transactional(readOnly = true)
     public Page<Response> findAll(int page, String keyword) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
@@ -77,7 +69,7 @@ public class QuestionService {
             return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
         }
         return questionRepository.findAll(spec, pageable).map(QuestionDTO.Response::new);
-    }
+    }*/
 
     @Transactional(readOnly = true)
     public Page<Response> findByStatus(int page, String status) {
@@ -101,7 +93,7 @@ public class QuestionService {
                 .map(QuestionDTO.Response::new);
     }
 
-    // Keyword Search
+    /*// Keyword Search
     private Specification<Question> searchByKeyword(String keyword) {
         return new Specification<>() {
             @Serial
@@ -120,7 +112,7 @@ public class QuestionService {
                         cb.like(u2.get("nickname"), "%" + keyword + "%")
                 );
             }
-        };
+        };*/
     @Transactional(readOnly = true)
     public Page<QuestionDTO.Response> searchByKeyword(String keyWord, int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
