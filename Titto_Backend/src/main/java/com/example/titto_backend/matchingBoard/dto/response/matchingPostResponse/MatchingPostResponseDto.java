@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class MatchingPostResponseDto {
 
     private Long matchingPostId;
+    private Long matchingPostAuthorId;
     private String authorNickName;
     private String profile;
     private String category;
@@ -29,6 +30,7 @@ public class MatchingPostResponseDto {
             MatchingPost matchingPost) {
         return new MatchingPostResponseDto(
                 matchingPost.getMatchingPostId(),
+                matchingPost.getUser().getId(),
                 matchingPost.getUser().getNickname(),
                 matchingPost.getUser().getProfile(),
                 String.valueOf(matchingPost.getCategory()),
