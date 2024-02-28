@@ -35,10 +35,9 @@ public class MessageController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<MessageDTO> writeMessage(@RequestBody MessageDTO messageDTO,
+    public ResponseEntity<String> writeMessage(@RequestBody MessageDTO.Request request,
                                                    @AuthenticationPrincipal UserDetails userDetails) {
-        messageService.writeMessage(messageDTO, userDetails.getUsername());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageService.writeMessage(request, userDetails.getUsername()));
     }
 
     @GetMapping("/receiver")
@@ -50,7 +49,7 @@ public class MessageController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<List<MessageDTO>> getMessagesByReceiver(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<MessageDTO.Response>> getMessagesByReceiver(@AuthenticationPrincipal UserDetails userDetails) {
         return new ResponseEntity<>(messageService.getMessagesByReceiver(userDetails.getUsername()), HttpStatus.OK);
     }
 
@@ -63,9 +62,13 @@ public class MessageController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<List<MessageDTO>> getMessagesBySender(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<MessageDTO.Response>> getMessagesBySender(@AuthenticationPrincipal UserDetails userDetails) {
         return new ResponseEntity<>(messageService.getMessagesBySender(userDetails.getUsername()), HttpStatus.OK);
     }
+
+    //메세지 삭제 (sender인 유저가 receiver유저와 한 대화내용을 삭제)
+    //쪽지함 전체 조회
+    //쪽지함 세부 조회 ( 주고 받은 사용자와의 대화 내용을 뿌려줄 수 있는 api)
 
 }
 

@@ -31,10 +31,6 @@ public class QuestionDTO {
         @NotBlank
         private String content;
 
-        // 아직 미완성 상태
-        @Schema(description = "이미지")
-        private List<String> imageList;
-
         @Schema(description = "카테고리", example = "HUMANITIES, MANAGEMENT, SOCIETY, MEDIA_CONTENT, FUTURE_FUSION, SOFTWARE")
         @NotBlank
         private String department;

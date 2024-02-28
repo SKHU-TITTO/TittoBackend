@@ -88,26 +88,6 @@ public class QuestionService {
                 .map(QuestionDTO.Response::new);
     }
 
-    /*// Keyword Search
-    private Specification<Question> searchByKeyword(String keyword) {
-        return new Specification<>() {
-            @Serial
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true);
-                Join<Question, User> u1 = q.join("author", JoinType.LEFT);
-                Join<Question, Answer> a = q.join("answers", JoinType.LEFT);
-                Join<Answer, User> u2 = a.join("author", JoinType.LEFT);
-                return cb.or(
-                        cb.like(q.get("title"), "%" + keyword + "%"),
-                        cb.like(q.get("content"), "%" + keyword + "%"),
-                        cb.like(u1.get("nickname"), "%" + keyword + "%"),
-                        cb.like(u2.get("nickname"), "%" + keyword + "%")
-                );
-            }
-        };*/
     @Transactional(readOnly = true)
     public Page<QuestionDTO.Response> searchByKeyword(String keyWord, int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
