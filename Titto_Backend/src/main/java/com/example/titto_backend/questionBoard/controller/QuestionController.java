@@ -7,7 +7,6 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,8 +93,22 @@ public class QuestionController {
                     @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
             })
     public ResponseEntity<Page<QuestionDTO.Response>> getQuestionsByCategory(@PathVariable("category") String category,
-                                                                             @Parameter(hidden = true) Pageable pageable) {
-        Page<QuestionDTO.Response> questions = questionService.findByCategory(pageable, category);
+                                                                             @RequestParam(defaultValue = "0") int page) {
+        Page<QuestionDTO.Response> questions = questionService.findByCategory(page, category);
+        return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/search")
+    @Operation(
+            summary = "질문 게시판 검색",
+            description = "키워드로 검색하여 질문을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
+            })
+    public ResponseEntity<Page<QuestionDTO.Response>> searchByKeyWord(@RequestParam("page") int page,
+                                                                      @RequestParam String keyWord) {
+        Page<QuestionDTO.Response> questions = questionService.searchByKeyword(keyWord, page);
         return ResponseEntity.ok(questions);
     }
 

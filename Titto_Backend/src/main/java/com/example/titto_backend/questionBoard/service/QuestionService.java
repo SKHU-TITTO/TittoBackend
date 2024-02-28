@@ -66,6 +66,12 @@ public class QuestionService {
         return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Response> findByStatus(int page, String status) {
+        Pageable pageable = Pageable.ofSize(10).withPage(page);
+        return questionRepository.findQuestionByStatus(Status.valueOf(status), pageable).map(QuestionDTO.Response::new);
+    }
+
     @Transactional
     public Response findById(Long Id, HttpServletRequest request, HttpServletResponse response) {
         Question question = questionRepository.findById(Id)
@@ -75,10 +81,17 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionDTO.Response> findByCategory(Pageable pageable, String category) {
+    public Page<QuestionDTO.Response> findByCategory(int page, String category) {
+        Pageable pageable = Pageable.ofSize(10).withPage(page);
         return questionRepository.findByDepartmentOrderByCreateDateDesc(pageable,
                         Department.valueOf(category.toUpperCase()))
                 .map(QuestionDTO.Response::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<QuestionDTO.Response> searchByKeyword(String keyWord, int page) {
+        Pageable pageable = Pageable.ofSize(10).withPage(page);
+        return questionRepository.findByTitleContaining(keyWord, pageable).map(QuestionDTO.Response::new);
     }
 
     // Update
