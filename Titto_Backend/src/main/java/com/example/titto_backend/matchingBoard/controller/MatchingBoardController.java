@@ -1,6 +1,5 @@
 package com.example.titto_backend.matchingBoard.controller;
 
-import com.example.titto_backend.matchingBoard.dto.request.MatchingPostRequest.MatchingPostPagingRequestDto;
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +31,7 @@ public class MatchingBoardController {
     public MatchingPostPagingResponseDto getAllMatchingPosts(
             @RequestParam("page") int page
     ) {
-        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
-        requestDto.setPage(page + 1);
-        return matchingBoardService.findAllPosts(requestDto);
+        return matchingBoardService.findAllPosts(page);
     }
 
     @GetMapping("/search")
@@ -48,9 +45,7 @@ public class MatchingBoardController {
             })
     public MatchingPostPagingResponseDto searchByKeyWord(@RequestParam("page") int page,
                                                          @RequestParam String keyWord) {
-        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
-        requestDto.setPage(page + 1);
-        return matchingBoardService.searchByKeyWord(requestDto, keyWord);
+        return matchingBoardService.searchByKeyWord(page, keyWord);
     }
 
     @GetMapping("/category")
@@ -64,8 +59,6 @@ public class MatchingBoardController {
             })
     public MatchingPostPagingResponseDto findByCategory(@RequestParam("page") int page,
                                                         @RequestParam String category) {
-        MatchingPostPagingRequestDto requestDto = new MatchingPostPagingRequestDto();
-        requestDto.setPage(page + 1);
-        return matchingBoardService.findByCategory(requestDto, category);
+        return matchingBoardService.findByCategory(page, category);
     }
 }
