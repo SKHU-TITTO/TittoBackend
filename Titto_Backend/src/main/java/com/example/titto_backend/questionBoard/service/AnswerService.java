@@ -44,7 +44,7 @@ public class AnswerService {
         user.setCountAnswer(updateUserCountAnswer);
 
         // 답변을 작성한 사용자의 경험치 추가
-        experienceService.addExperience(question.getAuthor(), user, 20);
+        experienceService.addExperience(question.getAuthor(), user, 5);
 
         return new AnswerDTO.Response(savedAnswer);
     }
