@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -135,7 +136,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
     @Operation(
             summary = "사용자 프로필 조회",
             description = "사용자의 프로필을 조회합니다",
@@ -149,7 +150,7 @@ public class UserController {
         return new ResponseEntity<>(userProfileViewDto, HttpStatus.OK);
     }
 
-    @GetMapping("level/update")
+    @GetMapping("/level/update")
     @Operation(
             summary = "사용자 레벨업",
             description = "사용자 레벨을 1 증가 시킵니다",
@@ -189,5 +190,20 @@ public class UserController {
     public ResponseEntity<List<Object>> getUserAnswers(@PathVariable Long userId) {
         List<Object> userAnswers = userService.userAnswerView(userId);
         return new ResponseEntity<>(userAnswers, HttpStatus.OK);
+    }
+
+    // Delete
+    @DeleteMapping("/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "회원 탈퇴",
+            description = "회원 탈퇴를 진행합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+            })
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다");
     }
 }
