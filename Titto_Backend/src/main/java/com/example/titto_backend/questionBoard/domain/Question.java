@@ -55,6 +55,7 @@ public class Question extends BaseEntity {
     @Column(name = "send_Experience", nullable = false)
     private Integer sendExperience;
 
+
     // 채택된 답변 ID
     @Setter
     @OneToOne
