@@ -2,7 +2,6 @@ package com.example.titto_backend.message.domain;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,11 +31,11 @@ public class Message extends BaseEntity {
     @Column(name = "message_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
