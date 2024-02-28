@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatchingBoardService {
     private final MatchingPostRepository matchingPostRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public MatchingPostPagingResponseDto findAllPosts(int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public MatchingPostPagingResponseDto searchByKeyWord(int page,
                                                          String keyword) {
 
@@ -33,7 +33,7 @@ public class MatchingBoardService {
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public MatchingPostPagingResponseDto findByCategory(int page,
                                                         String category) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
