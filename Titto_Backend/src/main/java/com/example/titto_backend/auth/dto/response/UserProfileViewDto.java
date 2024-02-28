@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserProfileViewDto {
+    private Long userId;
     private String profile;
     private String name;
     private String nickname;
@@ -27,6 +28,7 @@ public class UserProfileViewDto {
 
     public static UserProfileViewDto of(User user) {
         return new UserProfileViewDto(
+                user.getId(),
                 user.getProfile(),
                 user.getName(),
                 user.getNickname(),
