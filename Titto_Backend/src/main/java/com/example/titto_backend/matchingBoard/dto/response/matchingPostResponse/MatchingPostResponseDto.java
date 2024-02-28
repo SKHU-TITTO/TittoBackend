@@ -23,6 +23,7 @@ public class MatchingPostResponseDto {
     private Integer viewCount;
     private Integer reviewCount;
     private LocalDateTime updateDate;
+    private Integer level;
 
     public static MatchingPostResponseDto of(
             MatchingPost matchingPost) {
@@ -36,7 +37,8 @@ public class MatchingPostResponseDto {
                 matchingPost.getContent(),
                 matchingPost.getViewCount(),
                 matchingPost.getReviewCount(),
-                matchingPost.getUpdateDate());
+                matchingPost.getUpdateDate(),
+                matchingPost.getUser().getLevel());
     }
 
 }
