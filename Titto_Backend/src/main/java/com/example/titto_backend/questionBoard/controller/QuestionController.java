@@ -60,8 +60,9 @@ public class QuestionController {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@RequestParam(defaultValue = "0") int page) {
-        Page<QuestionDTO.Response> questions = questionService.findAll(page);
+    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "", value = "keyword") String keyword) {
+        Page<QuestionDTO.Response> questions = questionService.findAll(page, keyword);
         return ResponseEntity.ok(questions);
     }
 
