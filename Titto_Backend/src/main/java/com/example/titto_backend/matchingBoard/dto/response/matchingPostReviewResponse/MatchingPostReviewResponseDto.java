@@ -19,6 +19,7 @@ public class MatchingPostReviewResponseDto {
     private String profile;
     private String content;
     private LocalDateTime updateDate;
+    private Integer level;
 
     public MatchingPostReviewResponseDto(MatchingPostReview matchingPostReview) {
         this.reviewId = matchingPostReview.getReview_id();
@@ -26,5 +27,6 @@ public class MatchingPostReviewResponseDto {
         this.profile = matchingPostReview.getReviewAuthor().getProfile();
         this.content = matchingPostReview.getContent();
         this.updateDate = matchingPostReview.getUpdateDate();
+        this.level = matchingPostReview.getReviewAuthor().getLevel();
     }
 }
