@@ -1,3 +1,5 @@
+package com.example.titto_backend.matchingBoard.controller;
+
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
 import io.swagger.v3.oas.annotations.Operation;
