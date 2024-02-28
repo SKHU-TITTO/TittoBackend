@@ -1,11 +1,10 @@
-package com.example.titto_backend.matchingBoard.controller;
-
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostPagingResponseDto;
 import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,10 +27,11 @@ public class MatchingBoardController {
                     @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public MatchingPostPagingResponseDto getAllMatchingPosts(
+    public ResponseEntity<MatchingPostPagingResponseDto> getAllMatchingPosts(
             @RequestParam("page") int page
     ) {
-        return matchingBoardService.findAllPosts(page);
+        MatchingPostPagingResponseDto response = matchingBoardService.findAllPosts(page);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
@@ -43,9 +43,10 @@ public class MatchingBoardController {
                     @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public MatchingPostPagingResponseDto searchByKeyWord(@RequestParam("page") int page,
-                                                         @RequestParam String keyWord) {
-        return matchingBoardService.searchByKeyWord(page, keyWord);
+    public ResponseEntity<MatchingPostPagingResponseDto> searchByKeyWord(@RequestParam("page") int page,
+                                                                         @RequestParam String keyWord) {
+        MatchingPostPagingResponseDto response = matchingBoardService.searchByKeyWord(page, keyWord);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/category")
@@ -57,8 +58,9 @@ public class MatchingBoardController {
                     @ApiResponse(responseCode = "403", description = "인증 문제 발생"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public MatchingPostPagingResponseDto findByCategory(@RequestParam("page") int page,
-                                                        @RequestParam String category) {
-        return matchingBoardService.findByCategory(page, category);
+    public ResponseEntity<MatchingPostPagingResponseDto> findByCategory(@RequestParam("page") int page,
+                                                                        @RequestParam String category) {
+        MatchingPostPagingResponseDto response = matchingBoardService.findByCategory(page, category);
+        return ResponseEntity.ok(response);
     }
 }

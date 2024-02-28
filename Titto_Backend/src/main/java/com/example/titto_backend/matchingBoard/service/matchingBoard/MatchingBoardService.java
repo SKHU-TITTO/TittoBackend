@@ -22,6 +22,7 @@ public class MatchingBoardService {
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
+    @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto searchByKeyWord(int page,
                                                          String keyword) {
 
@@ -30,6 +31,7 @@ public class MatchingBoardService {
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
 
+    @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findByCategory(int page,
                                                         String category) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
