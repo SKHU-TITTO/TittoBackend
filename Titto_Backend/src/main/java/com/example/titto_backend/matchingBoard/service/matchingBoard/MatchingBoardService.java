@@ -6,7 +6,9 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,7 @@ public class MatchingBoardService {
 
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findAllPosts(int page) {
-        Pageable pageable = Pageable.ofSize(10).withPage(page);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
         Page<MatchingPost> matchingPosts = matchingPostRepository.findAll(pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
@@ -26,7 +28,7 @@ public class MatchingBoardService {
     public MatchingPostPagingResponseDto searchByKeyWord(int page,
                                                          String keyword) {
 
-        Pageable pageable = Pageable.ofSize(10).withPage(page);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
         Page<MatchingPost> matchingPosts = matchingPostRepository.findByTitleContaining(keyword, pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
@@ -34,7 +36,7 @@ public class MatchingBoardService {
     @Transactional(readOnly = true)
     public MatchingPostPagingResponseDto findByCategory(int page,
                                                         String category) {
-        Pageable pageable = Pageable.ofSize(10).withPage(page);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
         Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(Category.valueOf(category), pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
