@@ -30,7 +30,7 @@ public class MatchingPostService {
     private final UserRepository userRepository;
     private final MatchingPostReviewRepository matchingPostReviewRepository;
 
-    //게시물 작성
+    // 게시물 작성
     @Transactional
     public MatchingPostCreateResponseDto createMatchingPost(Principal principal,
                                                             MatchingPostCreateRequestDto matchingPostCreateRequestDto) {
