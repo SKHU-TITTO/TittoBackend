@@ -51,20 +51,19 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
     }
 
-   /* // Read
+    // Read
     @GetMapping("/posts")
     @Operation(
-            summary = "질문 목록 조회",
-            description = "질문 목록을 조회합니다",
+            summary = "전체 질문 조회",
+            description = "전체 질문을 조회합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "", value = "keyword") String keyword) {
-        Page<QuestionDTO.Response> questions = questionService.findAll(page, keyword);
+    public ResponseEntity<Page<QuestionDTO.Response>> getAllQuestions(@RequestParam(defaultValue = "0") int page) {
+        Page<QuestionDTO.Response> questions = questionService.findAll(page);
         return ResponseEntity.ok(questions);
-    }*/
+    }
 
     @GetMapping("/{postId}")
     @Operation(

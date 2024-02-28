@@ -60,16 +60,11 @@ public class QuestionService {
         return "질문이 성공적으로 등록되었습니다.";
     }
 
-    /*// Keyword가 null이면 전체목록, 있으면 검색
     @Transactional(readOnly = true)
-    public Page<Response> findAll(int page, String keyword) {
+    public Page<Response> findAll(int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
-        Specification<Question> spec = searchByKeyword(keyword);
-        if (keyword == null) {
-            return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
-        }
-        return questionRepository.findAll(spec, pageable).map(QuestionDTO.Response::new);
-    }*/
+        return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
+    }
 
     @Transactional(readOnly = true)
     public Page<Response> findByStatus(int page, String status) {
