@@ -6,6 +6,7 @@ import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
+import com.example.titto_backend.message.dto.MessageDTO.Response;
 import com.example.titto_backend.message.repository.MessageRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,26 @@ public class MessageService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void writeMessage(MessageDTO messageDTO, String email) {
+    public String writeMessage(MessageDTO.Request request, String email) throws CustomException {
         User sender = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        User receiver = userRepository.findById(messageDTO.getReceiverId())
+        User receiver = userRepository.findByNickname(request.getReceiverNickname())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         messageRepository.save(Message.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .title(messageDTO.getTitle())
-                .content(messageDTO.getContent())
+                .senderNickname(sender.getNickname())
+                .receiverNickname(receiver.getNickname())
+                .content(request.getContent())
                 .build());
+
+        return "메시지 전송 성공";
     }
 
     @Transactional
-    public List<MessageDTO> getMessagesByReceiver(String email) {
+    public List<Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -45,7 +49,7 @@ public class MessageService {
     }
 
     @Transactional
-    public List<MessageDTO> getMessagesBySender(String email) {
+    public List<Response> getMessagesBySender(String email) {
         User sender = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -53,9 +57,9 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    private List<MessageDTO> convertMessagesToDTO(List<Message> messages) {
+    private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
         return messages.stream()
-                .map(MessageDTO::toDto)
+                .map(MessageDTO.Response::new)
                 .toList();
     }
 }
