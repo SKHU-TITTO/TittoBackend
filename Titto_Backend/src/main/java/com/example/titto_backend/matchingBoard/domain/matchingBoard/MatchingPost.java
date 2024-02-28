@@ -72,6 +72,8 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer reviewCount;
 
+    @Column(name = "key_word")
+    private String keyWord;
 
     @PrePersist
     public void prePersist() {
@@ -85,6 +87,7 @@ public class MatchingPost extends BaseEntity {
         this.content = content;
         this.status = status;
     }
+
     // 조회 수 증가
     public void updateViewCount() {
         this.viewCount++;
