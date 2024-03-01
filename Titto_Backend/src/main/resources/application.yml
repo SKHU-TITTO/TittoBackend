@@ -32,6 +32,8 @@ spring:
         port: 6379
         host: redis
 
+server: ${PRODUCTION_SERVER_URL}
+
 # JWT
 jwt:
   secret: ${JWT_SECRET}
