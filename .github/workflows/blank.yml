@@ -44,6 +44,7 @@ jobs:
         spring.datasource.username: ${{ secrets.DB_USER }} 
         spring.datasource.password: ${{ secrets.DB_PASSWORD }} 
         jwt.secret: ${{ secrets.JWT_SECRET }}
+        server: ${{ secrets.PRODUCTION_SERVER_URL }}
         
     # (4) apllicataion-oauth.yml파일 환경변수 설정
     - name: Set apllicataion-oauth yml file 
