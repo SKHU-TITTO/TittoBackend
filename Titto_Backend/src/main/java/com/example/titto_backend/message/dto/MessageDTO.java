@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-// response 임!
 public class MessageDTO {
 
     @Data
@@ -84,7 +83,6 @@ public class MessageDTO {
             this.sentAt = message.getSentAt().toString();
         }
     }
-
 
 }
 

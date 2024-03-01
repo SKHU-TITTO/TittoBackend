@@ -51,6 +51,9 @@ public class Message extends BaseEntity {
     @Column(name = "receiver_nickname")
     private String receiverNickname;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     @Builder
     public Message(User sender, User receiver, String content, String senderNickname, String receiverNickname) {
         this.sender = sender;
