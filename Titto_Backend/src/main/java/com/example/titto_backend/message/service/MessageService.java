@@ -40,13 +40,35 @@ public class MessageService {
     }
 
     @Transactional
-    public List<Response> getMessagesByReceiver(String email) {
+    public List<Response> getBothMessages(String email, Long selectedUserId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        User selectedUser = userRepository.findById(selectedUserId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<Message> messages = messageRepository.findAllBySenderAndReceiverOrReceiverAndSender(user, selectedUser, user, selectedUser);
+        return convertMessagesToDTO(messages);
+    }
+
+    @Transactional
+    public List<MessageDTO.Preview> getAllMessagePreview(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<Message> messages = messageRepository.findAllByReceiver(user);
+        return convertMessagesToPreviewDTO(messages);
+    }
+
+    @Transactional
+    public List<MessageDTO.Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<Message> messages = messageRepository.findAllByReceiver(receiver);
         return convertMessagesToDTO(messages);
     }
+
 
     @Transactional
     public List<Response> getMessagesBySender(String email) {
@@ -57,10 +79,27 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
+    /**1 : 로그인한 사용자와 관련된 메세지인지
+    2 : sender 인지 receiver 인지
+    3 : isDeleted 가 false 인지 true 인지 **/
+    @Transactional
+    public void deleteMessage(Long messageId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        messageRepository.deleteById(messageId);
+    }
+
     private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
         return messages.stream()
                 .map(MessageDTO.Response::new)
                 .toList();
     }
+
+    private List<MessageDTO.Preview> convertMessagesToPreviewDTO(List<Message> messages) {
+        return messages.stream()
+                .map(MessageDTO.Preview::new)
+                .toList();
+    }
+
 }
 

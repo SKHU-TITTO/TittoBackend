@@ -60,5 +60,31 @@ public class MessageDTO {
             this.senderNickname = message.getSenderNickname();
         }
     }
+
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "메세지함 조회")
+    public static class Preview {
+        @Schema(description = "메시지 ID")
+        private Long id;
+
+        @Schema(description = "내용")
+        private String content;
+
+        @Schema(description = "보낸 사람 닉네임")
+        private String senderNickname;
+
+        @Schema(description = "보낸 시간")
+        private String sentAt;
+
+        public Preview(Message message) {
+            this.id = message.getId();
+            this.content = message.getContent();
+            this.senderNickname = message.getSenderNickname();
+            this.sentAt = message.getSentAt().toString();
+        }
+    }
+
+
 }
 
