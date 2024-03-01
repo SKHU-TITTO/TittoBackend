@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//TODO: 메세지 삭제 기능 추가 할거임?
 @Entity
 @Table(name = "messages")
 @Getter
@@ -33,17 +32,13 @@ public class Message extends BaseEntity {
     @Column(name = "message_id")
     private Long id;
 
-    // FetchType.LAZY로 바꿔야할지 고민중
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "receiver_id")
     private User receiver;
-
-    @Column(name = "title", nullable = false, length = 100)
-    private String title;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -51,12 +46,19 @@ public class Message extends BaseEntity {
     @Column(name = "sent_time")
     private LocalDateTime sentAt;
 
+    @Column(name = "sender_nickname")
+    private String senderNickname;
+
+    @Column(name = "receiver_nickname")
+    private String receiverNickname;
+
     @Builder
-    public Message(User sender, User receiver, String title, String content) {
+    public Message(User sender, User receiver, String content, String senderNickname, String receiverNickname) {
         this.sender = sender;
         this.receiver = receiver;
-        this.title = title;
         this.content = content;
+        this.senderNickname = senderNickname;
+        this.receiverNickname = receiverNickname;
         this.sentAt = LocalDateTime.now();
     }
 }
