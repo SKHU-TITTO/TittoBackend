@@ -10,8 +10,8 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   S3_BUCKET_NAME: tittodeploybucket
-  CODE_DEPLOY_APPLICATION_NAME: TittoCodeDeploy
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: titto-codedeploy-group
+  CODE_DEPLOY_APPLICATION_NAME: titto-codedeploy-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: titto-codedeploy-deployment-group
   
 permissions:
   contents: read
