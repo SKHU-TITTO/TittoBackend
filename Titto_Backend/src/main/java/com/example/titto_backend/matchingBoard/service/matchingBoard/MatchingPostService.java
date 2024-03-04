@@ -15,10 +15,12 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.matchingBoard.repository.review.MatchingPostReviewRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.titto_backend.matchingBoard.util.RedisUtil;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ public class MatchingPostService {
     private final MatchingPostRepository matchingPostRepository;
     private final UserRepository userRepository;
     private final MatchingPostReviewRepository matchingPostReviewRepository;
+    private final RedisUtil redisUtil;
 
     // 게시물 작성
     @Transactional
@@ -42,10 +45,10 @@ public class MatchingPostService {
 
     // 게시물 조회
     @Transactional
-    public MatchingPostResponseDto findByMatchingPostId(Long matchingPostId, HttpServletRequest request,
-                                                        HttpServletResponse response) {
+    public MatchingPostResponseDto findByMatchingPostId(Principal principal, Long matchingPostId) {
+        User user = getCurrentUser(principal);
         MatchingPost matchingPost = findMatchingPostById(matchingPostId);
-        countViews(matchingPost, request, response);
+        countViews(user, matchingPost);
         return MatchingPostResponseDto.of(matchingPost);
     }
 
@@ -81,40 +84,41 @@ public class MatchingPostService {
     }
 
     @Transactional
-    public void countViews(MatchingPost matchingPost, HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = null;
-        Cookie[] cookies = request.getCookies();
-        if (matchingPost != null) {
-            if (cookies != null) {
-                for (Cookie oldCookie : cookies) {
-                    if (oldCookie.getName().equals("postViews")) {
-                        cookie = oldCookie;
+    public void countViews(User user, MatchingPost matchingPost) {
+        String viewCount = redisUtil.getData(String.valueOf(matchingPost.getMatchingPostId()));
+        if (viewCount == null) {
+            redisUtil.setDateExpire(String.valueOf(user.getId()),
+                    matchingPost.getMatchingPostId() + "_",
+                    calculateTimeUntilMidnight());
+            matchingPost.updateViewCount();
+        } else {
+            String[] strArray = viewCount.split("_");
+            List<String> redisPortfolioList = Arrays.asList(strArray);
+
+            boolean isView = false;
+
+            if (!redisPortfolioList.isEmpty()) {
+                for (String redisPortfolioId : redisPortfolioList) {
+                    if (String.valueOf(matchingPost.getMatchingPostId()).equals(redisPortfolioId)) {
+                        isView = true;
                         break;
                     }
                 }
-            }
-            if (cookie != null) {
-                if (!cookie.getValue().contains("POST[" + matchingPost.getMatchingPostId() + "]")) {
+                if (!isView) {
+                    viewCount += matchingPost.getMatchingPostId() + "_";
+
+                    redisUtil.setDateExpire(String.valueOf(user.getId()), viewCount, calculateTimeUntilMidnight());
                     matchingPost.updateViewCount();
-                    matchingPostRepository.save(matchingPost);
-                    cookie.setValue(cookie.getValue() + "POST[" + matchingPost.getMatchingPostId() + "]");
                 }
-            } else {
-                matchingPost.updateViewCount();
-                matchingPostRepository.save(matchingPost);
-                cookie = new Cookie("postViews", "POST[" + matchingPost.getMatchingPostId() + "]");
             }
-            response.addCookie(setCookieValue(cookie));
         }
     }
 
-    // 쿠키 설정
-    private Cookie setCookieValue(Cookie cookie) {
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
-        return cookie;
+    public static long calculateTimeUntilMidnight() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+        return ChronoUnit.SECONDS.between(now, midnight);
     }
-
 
     private User getCurrentUser(Principal principal) {
         String userEmail = principal.getName();
