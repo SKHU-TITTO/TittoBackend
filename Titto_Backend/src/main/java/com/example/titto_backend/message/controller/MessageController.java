@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,10 +68,11 @@ public class MessageController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<List<MessageDTO.Response>> getBothMessages (
+    public ResponseEntity<List<MessageDTO.Response>> getBothMessages(
             @PathVariable Long selectedUserId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(messageService.getBothMessages(userDetails.getUsername(),selectedUserId), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.getBothMessages(userDetails.getUsername(), selectedUserId),
+                HttpStatus.OK);
     }
 
     @GetMapping("/receiver")
@@ -101,21 +103,21 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getMessagesBySender(userDetails.getUsername()), HttpStatus.OK);
     }
 
-    //TODO : 메세지 삭제 (sender인 유저가 receiver유저와 한 대화내용을 삭제)
-//    @DeleteMapping("/{messageId}")
-//    @Operation(
-//            summary = "메시지 삭제",
-//            description = "메시지를 삭제합니다.",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "요청 성공"),
-//                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-//                    @ApiResponse(responseCode = "500", description = "관리자 문의")
-//            })
-//    public ResponseEntity<String> deleteMessage(@PathVariable Long messageId,
-//                                                @AuthenticationPrincipal UserDetails userDetails) {
-//        messageService.deleteMessage(messageId, userDetails.getUsername());
-//        return ResponseEntity.ok("메시지 삭제 성공");
-//    }
-
+    // TODO : 메세지 삭제 (sender인 유저가 receiver유저와 한 대화내용을 삭제)
+    @PutMapping("/delete/{messageId}")
+    @Operation(
+            summary = "메시지 삭제",
+            description = "메시지를 삭제합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "요청 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+                    @ApiResponse(responseCode = "500", description = "관리자 문의")
+            })
+    public String deleteMessage(
+            @PathVariable Long messageId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        messageService.deleteMessage(messageId, userDetails.getUsername());
+        return "메시지 삭제 성공";
+    }
 }
 
