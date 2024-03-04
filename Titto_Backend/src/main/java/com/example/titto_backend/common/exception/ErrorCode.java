@@ -35,7 +35,8 @@ public enum ErrorCode {
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "답변을 찾을 수 없습니다."),
     NO_SEARCH_RESULT(HttpStatus.NOT_FOUND, "검색 결과가 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시물이 존재하지 않습니다."),
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."),
+    MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "메시지가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
