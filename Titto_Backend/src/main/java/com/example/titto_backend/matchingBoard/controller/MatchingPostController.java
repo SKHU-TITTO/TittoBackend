@@ -10,8 +10,6 @@ import com.example.titto_backend.matchingBoard.service.matchingBoard.MatchingPos
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,11 +58,9 @@ public class MatchingPostController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<MatchingPostResponseDto> findMatchingPostByMatchingPostId(@PathVariable Long matchingPostId,
-                                                                                    HttpServletRequest request,
-                                                                                    HttpServletResponse response) {
-        MatchingPostResponseDto responseDto = matchingPostService.findByMatchingPostId(matchingPostId, request,
-                response);
+    public ResponseEntity<MatchingPostResponseDto> findMatchingPostByMatchingPostId(Principal principal,
+                                                                                    @PathVariable Long matchingPostId) {
+        MatchingPostResponseDto responseDto = matchingPostService.findByMatchingPostId(principal, matchingPostId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
