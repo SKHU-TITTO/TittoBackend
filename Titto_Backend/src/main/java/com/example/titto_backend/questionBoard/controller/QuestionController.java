@@ -76,12 +76,8 @@ public class QuestionController {
     public ResponseEntity<QuestionDTO.Response> getQuestionById(@PathVariable("postId") Long postId,
                                                                 HttpServletRequest request,
                                                                 HttpServletResponse response) {
-        try {
-            QuestionDTO.Response question = questionService.findById(postId, request, response);
-            return ResponseEntity.ok(question);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        QuestionDTO.Response question = questionService.findById(postId, request, response);
+        return ResponseEntity.ok(question);
     }
 
     @GetMapping("/category/{category}")
