@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -150,30 +149,30 @@ public class QuestionService {
     // 조회수 증가
     private void validViewCount(Question question, HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        System.out.println("cookies = " + Arrays.toString(cookies));
         Cookie cookie = null;
         boolean isCookie = false;
-        for (Cookie value : cookies) {
-            if (value.getName().equals("viewCookie")) {
-                cookie = value;
-                if (!cookie.getValue().contains("[" + question.getId() + "]")) {
-                    question.addViewCount();
-                    cookie.setValue(cookie.getValue() + "[" + question.getId() + "]");
+        if (cookies != null) {
+            for (Cookie value : cookies) {
+                if (value.getName().equals("viewCookie")) {
+                    cookie = value;
+                    if (!cookie.getValue().contains("[" + question.getId() + "]")) {
+                        question.addViewCount();
+                        cookie.setValue(cookie.getValue() + "[" + question.getId() + "]");
+                    }
+                    isCookie = true;
+                    break;
                 }
-                isCookie = true;
-                break;
             }
+            System.out.println("isCookie = " + isCookie);
+            if (!isCookie) {
+                question.addViewCount();
+                cookie = new Cookie("viewCookie", "[" + question.getId() + "]");
+            }
+            long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
+            long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            cookie.setPath("/");
+            cookie.setMaxAge((int) (todayEndSecond - currentSecond));
+            response.addCookie(cookie);
         }
-        System.out.println("isCookie = " + isCookie);
-        if (!isCookie) {
-            question.addViewCount();
-            cookie = new Cookie("viewCookie", "[" + question.getId() + "]");
-        }
-        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
-        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        cookie.setPath("/");
-        cookie.setMaxAge((int) (todayEndSecond - currentSecond));
-        response.addCookie(cookie);
     }
-
 }
