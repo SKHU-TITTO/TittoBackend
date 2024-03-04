@@ -71,10 +71,7 @@ public class MatchingPost extends BaseEntity {
     @Setter
     @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer reviewCount;
-
-    @Column(name = "key_word")
-    private String keyWord;
-
+    
     @PrePersist
     public void prePersist() {
         this.viewCount = this.viewCount == null ? 0 : this.viewCount;
