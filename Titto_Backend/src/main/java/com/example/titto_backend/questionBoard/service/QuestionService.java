@@ -146,33 +146,57 @@ public class QuestionService {
         }
     }
 
+    // 쿠키가 있는지 확인
+    private boolean containsViewCookie(Cookie[] cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewCookie")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // 조회수 증가
     private void validViewCount(Question question, HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
-        Cookie cookie = null;
-        boolean isCookie = false;
-        if (cookies != null) {
-            for (Cookie value : cookies) {
-                if (value.getName().equals("viewCookie")) {
-                    cookie = value;
+        boolean isCookie = containsViewCookie(cookies);
+
+        if (!isCookie) {
+            // 쿠키가 없는 경우
+            question.addViewCount();
+            Cookie newCookie = createViewCookie(question.getId(), calculateMaxAge());
+            response.addCookie(newCookie);
+        } else {
+            // 쿠키가 있는 경우
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewCookie")) {
                     if (!cookie.getValue().contains("[" + question.getId() + "]")) {
+                        // 배열 안에 해당 아이디가 없는 경우
                         question.addViewCount();
                         cookie.setValue(cookie.getValue() + "[" + question.getId() + "]");
+                        response.addCookie(cookie);
                     }
-                    isCookie = true;
                     break;
                 }
             }
-            System.out.println("isCookie = " + isCookie);
-            if (!isCookie) {
-                question.addViewCount();
-                cookie = new Cookie("viewCookie", "[" + question.getId() + "]");
-            }
-            long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
-            long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            cookie.setPath("/");
-            cookie.setMaxAge((int) (todayEndSecond - currentSecond));
-            response.addCookie(cookie);
         }
     }
+
+    // 쿠키 생성
+    private Cookie createViewCookie(long questionId, long maxAge) {
+        Cookie cookie = new Cookie("viewCookie", "[" + questionId + "]");
+        cookie.setPath("/");
+        cookie.setMaxAge((int) maxAge);
+        return cookie;
+    }
+
+    // 하루의 끝까지 남은 시간 계산
+    private long calculateMaxAge() {
+        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
+        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        return todayEndSecond - currentSecond;
+    }
+
 }
