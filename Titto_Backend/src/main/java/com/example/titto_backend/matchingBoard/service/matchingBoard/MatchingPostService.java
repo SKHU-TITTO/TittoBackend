@@ -19,8 +19,6 @@ import com.example.titto_backend.matchingBoard.util.RedisUtil;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,34 +83,22 @@ public class MatchingPostService {
 
     @Transactional
     public void countViews(User user, MatchingPost matchingPost) {
-        String viewCount = redisUtil.getData(String.valueOf(matchingPost.getMatchingPostId()));
+        String key = String.format("viewCount:%d:%d", user.getId(), matchingPost.getMatchingPostId());
+        String viewCount = redisUtil.getData(key);
+
         if (viewCount == null) {
-            redisUtil.setDateExpire(String.valueOf(user.getId()),
-                    matchingPost.getMatchingPostId() + "_",
-                    calculateTimeUntilMidnight());
+            redisUtil.setDateExpire(key, "1", calculateTimeUntilMidnight());
             matchingPost.updateViewCount();
         } else {
-            String[] strArray = viewCount.split("_");
-            List<String> redisPortfolioList = Arrays.asList(strArray);
-
-            boolean isView = false;
-
-            if (!redisPortfolioList.isEmpty()) {
-                for (String redisPortfolioId : redisPortfolioList) {
-                    if (String.valueOf(matchingPost.getMatchingPostId()).equals(redisPortfolioId)) {
-                        isView = true;
-                        break;
-                    }
-                }
-                if (!isView) {
-                    viewCount += matchingPost.getMatchingPostId() + "_";
-
-                    redisUtil.setDateExpire(String.valueOf(user.getId()), viewCount, calculateTimeUntilMidnight());
-                    matchingPost.updateViewCount();
-                }
+            int count = Integer.parseInt(viewCount);
+            if (count < 1) {
+                count++;
+                redisUtil.setDateExpire(key, String.valueOf(count), calculateTimeUntilMidnight());
+                matchingPost.updateViewCount();
             }
         }
     }
+
 
     public static long calculateTimeUntilMidnight() {
         LocalDateTime now = LocalDateTime.now();
