@@ -47,7 +47,8 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Message> messages = messageRepository.findAllBySenderAndReceiverOrReceiverAndSender(user, selectedUser, user, selectedUser);
+        List<Message> messages = messageRepository.findAllBySenderAndReceiverOrReceiverAndSender(user, selectedUser,
+                user, selectedUser);
         return convertMessagesToDTO(messages);
     }
 
@@ -64,7 +65,11 @@ public class MessageService {
     public List<MessageDTO.Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
+        // 받은 메세지를 삭제할 경우 삭제된 메세지는 보이지 않게 하기 위해 isDeleted 가 false 인 메세지만 조회
+        if (receiver.getReceivedMessages().stream().anyMatch(Message::isDeleted)) {
+            return convertMessagesToDTO(
+                    receiver.getReceivedMessages().stream().filter(message -> !message.isDeleted()).toList());
+        }
         List<Message> messages = messageRepository.findAllByReceiver(receiver);
         return convertMessagesToDTO(messages);
     }
@@ -79,14 +84,26 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    /**1 : 로그인한 사용자와 관련된 메세지인지
-    2 : sender 인지 receiver 인지
-    3 : isDeleted 가 false 인지 true 인지 **/
+    /**
+     * 1 : 로그인한 사용자와 관련된 메세지인지 2 : sender 인지 receiver 인지 3 : isDeleted 가 false 인지 true 인지
+     **/
     @Transactional
     public void deleteMessage(Long messageId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        messageRepository.deleteById(messageId);
+
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MESSAGE_NOT_FOUND));
+
+        if (message.getSender().equals(user) || message.getReceiver().equals(user)) {
+            if (message.getSender().equals(user)) {
+                message.setDeleted(true);
+            } else {
+                message.setDeleted(true);
+            }
+        } else {
+            throw new CustomException(ErrorCode.MESSAGE_NOT_FOUND);
+        }
     }
 
     private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
