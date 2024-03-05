@@ -4,6 +4,7 @@ import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import com.example.titto_backend.common.util.RedisUtil;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.Status;
@@ -15,7 +16,6 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.matchingBoard.repository.review.MatchingPostReviewRepository;
-import com.example.titto_backend.common.util.RedisUtil;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -83,7 +83,7 @@ public class MatchingPostService {
 
     @Transactional
     public void countViews(User user, MatchingPost matchingPost) {
-        String key = String.format("viewCount:%d:%d", user.getId(), matchingPost.getMatchingPostId());
+        String key = String.format("matchingPostViewCount:%d:%d", user.getId(), matchingPost.getMatchingPostId());
         String viewCount = redisUtil.getData(key);
 
         if (viewCount == null) {

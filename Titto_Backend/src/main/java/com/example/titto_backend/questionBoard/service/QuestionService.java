@@ -148,7 +148,7 @@ public class QuestionService {
 
     @Transactional
     public void countViews(User user, Question question) {
-        String key = String.format("viewCount:%d:%d", user.getId(), question.getId());
+        String key = String.format("QuestionBoardViewCount:%d:%d", user.getId(), question.getId());
         String viewCount = redisUtil.getData(key);
 
         if (viewCount == null) {
