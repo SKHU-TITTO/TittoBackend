@@ -14,9 +14,9 @@ import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,12 +70,10 @@ public class QuestionService {
     }
 
     @Transactional
-    public Response findById(Principal principal, Long Id) {
-        User user = userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    public Response findById(Long Id, HttpServletRequest request, HttpServletResponse response) {
         Question question = questionRepository.findById(Id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        countViews(user, question);
+        countViews(question, request, response);
         return new Response(question);
     }
 
@@ -147,28 +145,43 @@ public class QuestionService {
     }
 
     // TODO : Redis 사용하여 조회수 증가 방법 변경 -> 동균 코드 확인 후 수정
-    @Transactional
-    public void countViews(User user, Question question) {
-        String key = String.format("viewCount:%d:%d", user.getId(), question.getId());
-        String viewCount = redisUtil.getData(key);
-
-        if (viewCount == null) {
-            redisUtil.setDateExpire(key, "1", calculateTimeUntilMidnight());
-            question.addViewCount();
-        } else {
-            int count = Integer.parseInt(viewCount);
-            if (count < 1) {
-                count++;
-                redisUtil.setDateExpire(key, String.valueOf(count), calculateTimeUntilMidnight());
-                question.addViewCount();
+    private void countViews(Question post, HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (post != null) {
+            if (cookies != null) {
+                for (Cookie oldCookie : cookies) {
+                    if (oldCookie.getName().equals("postViews")) {
+                        cookie = oldCookie;
+                        break;
+                    }
+                }
             }
+            if (cookie != null) {
+                if (!cookie.getValue().contains("POST[" + post.getId() + "]")) {
+                    post.addViewCount();
+                    questionRepository.save(post);
+                    cookie.setValue(cookie.getValue() + "POST[" + post.getId() + "]");
+                }
+            } else {
+                post.addViewCount();
+                questionRepository.save(post);
+                cookie = new Cookie("postViews", "POST[" + post.getId() + "]");
+            }
+            response.addCookie(setCookieValue(cookie));
         }
     }
 
-    public static long calculateTimeUntilMidnight() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
-        return ChronoUnit.SECONDS.between(now, midnight);
+    private Cookie setCookieValue(Cookie cookie) {
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        return cookie;
     }
+
+//    public static long calculateTimeUntilMidnight() {
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+//        return ChronoUnit.SECONDS.between(now, midnight);
+//    }
 
 }
