@@ -5,6 +5,7 @@ import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
+import com.example.titto_backend.common.util.RedisUtil;
 import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Department;
 import com.example.titto_backend.questionBoard.domain.Question;
@@ -13,13 +14,9 @@ import com.example.titto_backend.questionBoard.dto.QuestionDTO;
 import com.example.titto_backend.questionBoard.dto.QuestionDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
+import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +34,7 @@ public class QuestionService {
 
     private final ExperienceService experienceService;
     private final AnswerService answerService;
+    private final RedisUtil redisUtil;
 
     //Create
     @Transactional
@@ -72,10 +70,12 @@ public class QuestionService {
     }
 
     @Transactional
-    public Response findById(Long Id, HttpServletRequest request, HttpServletResponse response) {
+    public Response findById(Principal principal, Long Id) {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Question question = questionRepository.findById(Id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        validViewCount(question, request, response);
+        countViews(user, question);
         return new Response(question);
     }
 
@@ -146,57 +146,29 @@ public class QuestionService {
         }
     }
 
-    // 쿠키가 있는지 확인
-    private boolean containsViewCookie(Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("viewCookie")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    // TODO : Redis 사용하여 조회수 증가 방법 변경 -> 동균 코드 확인 후 수정
+    @Transactional
+    public void countViews(User user, Question question) {
+        String key = String.format("viewCount:%d:%d", user.getId(), question.getId());
+        String viewCount = redisUtil.getData(key);
 
-    // 조회수 증가
-    private void validViewCount(Question question, HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        boolean isCookie = containsViewCookie(cookies);
-
-        if (!isCookie) {
-            // 쿠키가 없는 경우
+        if (viewCount == null) {
+            redisUtil.setDateExpire(key, "1", calculateTimeUntilMidnight());
             question.addViewCount();
-            Cookie newCookie = createViewCookie(question.getId(), calculateMaxAge());
-            response.addCookie(newCookie);
         } else {
-            // 쿠키가 있는 경우
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("viewCookie")) {
-                    if (!cookie.getValue().contains("[" + question.getId() + "]")) {
-                        // 배열 안에 해당 아이디가 없는 경우
-                        question.addViewCount();
-                        cookie.setValue(cookie.getValue() + "[" + question.getId() + "]");
-                        response.addCookie(cookie);
-                    }
-                    break;
-                }
+            int count = Integer.parseInt(viewCount);
+            if (count < 1) {
+                count++;
+                redisUtil.setDateExpire(key, String.valueOf(count), calculateTimeUntilMidnight());
+                question.addViewCount();
             }
         }
     }
 
-    // 쿠키 생성
-    private Cookie createViewCookie(long questionId, long maxAge) {
-        Cookie cookie = new Cookie("viewCookie", "[" + questionId + "]");
-        cookie.setPath("/");
-        cookie.setMaxAge((int) maxAge);
-        return cookie;
-    }
-
-    // 하루의 끝까지 남은 시간 계산
-    private long calculateMaxAge() {
-        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
-        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        return todayEndSecond - currentSecond;
+    public static long calculateTimeUntilMidnight() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+        return ChronoUnit.SECONDS.between(now, midnight);
     }
 
 }
