@@ -164,7 +164,6 @@ public class QuestionService {
         }
     }
 
-
     public static long calculateTimeUntilMidnight() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime midnight = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
