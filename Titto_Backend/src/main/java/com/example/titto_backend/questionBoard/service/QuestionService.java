@@ -71,9 +71,11 @@ public class QuestionService {
 
     @Transactional
     public Response findById(Principal principal, Long Id) {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Question question = questionRepository.findById(Id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        countViews((User) principal, question);
+        countViews(user, question);
         return new Response(question);
     }
 
