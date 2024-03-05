@@ -1,4 +1,4 @@
-package com.example.titto_backend.matchingBoard.util;
+package com.example.titto_backend.common.util;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;

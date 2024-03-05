@@ -56,7 +56,6 @@ public class Question extends BaseEntity {
     private Integer sendExperience;
 
 
-    // 채택된 답변 ID
     @Setter
     @OneToOne
     @JoinColumn(name = "accepted_answer")
