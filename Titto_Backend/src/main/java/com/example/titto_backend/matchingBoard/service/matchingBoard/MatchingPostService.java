@@ -15,7 +15,7 @@ import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse
 import com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostUpdateResponseDto;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
 import com.example.titto_backend.matchingBoard.repository.review.MatchingPostReviewRepository;
-import com.example.titto_backend.matchingBoard.util.RedisUtil;
+import com.example.titto_backend.common.util.RedisUtil;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

@@ -9,8 +9,6 @@ import com.example.titto_backend.questionBoard.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -73,10 +71,9 @@ public class QuestionController {
                     @ApiResponse(responseCode = "200", description = "요청 성공"),
                     @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
             })
-    public ResponseEntity<QuestionDTO.Response> getQuestionById(@PathVariable("postId") Long postId,
-                                                                HttpServletRequest request,
-                                                                HttpServletResponse response) {
-        QuestionDTO.Response question = questionService.findById(postId, request, response);
+    public ResponseEntity<QuestionDTO.Response> getQuestionById(Principal principal,
+                                                                @PathVariable("postId") Long postId) {
+        QuestionDTO.Response question = questionService.findById(principal, postId);
         return ResponseEntity.ok(question);
     }
 
