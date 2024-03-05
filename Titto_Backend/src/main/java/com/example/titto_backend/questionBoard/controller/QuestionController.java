@@ -72,9 +72,9 @@ public class QuestionController {
                     @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
             })
     public ResponseEntity<QuestionDTO.Response> getQuestionById(Principal principal,
-                                                                @PathVariable("postId") Long postId) {
+                                                                @PathVariable Long postId) {
         QuestionDTO.Response question = questionService.findById(principal, postId);
-        return ResponseEntity.ok(question);
+        return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
     @GetMapping("/category/{category}")
