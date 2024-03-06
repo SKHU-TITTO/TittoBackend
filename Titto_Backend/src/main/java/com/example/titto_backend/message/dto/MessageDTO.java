@@ -76,11 +76,15 @@ public class MessageDTO {
         @Schema(description = "보낸 시간")
         private String sentAt;
 
+        @Schema(description = "보낸 사람 ID")
+        private Long senderId;
+
         public Preview(Message message) {
             this.id = message.getId();
             this.content = message.getContent();
             this.senderNickname = message.getSenderNickname();
             this.sentAt = message.getSentAt().toString();
+            this.senderId = message.getSender().getId();
         }
     }
 
