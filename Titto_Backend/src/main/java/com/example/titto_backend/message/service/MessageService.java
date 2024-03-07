@@ -56,7 +56,10 @@ public class MessageService {
     public List<MessageDTO.Preview> getAllMessagePreview(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
+        if (user.getReceivedMessages().stream().anyMatch(Message::isDeleted)) {
+            return convertMessagesToPreviewDTO(
+                    user.getReceivedMessages().stream().filter(message -> !message.isDeleted()).toList());
+        }
         List<Message> messages = messageRepository.findAllByReceiver(user);
         return convertMessagesToPreviewDTO(messages);
     }
@@ -79,7 +82,10 @@ public class MessageService {
     public List<Response> getMessagesBySender(String email) {
         User sender = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
+        if (sender.getSentMessages().stream().anyMatch(Message::isDeleted)) {
+            return convertMessagesToDTO(
+                    sender.getSentMessages().stream().filter(message -> !message.isDeleted()).toList());
+        }
         List<Message> messages = messageRepository.findAllBySender(sender);
         return convertMessagesToDTO(messages);
     }
@@ -103,6 +109,22 @@ public class MessageService {
             }
         } else {
             throw new CustomException(ErrorCode.MESSAGE_NOT_FOUND);
+        }
+    }
+
+    // 메세지 전체 삭제
+    @Transactional
+    public void deleteAllMessages(String email, Long selectedUserId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        User selectedUser = userRepository.findById(selectedUserId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        List<Message> messages = messageRepository.findAllBySenderAndReceiverOrReceiverAndSender(user, selectedUser,
+                user, selectedUser);
+        for (Message message : messages) {
+            message.setDeleted(true);
         }
     }
 
