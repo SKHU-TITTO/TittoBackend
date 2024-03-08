@@ -47,6 +47,11 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        if (user.getReceivedMessages().stream().anyMatch(Message::isDeleted)) {
+            return convertMessagesToDTO(
+                    user.getReceivedMessages().stream().filter(message -> !message.isDeleted()).toList());
+        }
+
         List<Message> messages = messageRepository.findAllBySenderAndReceiverOrReceiverAndSender(user, selectedUser,
                 user, selectedUser);
         return convertMessagesToDTO(messages);
