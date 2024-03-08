@@ -2,12 +2,16 @@ package com.example.titto_backend.questionBoard.repository;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.questionBoard.domain.Answer;
+import com.example.titto_backend.questionBoard.dto.AnswerInfoDto;
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-public interface AnswerRepository extends JpaRepository<Answer, Long> {
+public interface AnswerRepository extends CrudRepository<Answer, Long> {
 
-    List<Answer> findAnswerByAuthor(User user);
+    @Query("SELECT new com.example.titto_backend.questionBoard.dto.AnswerInfoDto(a.id, a.content) FROM Answer a WHERE a.author = :user")
+    List<AnswerInfoDto> findAnswerInfoByAuthor(@Param("user") User user);
 
     List<Answer> findByQuestionId(Long questionId);
 }

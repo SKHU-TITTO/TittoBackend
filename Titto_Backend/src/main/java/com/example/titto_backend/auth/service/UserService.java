@@ -10,7 +10,7 @@ import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
-import com.example.titto_backend.questionBoard.domain.Answer;
+import com.example.titto_backend.questionBoard.dto.AnswerInfoDto;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import java.util.ArrayList;
@@ -91,14 +91,13 @@ public class UserService {
     }
 
     // 유저 작성 답글 보기
-    public List<Object> userAnswerView(Long userId) {
+    public List<AnswerInfoDto> userAnswerView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Answer> answers = answerRepository.findAnswerByAuthor(user);
-
-        return new ArrayList<>(answers);
+        return answerRepository.findAnswerInfoByAuthor(user);
     }
+
 
     // 유저 삭제 & 글을 지울지 말지 정해야함. (알 수 없음 으로 둘 경우, 글은 안지워도 됨. / 알 수 있다면, 글도 지워야함.)
     @Transactional

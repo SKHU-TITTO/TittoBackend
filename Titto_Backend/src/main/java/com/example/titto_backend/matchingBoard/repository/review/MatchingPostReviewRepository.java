@@ -11,6 +11,4 @@ public interface MatchingPostReviewRepository extends JpaRepository<MatchingPost
     List<MatchingPostReview> findAllByMatchingPost(MatchingPost matchingPost);
 
     void deleteAllByMatchingPost(MatchingPost matchingPost);
-
-    Integer countByMatchingPost(MatchingPost matchingPost);
 }
