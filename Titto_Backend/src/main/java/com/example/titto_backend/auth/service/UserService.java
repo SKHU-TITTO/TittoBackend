@@ -99,7 +99,6 @@ public class UserService {
     }
 
 
-    // 유저 삭제 & 글을 지울지 말지 정해야함. (알 수 없음 으로 둘 경우, 글은 안지워도 됨. / 알 수 있다면, 글도 지워야함.)
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)

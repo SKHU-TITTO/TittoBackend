@@ -5,6 +5,7 @@ import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.message.domain.Message;
+import com.example.titto_backend.questionBoard.domain.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -77,6 +78,10 @@ public class User extends BaseEntity {
     private List<Badge> badges;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Question> questions;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MatchingPost> matchingPosts;
 
@@ -111,6 +116,11 @@ public class User extends BaseEntity {
     @Setter
     @Column(name = "level")
     private Integer level;
+
+    // isDeleted 로 유저가 삭제되었는지 안되었는지 확인하고 삭제되었을 경우에는 사용자의 닉네임을 '알수없음'으로 담은 dto를 반환하도록 하기
+//    @Setter
+//    @Column(name = "is_deleted")
+//    private boolean isDeleted;
 
     @Builder
     public User(String email, String profile, String socialId, SocialType socialType) {

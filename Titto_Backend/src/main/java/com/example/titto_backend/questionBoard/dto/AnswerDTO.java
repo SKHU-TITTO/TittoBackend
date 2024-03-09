@@ -74,4 +74,21 @@ public class AnswerDTO {
             this.level = answer.getAuthor().getLevel();
         }
     }
+
+//    @Data
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    @Schema(description = "답변 정보")
+//    public static class Info {
+//        @Schema(description = "답변 ID")
+//        private Long id;
+//
+//        @Schema(description = "답변 내용")
+//        private String content;
+//
+//        public Info(Answer answer) {
+//            this.id = answer.getId();
+//            this.content = answer.getContent();
+//        }
+//
+//    }
 }
