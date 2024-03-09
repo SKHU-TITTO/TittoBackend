@@ -95,7 +95,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return answerRepository.findAnswerInfoByAuthor(user);
+        return answerRepository.findAnswersInfoByAuthor(user);
     }
 
 

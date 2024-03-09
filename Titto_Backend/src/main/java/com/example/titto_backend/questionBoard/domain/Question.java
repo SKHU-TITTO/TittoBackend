@@ -55,7 +55,6 @@ public class Question extends BaseEntity {
     @Column(name = "send_Experience", nullable = false)
     private Integer sendExperience;
 
-
     @Setter
     @OneToOne
     @JoinColumn(name = "accepted_answer")
@@ -64,6 +63,10 @@ public class Question extends BaseEntity {
     @Setter
     @JoinColumn(name = "is_accepted_answer")
     private boolean isAnswerAccepted;
+
+    @Setter
+    @JoinColumn(name = "answer_count")
+    private Integer answerCount;
 
     public void update(String title, String content, Department department) {
         this.title = title;

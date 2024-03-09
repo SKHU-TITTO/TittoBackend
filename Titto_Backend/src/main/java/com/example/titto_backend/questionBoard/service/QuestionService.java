@@ -52,6 +52,7 @@ public class QuestionService {
                 .status(Status.valueOf("UNSOLVED"))
                 .sendExperience(request.getSendExperience())
                 .viewCount(0)
+                .answerCount(0)
                 .isAnswerAccepted(false)
                 .build());
         return "질문이 성공적으로 등록되었습니다.";
@@ -125,7 +126,7 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-    // 질문 게시판에 채택된 답변이 없으면 경험치 되돌려줌, 채택된 답변 있을 시 삭제 불가능
+    // 질문 게시판에 채택된 답변이 없으면 걸었던 경험치 되돌려줌, 채택된 답변 있을 시 삭제 불가능
     private void isAcceptAnswer(Question question, User user) {
         if (!question.isAnswerAccepted()) {
             user.setCurrentExperience(user.getCurrentExperience() + question.getSendExperience());
