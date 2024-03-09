@@ -78,11 +78,11 @@ public class AnswerService {
         validateQuestionAuthorIsLoggedInUser(questionId, user);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        verifyAcceptedAnswer(questionId);
+//        verifyAcceptedAnswer(questionId);
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
         answer.setAccepted(true);
-        question.setAcceptedAnswer(answer);
+//        question.setAcceptedAnswer(answer);
         question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
 
@@ -92,11 +92,11 @@ public class AnswerService {
         experienceService.addExperience(question.getAuthor(), answer.getAuthor(), 35 + question.getSendExperience());
     }
 
-    private void verifyAcceptedAnswer(Long questionId) {
+   /* private void verifyAcceptedAnswer(Long questionId) {
         if (questionRepository.existsByIdAndAcceptedAnswerIsNotNull(questionId)) {
             throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
         }
-    }
+    }*/
 
     private void validateQuestionAuthorIsLoggedInUser(Long questionId, User user) {
         Question question = questionRepository.findById(questionId)
