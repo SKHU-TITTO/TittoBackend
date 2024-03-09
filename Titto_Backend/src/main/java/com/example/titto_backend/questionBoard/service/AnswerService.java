@@ -42,7 +42,7 @@ public class AnswerService {
         Answer savedAnswer = answerRepository.save(answer);
         Integer updateUserCountAnswer = user.getCountAnswer() + 1;
         user.setCountAnswer(updateUserCountAnswer);
-
+        question.setAnswerCount(question.getAnswerCount() + 1);
         // 답변을 작성한 사용자의 경험치 추가
         experienceService.addExperience(question.getAuthor(), user, 5);
 
@@ -52,19 +52,25 @@ public class AnswerService {
     //Update
     @Transactional
     public AnswerDTO.Response update(Long id, AnswerDTO.Request request, User user) throws CustomException {
-        validateAnswerAuthorIsLoggedInUser(id, user);
         Answer answer = answerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+        validateAnswerAuthorIsLoggedInUser(answer, user);
         answer.setContent(request.getContent());
         return new AnswerDTO.Response(answer);
     }
 
     // Delete
     @Transactional
-    public void delete(Long id, User user) throws CustomException {
-        validateAnswerAuthorIsLoggedInUser(id, user);
+    public void delete(Long answerId, User user) throws CustomException {
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+        validateAnswerAuthorIsLoggedInUser(answer, user);
         user.setCountAnswer(user.getCountAnswer() - 1);  // 유저 답변 수 1 감소
-        answerRepository.deleteById(id);
+
+        Question question = answer.getQuestion();
+        question.setAnswerCount(question.getAnswerCount() - 1);
+
+        answerRepository.deleteById(answerId);
     }
 
     @Transactional
@@ -100,9 +106,7 @@ public class AnswerService {
         }
     }
 
-    private void validateAnswerAuthorIsLoggedInUser(Long answerId, User user) {
-        Answer answer = answerRepository.findById(answerId)
-                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+    private void validateAnswerAuthorIsLoggedInUser(Answer answer, User user) {
         if (!answer.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
