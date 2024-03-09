@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
-    @Query("SELECT new com.example.titto_backend.questionBoard.dto.AnswerInfoDto(a.id, a.content, a.question.id, a.question.title) FROM Answer a WHERE a.author = :user")
+    @Query("SELECT new com.example.titto_backend.questionBoard.dto.AnswerInfoDto(a.id, a.content, a.question.id, a.question.title) "
+            + "FROM Answer a"
+            + " WHERE a.author = :user")
     List<AnswerInfoDto> findAnswersInfoByAuthor(@Param("user") User user);
 
 
