@@ -97,9 +97,6 @@ public class QuestionDTO {
         @Schema(description = "줄 포인트")
         private Integer sendExperience;
 
-        @Schema(description = "답변 개수")
-        private Integer answerCount;
-
         public Response(Question question) {
             this.id = question.getId();
             this.authorId = question.getAuthor().getId();
@@ -109,14 +106,13 @@ public class QuestionDTO {
             this.title = question.getTitle();
             this.content = question.getContent();
             this.answerList = question.getAnswers().stream().map(AnswerDTO.Response::new).toList();
-            this.isAccepted = question.getAcceptedAnswer() != null;
+            this.isAccepted = question.isAnswerAccepted();
             this.viewCount = question.getViewCount();
             this.createDate = question.getCreateDate();
             this.updateDate = question.getUpdateDate();
             this.level = question.getAuthor().getLevel();
             this.profile = question.getAuthor().getProfile();
             this.sendExperience = question.getSendExperience();
-            this.answerCount = question.getAnswerCount();
         }
     }
 

@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -55,10 +54,10 @@ public class Question extends BaseEntity {
     @Column(name = "send_Experience", nullable = false)
     private Integer sendExperience;
 
-    @Setter
+/*    @Setter
     @OneToOne
     @JoinColumn(name = "accepted_answer")
-    private Answer acceptedAnswer;
+    private Answer acceptedAnswer;*/
 
     @Setter
     @JoinColumn(name = "is_accepted_answer")
