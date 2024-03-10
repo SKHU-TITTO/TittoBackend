@@ -1,5 +1,6 @@
 package com.example.titto_backend.questionBoard.dto;
 
+import com.example.titto_backend.questionBoard.domain.Department;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,7 @@ public class QuestionInfoDto {
 
     @Schema(description = "답변 개수")
     private Integer answerCount;
+
+    @Schema(description = "학과")
+    private Department department;
 }

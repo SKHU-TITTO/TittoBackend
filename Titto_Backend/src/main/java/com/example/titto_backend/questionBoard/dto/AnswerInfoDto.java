@@ -1,5 +1,6 @@
 package com.example.titto_backend.questionBoard.dto;
 
+import com.example.titto_backend.questionBoard.domain.Department;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class AnswerInfoDto {
     private String content;
     private Long questionId;
     private String questionTitle;
+    private Department department;
 }

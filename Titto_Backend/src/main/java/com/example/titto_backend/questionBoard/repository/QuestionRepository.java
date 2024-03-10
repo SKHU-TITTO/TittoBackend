@@ -25,7 +25,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Page<Question> findByTitleContaining(String keyWord, Pageable pageable);
 
-    @Query("SELECT new com.example.titto_backend.questionBoard.dto.QuestionInfoDto(a.id, a.title, a.content, a.createDate, a.viewCount, a.answerCount) "
+    @Query("SELECT new com.example.titto_backend.questionBoard.dto.QuestionInfoDto(a.id, a.title, a.content,"
+            + " a.createDate, a.viewCount, a.answerCount, a.department) "
             + "FROM Question a"
             + " WHERE a.author = :user")
     List<QuestionInfoDto> findQuestionsInfoByAuthor(@Param("user") User user);
