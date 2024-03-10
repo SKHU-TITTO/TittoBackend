@@ -16,6 +16,7 @@ import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,13 +82,11 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Object> userPosts = new ArrayList<>(matchingPostRepository.findMatchingPostByUser(user));
+        List<Object> questionPosts = new ArrayList<>(questionRepository.findQuestionsInfoByAuthor(user));
+        List<Object> matchingPosts = new ArrayList<>(matchingPostRepository.findMatchingPostsInfoByAuthor(user));
 
-        userPosts.addAll(questionRepository.findQuestionByAuthor(user)
-                .stream()
-                .toList());
-
-        return userPosts;
+        return Stream.concat(questionPosts.stream(), matchingPosts.stream())
+                .toList();
     }
 
     // 유저 작성 답글 보기

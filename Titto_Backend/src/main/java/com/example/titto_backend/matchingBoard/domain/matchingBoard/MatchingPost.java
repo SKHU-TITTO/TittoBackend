@@ -38,7 +38,7 @@ public class MatchingPost extends BaseEntity {
 
     // 직상자
     @ManyToOne
-    @JoinColumn(name = "post_author")
+    @JoinColumn(name = "author")
     private User user;
 
     // 매칭게시판
@@ -47,10 +47,12 @@ public class MatchingPost extends BaseEntity {
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
     @Enumerated(EnumType.STRING)
+    @Column(name = "category")
     private Category category;
 
     // 상태(모집중, 모집 완료)
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     // 제목
@@ -71,7 +73,7 @@ public class MatchingPost extends BaseEntity {
     @Setter
     @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer reviewCount;
-    
+
     @PrePersist
     public void prePersist() {
         this.viewCount = this.viewCount == null ? 0 : this.viewCount;
