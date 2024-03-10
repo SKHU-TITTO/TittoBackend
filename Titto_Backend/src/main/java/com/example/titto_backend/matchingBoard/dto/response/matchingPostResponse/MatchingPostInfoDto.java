@@ -1,5 +1,6 @@
 package com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse;
 
+import com.example.titto_backend.matchingBoard.domain.matchingBoard.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,8 @@ public class MatchingPostInfoDto {
 
     @Schema(description = "댓글 개수")
     private Integer reviewCount;
+
+    @Schema(description = "카테고리")
+    private Category category;
 
 }
