@@ -47,8 +47,6 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        //서로 주고 받은 메세지가 삭제된 경우 삭제된 메세지는 보이지 않게 하기 위해 isDeleted 가 false 인 메세지만 조회
-        //다른 상대에게 받은 메세지는 안뜨게 하고싶음.
         List<Message> messages = messageRepository.findAllBySenderAndReceiverAndIsDeletedFalseOrReceiverAndSenderAndIsDeletedFalse(
                 user, selectedUser,
                 user, selectedUser);
@@ -82,6 +80,8 @@ public class MessageService {
 
     /**
      * 1 : 로그인한 사용자와 관련된 메세지인지 2 : sender 인지 receiver 인지 3 : isDeleted 가 false 인지 true 인지
+     * 한 쪽만 삭제 할 시 다른 한 쪽은 삭제를 하면 안됨
+     * 한쪽에서 삭제하면 논리적 삭제를 하고 만약 둘다 삭제 시 데이터 베이스에서 지워지게 하기
      **/
     @Transactional
     public void deleteMessage(Long messageId, String email) {
