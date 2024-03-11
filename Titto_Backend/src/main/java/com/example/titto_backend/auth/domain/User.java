@@ -9,6 +9,7 @@ import com.example.titto_backend.questionBoard.domain.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -74,8 +75,10 @@ public class User extends BaseEntity {
     private String selfIntro;
 
     @Setter
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Badge> badges;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection
+    @Column(name = "badge")
+    private List<BadgeType> badges;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -104,6 +107,10 @@ public class User extends BaseEntity {
     @Setter
     @Column(name = "current_experience")
     private Integer currentExperience; // 사용자의 현재 경험치
+
+    @Setter
+    @Column(name = "count_question")
+    private Integer countQuestion;
 
     @Setter
     @Column(name = "count_answer")
@@ -137,6 +144,7 @@ public class User extends BaseEntity {
         this.setDepartment(signUpDTO.getDepartment());
         this.setTotalExperience(0);
         this.setCurrentExperience(0);
+        this.setCountQuestion(0);
         this.setCountAnswer(0);
         this.setCountAccept(0);
         this.setLevel(1);

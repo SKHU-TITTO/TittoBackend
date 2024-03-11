@@ -2,6 +2,7 @@ package com.example.titto_backend.questionBoard.service;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.auth.service.BadgeService;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
@@ -23,6 +24,7 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final ExperienceService experienceService;
+    private final BadgeService badgeService;
 
     // Create
     @Transactional
@@ -43,6 +45,8 @@ public class AnswerService {
         Integer updateUserCountAnswer = user.getCountAnswer() + 1;
         user.setCountAnswer(updateUserCountAnswer);
         question.setAnswerCount(question.getAnswerCount() + 1);
+        badgeService.getAnswerBadge(user, user.getCountAnswer());  // 뱃지 여부 판단
+
         // 답변을 작성한 사용자의 경험치 추가
         experienceService.addExperience(question.getAuthor(), user, 5);
 
@@ -75,21 +79,25 @@ public class AnswerService {
 
     @Transactional
     public void acceptAnswer(Long questionId, Long answerId, User user) {
-        validateQuestionAuthorIsLoggedInUser(questionId, user);
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+        validateQuestionAuthorIsLoggedInUser(question, user);
+
 //        verifyAcceptedAnswer(questionId);
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+
         answer.setAccepted(true);
 //        question.setAcceptedAnswer(answer);
         question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
 
-        Integer updateCountAccept = answer.getAuthor().getCountAccept() + 1;
-        answer.getAuthor().setCountAccept(updateCountAccept);
+        User answerAuthor = answer.getAuthor();
+        Integer updateCountAccept = answerAuthor.getCountAccept() + 1;
+        answerAuthor.setCountAccept(updateCountAccept);
 
-        experienceService.addExperience(question.getAuthor(), answer.getAuthor(), 35 + question.getSendExperience());
+        experienceService.addExperience(question.getAuthor(), answerAuthor, 35 + question.getSendExperience());
+        badgeService.getAcceptBadge(answerAuthor, answerAuthor.getCountAccept());
     }
 
    /* private void verifyAcceptedAnswer(Long questionId) {
@@ -98,9 +106,7 @@ public class AnswerService {
         }
     }*/
 
-    private void validateQuestionAuthorIsLoggedInUser(Long questionId, User user) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+    private void validateQuestionAuthorIsLoggedInUser(Question question, User user) {
         if (!question.getAuthor().equals(user)) {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
