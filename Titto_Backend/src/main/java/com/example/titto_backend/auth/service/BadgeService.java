@@ -20,6 +20,7 @@ public class BadgeService {
         addBadge(badges, countAnswer, BadgeType.PROFESSIONAL_RESPONDER, 11, 20);
         addBadge(badges, countAnswer, BadgeType.EXPERT_RESPONDER, 50);
         user.setBadges(badges);
+        getTittoMasterBadge(user);
     }
 
     public void getQuestionBadge(User user, int countQuestion) {
@@ -30,6 +31,7 @@ public class BadgeService {
         addBadge(badges, countQuestion, BadgeType.PROFESSIONAL_INQUIRER, 11, 20);
         addBadge(badges, countQuestion, BadgeType.EXPERT_INQUIRER, 50);
         user.setBadges(badges);
+        getTittoMasterBadge(user);
     }
 
     public void getAcceptBadge(User user, int countAccept) {
@@ -40,6 +42,21 @@ public class BadgeService {
         addBadge(badges, countAccept, BadgeType.PROFESSIONAL_SOLVER, 11, 20);
         addBadge(badges, countAccept, BadgeType.EXPERT_SOLVER, 50);
         user.setBadges(badges);
+        getTittoMasterBadge(user);
+    }
+
+    public void getTittoAuthorityBadge(User user) {
+        List<BadgeType> badges = user.getBadges();
+        if (user.getLevel() == 5) {
+            badges.add(BadgeType.TITTO_AUTHORITY);
+        }
+    }
+
+    public void getTittoMasterBadge(User user) {
+        List<BadgeType> badges = user.getBadges();
+        if (badges.size() == 16) {
+            badges.add(BadgeType.TITTO_MASTER);
+        }
     }
 
     private void addBadge(List<BadgeType> badges, int count, BadgeType badgeType, int... counts) {
