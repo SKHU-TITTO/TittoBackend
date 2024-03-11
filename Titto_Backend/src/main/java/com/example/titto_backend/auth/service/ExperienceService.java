@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExperienceService {
     private final UserRepository userRepository;
 
+    private final BadgeService badgeService;
+
     // 경험치 추가
     @Transactional
     public void addExperience(User questionAuthor, User answerAuthor, int experienceToAdd) {
@@ -53,6 +55,7 @@ public class ExperienceService {
         if (level < 5) {
             user.setLevel(level + 1);
         }
+        badgeService.getTittoAuthorityBadge(user);
     }
 }
 

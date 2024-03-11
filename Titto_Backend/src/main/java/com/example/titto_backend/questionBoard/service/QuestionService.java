@@ -2,6 +2,7 @@ package com.example.titto_backend.questionBoard.service;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.auth.repository.UserRepository;
+import com.example.titto_backend.auth.service.BadgeService;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
@@ -35,6 +36,7 @@ public class QuestionService {
     private final ExperienceService experienceService;
     private final AnswerService answerService;
     private final RedisUtil redisUtil;
+    private final BadgeService badgeService;
 
     //Create
     @Transactional
@@ -43,6 +45,8 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         experienceService.deductExperience(user, request.getSendExperience()); // 유저 경험치 차감
+        user.setCountQuestion(user.getCountQuestion() + 1);
+        badgeService.getQuestionBadge(user, user.getCountQuestion());
 
         questionRepository.save(Question.builder()
                 .title(request.getTitle())
@@ -112,7 +116,7 @@ public class QuestionService {
     @Transactional
     public void delete(Long id, User user) {
         validateAuthorIsLoggedInUser(id, user);
-
+        user.setCountQuestion(user.getCountQuestion() - 1);
         // 질문에 연관된 답변들을 가져옴
         List<Answer> answers = answerRepository.findByQuestionId(id);
 
