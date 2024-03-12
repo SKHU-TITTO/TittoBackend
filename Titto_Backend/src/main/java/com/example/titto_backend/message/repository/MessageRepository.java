@@ -6,13 +6,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findAllByReceiver(User user);
+    List<Message> findAllByReceiverAndDeletedByReceiverFalse(User user);
 
-    List<Message> findAllBySender(User user);
+    List<Message> findAllBySenderAndDeletedBySenderFalse(User user);
 
-    // selectedUserId를 받고 자신과 서로 메시지를 주고받은 메시지를 조회
-    List<Message> findAllBySenderAndReceiverOrReceiverAndSender(User sender, User receiver, User receiver2,
-                                                                User sender2);
-    // isDeleted가 false인 메시지만 조회
-    List<Message> findAllByIsDeletedFalse();
+    List<Message> findAllBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalse(
+            User sender1, User receiver1, User receiver2, User sender2);
+
 }

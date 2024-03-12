@@ -7,7 +7,7 @@ import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.auth.service.UserService;
-import com.example.titto_backend.questionBoard.dto.AnswerInfoDto;
+import com.example.titto_backend.questionBoard.dto.AnswerDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -138,6 +138,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "사용자 프로필 조회",
             description = "사용자의 프로필을 조회합니다",
@@ -188,8 +189,8 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청"),
                     @ApiResponse(responseCode = "500", description = "관리자 문의")
             })
-    public ResponseEntity<List<AnswerInfoDto>> getUserAnswers(@PathVariable Long userId) {
-        List<AnswerInfoDto> userAnswers = userService.userAnswerView(userId);
+    public ResponseEntity<List<AnswerDTO.Info>> getUserAnswers(@PathVariable Long userId) {
+        List<AnswerDTO.Info> userAnswers = userService.userAnswerView(userId);
         return new ResponseEntity<>(userAnswers, HttpStatus.OK);
     }
 

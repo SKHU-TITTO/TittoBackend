@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "messages")
@@ -33,10 +35,12 @@ public class Message extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
+    @OnDelete(action = OnDeleteAction.NO_ACTION) // 수신자나 발신자가 삭제되면 메시지는 삭제되지 않음
     private User receiver;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
@@ -51,8 +55,11 @@ public class Message extends BaseEntity {
     @Column(name = "receiver_nickname")
     private String receiverNickname;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @Column(name = "DeletedBySender")
+    private boolean deletedBySender;
+
+    @Column(name = "DeletedByReceiver")
+    private boolean deletedByReceiver;
 
     @Builder
     public Message(User sender, User receiver, String content, String senderNickname, String receiverNickname) {
@@ -61,6 +68,8 @@ public class Message extends BaseEntity {
         this.content = content;
         this.senderNickname = senderNickname;
         this.receiverNickname = receiverNickname;
+        this.deletedBySender = false;
+        this.deletedByReceiver = false;
         this.sentAt = LocalDateTime.now();
     }
 }
