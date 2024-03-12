@@ -1,7 +1,6 @@
 package com.example.titto_backend.questionBoard.dto;
 
 import com.example.titto_backend.questionBoard.domain.Answer;
-import com.example.titto_backend.questionBoard.domain.Department;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -74,27 +73,5 @@ public class AnswerDTO {
             this.updateDate = answer.getUpdateDate();
             this.level = answer.getAuthor().getLevel();
         }
-    }
-
-    @Data
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @AllArgsConstructor
-    @Schema(description = "사용자 작성 답글 조회")
-    public static class Info {
-        @Schema(description = "답변 ID")
-        private Long id;
-
-        @Schema(description = "답변 내용")
-        private String content;
-
-        @Schema(description = "질문 ID")
-        private Long questionId;
-
-        @Schema(description = "질문 제목")
-        private String questionTitle;
-
-        @Schema(description = "전공")
-        private Department department;
-
     }
 }

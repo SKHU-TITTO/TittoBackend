@@ -83,12 +83,10 @@ public class AnswerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
         validateQuestionAuthorIsLoggedInUser(question, user);
 
-//        verifyAcceptedAnswer(questionId);
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
 
         answer.setAccepted(true);
-//        question.setAcceptedAnswer(answer);
         question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
 
@@ -99,12 +97,6 @@ public class AnswerService {
         experienceService.addExperience(question.getAuthor(), answerAuthor, 35 + question.getSendExperience());
         badgeService.getAcceptBadge(answerAuthor, answerAuthor.getCountAccept());
     }
-
-   /* private void verifyAcceptedAnswer(Long questionId) {
-        if (questionRepository.existsByIdAndAcceptedAnswerIsNotNull(questionId)) {
-            throw new CustomException(ErrorCode.ALREADY_ACCEPTED_ANSWER);
-        }
-    }*/
 
     private void validateQuestionAuthorIsLoggedInUser(Question question, User user) {
         if (!question.getAuthor().equals(user)) {
