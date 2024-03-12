@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ExperienceService {
-    private final UserRepository userRepository;
 
+    private final UserRepository userRepository;
     private final BadgeService badgeService;
 
     // 경험치 추가
