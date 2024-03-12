@@ -61,21 +61,6 @@ public class Message extends BaseEntity {
     @Column(name = "DeletedByReceiver")
     private boolean deletedByReceiver;
 
-//    @Column(name = "is_deleted")
-//    private boolean isDeleted;
-
-    public void deletedBySender() {
-        this.deletedBySender = true;
-    }
-
-    public void deletedByReceiver() {
-        this.deletedByReceiver = true;
-    }
-
-    public boolean isDeleted() {
-        return isDeletedBySender() && isDeletedByReceiver();
-    }
-
     @Builder
     public Message(User sender, User receiver, String content, String senderNickname, String receiverNickname) {
         this.sender = sender;
@@ -83,6 +68,8 @@ public class Message extends BaseEntity {
         this.content = content;
         this.senderNickname = senderNickname;
         this.receiverNickname = receiverNickname;
+        this.deletedBySender = false;
+        this.deletedByReceiver = false;
         this.sentAt = LocalDateTime.now();
     }
 }
