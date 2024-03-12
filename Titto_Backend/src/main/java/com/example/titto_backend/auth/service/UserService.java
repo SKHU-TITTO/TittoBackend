@@ -10,7 +10,7 @@ import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.matchingBoard.repository.matchingBoard.MatchingPostRepository;
-import com.example.titto_backend.questionBoard.dto.AnswerDTO;
+import com.example.titto_backend.questionBoard.dto.AnswerInfoDTO;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
 import java.util.ArrayList;
@@ -90,13 +90,12 @@ public class UserService {
     }
 
     // 유저 작성 답글 보기
-    public List<AnswerDTO.Info> userAnswerView(Long userId) {
+    public List<AnswerInfoDTO> userAnswerView(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return answerRepository.findAnswersInfoByAuthor(user);
     }
-
 
     @Transactional
     public void deleteUser(Long userId) {
