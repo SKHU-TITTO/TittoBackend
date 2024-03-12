@@ -4,7 +4,7 @@ import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.questionBoard.domain.Department;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
-import com.example.titto_backend.questionBoard.dto.QuestionInfoDto;
+import com.example.titto_backend.questionBoard.dto.QuestionInfoDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +21,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Page<Question> findByTitleContaining(String keyWord, Pageable pageable);
 
-    @Query("SELECT new com.example.titto_backend.questionBoard.dto.QuestionInfoDto(a.id, a.title, a.content,"
+    @Query("SELECT new com.example.titto_backend.questionBoard.dto.QuestionInfoDTO(a.id, a.title, a.content,"
             + " a.createDate, a.viewCount, a.answerCount, a.department) "
             + "FROM Question a"
             + " WHERE a.author = :user")
-    List<QuestionInfoDto> findQuestionsInfoByAuthor(@Param("user") User user);
+    List<QuestionInfoDTO> findQuestionsInfoByAuthor(@Param("user") User user);
 
 }
