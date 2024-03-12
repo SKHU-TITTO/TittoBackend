@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class OAuthKakaoService {
+
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final RedisTemplate<String, Object> redisTemplate;
