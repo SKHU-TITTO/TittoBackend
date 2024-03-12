@@ -23,10 +23,10 @@ public class MessageService {
     @Transactional
     public String writeMessage(MessageDTO.Request request, String email) throws CustomException {
         User sender = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)); //보낸사람 찾기
 
         User receiver = userRepository.findByNickname(request.getReceiverNickname())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)); // 받는사람 찾기
 
         messageRepository.save(Message.builder()
                 .sender(sender)
@@ -39,6 +39,7 @@ public class MessageService {
         return "메시지 전송 성공";
     }
 
+    // 서로 주고 받은 메세지
     @Transactional
     public List<Response> getBothMessages(String email, Long selectedUserId) {
         User user = userRepository.findByEmail(email)
@@ -47,62 +48,40 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        //서로 주고 받은 메세지가 삭제된 경우 삭제된 메세지는 보이지 않게 하기 위해 isDeleted 가 false 인 메세지만 조회
-        //다른 상대에게 받은 메세지는 안뜨게 하고싶음.
-        List<Message> messages = messageRepository.findAllBySenderAndReceiverAndIsDeletedFalseOrReceiverAndSenderAndIsDeletedFalse(
-                user, selectedUser,
-                user, selectedUser);
+        List<Message> messages = messageRepository.findAllBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalse(
+                user, selectedUser, user, selectedUser);
+
         return convertMessagesToDTO(messages);
     }
 
+    // 받은 메세지 미리보기
     @Transactional
     public List<MessageDTO.Preview> getAllMessagePreview(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<Message> messages = messageRepository.findAllByReceiverAndIsDeletedFalse(user);
+        List<Message> messages = messageRepository.findAllByReceiverAndDeletedByReceiverFalse(user);
         return convertMessagesToPreviewDTO(messages);
     }
 
+    // 받은 메세지함 조회
     @Transactional
-    public List<MessageDTO.Response> getMessagesByReceiver(String email) {
+    public List<Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<Message> messages = messageRepository.findAllByReceiverAndIsDeletedFalse(receiver);
+        List<Message> messages = messageRepository.findAllByReceiverAndDeletedByReceiverFalse(receiver);
         return convertMessagesToDTO(messages);
     }
 
-
+    // 보낸 메세지함 조회
     @Transactional
     public List<Response> getMessagesBySender(String email) {
         User sender = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<Message> messages = messageRepository.findAllBySenderAndIsDeletedFalse(sender);
+        List<Message> messages = messageRepository.findAllBySenderAndDeletedBySenderFalse(sender);
         return convertMessagesToDTO(messages);
     }
 
-    /**
-     * 1 : 로그인한 사용자와 관련된 메세지인지 2 : sender 인지 receiver 인지 3 : isDeleted 가 false 인지 true 인지
-     **/
-    @Transactional
-    public void deleteMessage(Long messageId, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MESSAGE_NOT_FOUND));
-
-        if (message.getSender().equals(user) || message.getReceiver().equals(user)) {
-            if (message.getSender().equals(user)) {
-                message.setDeleted(true);
-            } else {
-                message.setDeleted(true);
-            }
-        } else {
-            throw new CustomException(ErrorCode.MESSAGE_NOT_FOUND);
-        }
-    }
-
-    // 메세지 전체 삭제
+    // 메세지 삭제
     @Transactional
     public void deleteAllMessages(String email, Long selectedUserId) {
         User user = userRepository.findByEmail(email)
@@ -111,12 +90,18 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Message> messages = messageRepository.findAllBySenderAndReceiverAndIsDeletedFalseOrReceiverAndSenderAndIsDeletedFalse(
-                user, selectedUser,
-                user, selectedUser);
+        List<Message> messages = messageRepository.findAllBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalse(user,selectedUser,user,selectedUser);
+
         for (Message message : messages) {
-            message.setDeleted(true);
+            if (message.getSender().equals(user)) {
+                message.setDeletedBySender(true);
+            }
+            if (message.getReceiver().equals(user)) {
+                message.setDeletedByReceiver(true);
+            }
         }
+
+        // TODO:만약 둘다 삭제 시 데이터 베이스에서 지워지게 하기
     }
 
     private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
