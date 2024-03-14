@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "사용자 작성 게시글 조회")
-public class QuestionInfoDto {
+public class QuestionInfoDTO {
     @Schema(description = "질문 ID")
     private Long id;
 
