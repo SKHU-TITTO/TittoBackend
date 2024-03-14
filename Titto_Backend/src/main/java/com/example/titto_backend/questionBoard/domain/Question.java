@@ -2,7 +2,6 @@ package com.example.titto_backend.questionBoard.domain;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,11 +53,6 @@ public class Question extends BaseEntity {
     @Column(name = "send_Experience", nullable = false)
     private Integer sendExperience;
 
-/*    @Setter
-    @OneToOne
-    @JoinColumn(name = "accepted_answer")
-    private Answer acceptedAnswer;*/
-
     @Setter
     @Column(name = "accepted_answer")
     private boolean isAnswerAccepted;
@@ -76,7 +70,7 @@ public class Question extends BaseEntity {
     @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer viewCount;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
 
     public void addViewCount() {
