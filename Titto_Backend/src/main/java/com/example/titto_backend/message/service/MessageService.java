@@ -90,7 +90,8 @@ public class MessageService {
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Message> messages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalseOrderBySentAtDesc(user,selectedUser,user,selectedUser);
+        List<Message> messages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalseOrderBySentAtDesc(
+                user, selectedUser, user, selectedUser);
 
         for (Message message : messages) {
             if (message.getSender().equals(user)) {
@@ -101,7 +102,9 @@ public class MessageService {
             }
         }
 
-        // TODO:만약 둘다 삭제 시 데이터 베이스에서 지워지게 하기
+        if (messages.stream().allMatch(message -> message.isDeletedBySender() && message.isDeletedByReceiver())) {
+            messageRepository.deleteAll(messages);
+        }
     }
 
     private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
