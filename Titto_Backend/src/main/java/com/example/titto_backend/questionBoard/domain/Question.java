@@ -2,6 +2,7 @@ package com.example.titto_backend.questionBoard.domain;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -70,7 +71,7 @@ public class Question extends BaseEntity {
     @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer viewCount;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
 
     public void addViewCount() {
