@@ -1,11 +1,15 @@
 package com.example.titto_backend.message.controller;
 
+import com.example.titto_backend.auth.domain.User;
+import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,19 +47,17 @@ public class MessageController {
                 .body(messageService.writeMessage(request, userDetails.getUsername()));
     }
 
-    //쪽지함 전체 조회
+    // 쪽지함 목록 조회
     @GetMapping("/all")
-    @Operation(
-            summary = "전체 메시지 조회",
-            description = "전체 메시지를 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "요청 성공"),
-                    @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-                    @ApiResponse(responseCode = "500", description = "관리자 문의")
-            })
-    public ResponseEntity<List<MessageDTO.Preview>> getAllMessagePreview(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return new ResponseEntity<>(messageService.getAllMessagePreview(userDetails.getUsername()), HttpStatus.OK);
+    public ResponseEntity<List<MessageDTO.Preview>> getAllMessages(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<User, Message> conversations = messageService.getUserConversations(userDetails.getUsername());
+
+        // 대화 목록을 DTO로 변환하여 반환
+        List<MessageDTO.Preview> previews = conversations.values().stream()
+                .map(MessageDTO.Preview::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(previews, HttpStatus.OK);
     }
 
     //쪽지함 세부 조회 ( 주고 받은 사용자와의 대화 내용을 뿌려줄 수 있는 api)
