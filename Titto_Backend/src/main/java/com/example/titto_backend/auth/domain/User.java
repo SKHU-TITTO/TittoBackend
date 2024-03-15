@@ -5,6 +5,7 @@ import com.example.titto_backend.common.BaseEntity;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.message.domain.Message;
+import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
@@ -18,7 +19,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +38,6 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column(name = "email")
-    @NotBlank(message = "이메일은 필수!")
     private String email;
 
     @Column(name = "profile", nullable = true)
@@ -81,23 +80,27 @@ public class User extends BaseEntity {
     private List<BadgeType> badges;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Question> questions;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Answer> answers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<MatchingPost> matchingPosts;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MatchingPostReview> matchingPostReviews;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Message> sentMessages;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Message> receivedMessages;
 
     @Setter
@@ -110,7 +113,7 @@ public class User extends BaseEntity {
 
     @Setter
     @Column(name = "count_question")
-    private Integer countQuestion;
+    private Integer countQuestion; // 질문 개수
 
     @Setter
     @Column(name = "count_answer")
@@ -122,9 +125,9 @@ public class User extends BaseEntity {
 
     @Setter
     @Column(name = "level")
-    private Integer level;
+    private Integer level; // 사용자의 레벨
 
-    // isDeleted 로 유저가 삭제되었는지 안되었는지 확인하고 삭제되었을 경우에는 사용자의 닉네임을 '알수없음'으로 담은 dto를 반환하도록 하기
+    // TODO : isDeleted 로 유저가 삭제되었는지 안되었는지 확인하고 삭제되었을 경우에는 사용자의 닉네임을 '알수없음'으로 담은 dto를 반환하도록 하기
 //    @Setter
 //    @Column(name = "is_deleted")
 //    private boolean isDeleted;

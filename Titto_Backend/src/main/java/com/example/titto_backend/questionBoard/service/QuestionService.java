@@ -53,12 +53,13 @@ public class QuestionService {
                 .author(user)
                 .content(request.getContent())
                 .department(Department.valueOf(request.getDepartment().toUpperCase()))
-                .status(Status.valueOf("UNSOLVED"))
+                .status(Status.UNSOLVED)
                 .sendExperience(request.getSendExperience())
                 .viewCount(0)
                 .answerCount(0)
                 .isAnswerAccepted(false)
                 .build());
+
         return "질문이 성공적으로 등록되었습니다.";
     }
 

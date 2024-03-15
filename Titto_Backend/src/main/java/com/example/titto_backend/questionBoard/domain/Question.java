@@ -54,11 +54,6 @@ public class Question extends BaseEntity {
     @Column(name = "send_Experience", nullable = false)
     private Integer sendExperience;
 
-/*    @Setter
-    @OneToOne
-    @JoinColumn(name = "accepted_answer")
-    private Answer acceptedAnswer;*/
-
     @Setter
     @Column(name = "accepted_answer")
     private boolean isAnswerAccepted;
