@@ -79,12 +79,20 @@ public class MessageDTO {
         @Schema(description = "보낸 사람 ID")
         private Long senderId;
 
+        @Schema(description = "받는 사람 ID")
+        private Long receiverId;
+
+        @Schema(description = "받는 사람 닉네임")
+        private String receiverNickname;
+
         public Preview(Message message) {
             this.id = message.getId();
             this.content = message.getContent();
             this.senderNickname = message.getSenderNickname();
             this.sentAt = message.getSentAt().toString();
             this.senderId = message.getSender().getId();
+            this.receiverId = message.getReceiver().getId();
+            this.receiverNickname = message.getReceiverNickname();
         }
     }
 
