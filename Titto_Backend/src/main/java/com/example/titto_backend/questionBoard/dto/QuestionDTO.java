@@ -35,10 +35,6 @@ public class QuestionDTO {
         @NotBlank
         private String department;
 
-        @Schema(description = "상태", defaultValue = "UNSOLVED")
-        @NotBlank
-        private String status;
-
         @Schema(description = "줄 포인트")
         @NotBlank
         private Integer sendExperience;
