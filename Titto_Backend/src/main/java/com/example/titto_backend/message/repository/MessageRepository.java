@@ -13,4 +13,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalseOrderBySentAtDesc(
             User sender1, User receiver1, User receiver2, User sender2);
 
+    List<Message> findBySenderOrReceiverOrderBySentAtDesc(User sender, User receiver);
+
 }
