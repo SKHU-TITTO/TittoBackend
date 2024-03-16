@@ -78,6 +78,9 @@ public class UserService {
 
     // 유저 프로필 조회
     public UserProfileViewDto userProfileView(Long userId) {
+        if (userId == 1L) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return UserProfileViewDto.of(user);
