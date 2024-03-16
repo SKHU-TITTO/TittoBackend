@@ -8,7 +8,9 @@ import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.dto.MessageDTO.Response;
 import com.example.titto_backend.message.repository.MessageRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,13 +56,28 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    // 받은 메세지 미리보기
+    // 메세지 함에서 사용자 별 가장 최근 메세지만 보내줌.
     @Transactional
-    public List<MessageDTO.Preview> getAllMessagePreview(String email) {
+    public Map<User, Message> getUserConversations(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        List<Message> messages = messageRepository.findAllByReceiverAndDeletedByReceiverFalse(user);
-        return convertMessagesToPreviewDTO(messages);
+
+        List<Message> userMessages = messageRepository.findBySenderOrReceiverOrderBySentAtDesc(user, user);
+        Map<User, Message> conversations = new HashMap<>();
+
+        for (Message message : userMessages) {
+            User otherUser = message.getSender().equals(user) ? message.getReceiver() : message.getSender();
+            // 이미 대화 목록에 있는 사용자인 경우 최신 메시지로 갱신
+            if (conversations.containsKey(otherUser)) {
+                Message currentMessage = conversations.get(otherUser);
+                if (message.getSentAt().isAfter(currentMessage.getSentAt())) {
+                    conversations.put(otherUser, message);
+                }
+            } else {
+                conversations.put(otherUser, message);
+            }
+        }
+        return conversations;
     }
 
     // 받은 메세지함 조회
@@ -110,12 +127,6 @@ public class MessageService {
     private List<MessageDTO.Response> convertMessagesToDTO(List<Message> messages) {
         return messages.stream()
                 .map(MessageDTO.Response::new)
-                .toList();
-    }
-
-    private List<MessageDTO.Preview> convertMessagesToPreviewDTO(List<Message> messages) {
-        return messages.stream()
-                .map(MessageDTO.Preview::new)
                 .toList();
     }
 
