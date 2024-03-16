@@ -27,4 +27,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             + " WHERE a.author = :user")
     List<QuestionInfoDTO> findQuestionsInfoByAuthor(@Param("user") User user);
 
+    List<Question> findQuestionsByAuthor(User user);
 }

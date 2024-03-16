@@ -34,6 +34,7 @@ public class Question extends BaseEntity {
     private Long id;
 
     @ManyToOne
+    @Setter
     @JoinColumn(name = "author")
     private User author;
 

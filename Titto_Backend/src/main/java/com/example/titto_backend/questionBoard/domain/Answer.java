@@ -33,6 +33,7 @@ public class Answer extends BaseEntity {
 
     // 답글 작성자
     @ManyToOne
+    @Setter
     @JoinColumn(name = "author")
     private User author;
 

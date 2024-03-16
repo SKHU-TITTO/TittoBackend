@@ -80,19 +80,19 @@ public class User extends BaseEntity {
     private List<BadgeType> badges;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Question> questions;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Answer> answers;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<MatchingPost> matchingPosts;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reviewAuthor", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<MatchingPostReview> matchingPostReviews;
 
     @JsonIgnore

@@ -1,7 +1,5 @@
 package com.example.titto_backend.matchingBoard.domain.matchingBoard;
 
-//import com.example.titto_backend.converter.CategoryToIntegerConverter;
-
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
 import jakarta.persistence.CascadeType;
@@ -38,6 +36,7 @@ public class MatchingPost extends BaseEntity {
 
     // 직상자
     @ManyToOne
+    @Setter
     @JoinColumn(name = "author")
     private User user;
 
