@@ -16,4 +16,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<AnswerInfoDTO> findAnswersInfoByAuthor(@Param("user") User user);
 
     List<Answer> findByQuestionId(Long questionId);
+
+    List<Answer> findAnswersByAuthor(User user);
 }

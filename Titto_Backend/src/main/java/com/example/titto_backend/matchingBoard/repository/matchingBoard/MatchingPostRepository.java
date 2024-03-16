@@ -24,4 +24,5 @@ public interface MatchingPostRepository extends JpaRepository<MatchingPost, Long
             + " WHERE a.user = :user")
     List<MatchingPostInfoDto> findMatchingPostsInfoByAuthor(@Param("user") User user);
 
+    List<MatchingPost> findMatchingPostByUser(User user);
 }

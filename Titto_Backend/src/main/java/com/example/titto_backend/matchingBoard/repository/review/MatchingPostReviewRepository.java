@@ -1,5 +1,6 @@
 package com.example.titto_backend.matchingBoard.repository.review;
 
+import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import java.util.List;
@@ -11,4 +12,6 @@ public interface MatchingPostReviewRepository extends JpaRepository<MatchingPost
     List<MatchingPostReview> findAllByMatchingPost(MatchingPost matchingPost);
 
     void deleteAllByMatchingPost(MatchingPost matchingPost);
+
+    List<MatchingPostReview> findMatchingPostReviewsByReviewAuthor(User user);
 }
