@@ -86,6 +86,10 @@ public class AnswerService {
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
 
+        if (question.isAnswerAccepted()) {
+            throw new CustomException(ErrorCode.CANNOT_ACCEPTED);
+        }
+
         answer.setAccepted(true);
         question.setStatus(Status.valueOf("SOLVED"));
         question.setAnswerAccepted(true);  // 일단 임시 추가
