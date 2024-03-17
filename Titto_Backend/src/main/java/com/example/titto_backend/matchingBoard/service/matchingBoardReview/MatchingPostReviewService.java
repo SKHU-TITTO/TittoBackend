@@ -86,7 +86,7 @@ public class MatchingPostReviewService {
         User user = getCurrentUser(principal);
         validateMatchingPostReviewAuthorIsLoggedInUser(matchingPostReviewDeleteRequestDto.getReviewId(), user);
 
-        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostReviewDeleteRequestDto.getReviewId())
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostReviewDeleteRequestDto.getPostId())
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
         matchingPost.decreaseReviewCount();
 
