@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "profile",length = 1000, nullable = true)
+    @Column(name = "profile", columnDefinition = "TEXT", nullable = true)
     private String profile;
 
     @Setter
