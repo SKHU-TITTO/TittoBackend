@@ -75,8 +75,8 @@ public class AnswerService {
         question.setAnswerCount(question.getAnswerCount() - 1);
 
         User answerAuthor = answer.getAuthor();
-        answerAuthor.setTotalExperience(answerAuthor.getTotalExperience() - question.getSendExperience());
-        answerAuthor.setCurrentExperience(answerAuthor.getCurrentExperience() - question.getSendExperience());
+        answerAuthor.setTotalExperience(answerAuthor.getTotalExperience() - 5);
+        answerAuthor.setCurrentExperience(answerAuthor.getCurrentExperience() - 5);
 
         answerRepository.deleteById(answerId);
     }
