@@ -88,10 +88,10 @@ public class MessageDTO {
         public Preview(Message message) {
             this.id = message.getId();
             this.content = message.getContent();
-            this.senderNickname = message.getSenderNickname();
             this.sentAt = message.getSentAt().toString();
             this.senderId = message.getSender().getId();
             this.receiverId = message.getReceiver().getId();
+            this.senderNickname = message.getSenderNickname();
             this.receiverNickname = message.getReceiverNickname();
         }
     }
