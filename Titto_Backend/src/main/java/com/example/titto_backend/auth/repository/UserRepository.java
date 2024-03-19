@@ -20,8 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT new com.example.titto_backend.auth.dto.response.UserRankingDto("
             + "a.id, a.profile, a.nickname, a.studentNo, a.department, a.totalExperience, a.level)"
-            + "FROM User a "
-            + "ORDER BY a.totalExperience DESC"
+            + "FROM User a WHERE a.id NOT IN (1)"
+            + "ORDER BY a.totalExperience DESC limit 10"
     )
     List<UserRankingDto> findUserByOrderByTotalExperience();
 }
