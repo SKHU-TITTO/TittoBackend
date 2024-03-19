@@ -18,7 +18,8 @@ public interface MatchingPostRepository extends JpaRepository<MatchingPost, Long
 
     Page<MatchingPost> findByCategory(Category category, Pageable pageable);
 
-    @Query("SELECT new com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostInfoDto(a.matchingPostId, a.title, a.content, "
+    @Query("SELECT new com.example.titto_backend.matchingBoard.dto.response.matchingPostResponse.MatchingPostInfoDto("
+            + "a.matchingPostId, a.title, a.content, "
             + "a.createDate, a.viewCount, a.reviewCount, a.category) "
             + "FROM MatchingPost a"
             + " WHERE a.user = :user")

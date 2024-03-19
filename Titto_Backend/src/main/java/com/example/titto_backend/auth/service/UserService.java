@@ -6,6 +6,7 @@ import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
 import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
 import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
+import com.example.titto_backend.auth.dto.response.UserRankingDto;
 import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
@@ -153,6 +154,9 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public List<UserRankingDto> findUserRanking() {
+        return userRepository.findUserByOrderByTotalExperience();
+    }
 
     //닉네임 중복 여부
     public boolean isDuplicatedNickname(String nickname) {
