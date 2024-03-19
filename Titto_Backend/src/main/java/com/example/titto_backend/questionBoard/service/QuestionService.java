@@ -64,19 +64,19 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Response> findAll(int page) {
+    public Page<QuestionDTO.Response> findAll(int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
         return questionRepository.findAllByOrderByCreateDateDesc(pageable).map(QuestionDTO.Response::new);
     }
 
     @Transactional(readOnly = true)
-    public Page<Response> findByStatus(int page, String status) {
+    public Page<QuestionDTO.Response> findByStatus(int page, String status) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
         return questionRepository.findQuestionByStatus(Status.valueOf(status), pageable).map(QuestionDTO.Response::new);
     }
 
     @Transactional
-    public Response findById(Principal principal, Long Id) {
+    public QuestionDTO.Response findById(Principal principal, Long Id) {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Question question = questionRepository.findById(Id)

@@ -6,7 +6,6 @@ import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
-import com.example.titto_backend.message.dto.MessageDTO.Response;
 import com.example.titto_backend.message.repository.MessageRepository;
 import java.util.HashMap;
 import java.util.List;
@@ -41,9 +40,9 @@ public class MessageService {
         return "메시지 전송 성공";
     }
 
-    // 서로 주고 받은 메세지
+    // 서로 주고 받은 메세지 조회
     @Transactional
-    public List<Response> getBothMessages(String email, Long selectedUserId) {
+    public List<MessageDTO.Response> getBothMessages(String email, Long selectedUserId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -56,7 +55,7 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    // 메세지 함에서 사용자 별 가장 최근 메세지만 보내줌.
+    // 메세지함에서 사용자 별 가장 최근 메세지만 보내줌.
     @Transactional
     public Map<User, Message> getUserConversations(String email) {
         User user = userRepository.findByEmail(email)
@@ -82,7 +81,7 @@ public class MessageService {
 
     // 받은 메세지함 조회
     @Transactional
-    public List<Response> getMessagesByReceiver(String email) {
+    public List<MessageDTO.Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         List<Message> messages = messageRepository.findAllByReceiverAndDeletedByReceiverFalse(receiver);
@@ -91,7 +90,7 @@ public class MessageService {
 
     // 보낸 메세지함 조회
     @Transactional
-    public List<Response> getMessagesBySender(String email) {
+    public List<MessageDTO.Response> getMessagesBySender(String email) {
         User sender = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         List<Message> messages = messageRepository.findAllBySenderAndDeletedBySenderFalse(sender);
