@@ -5,6 +5,7 @@ import com.example.titto_backend.auth.dto.request.UserInfoUpdateDTO;
 import com.example.titto_backend.auth.dto.request.UserProfileUpdateDTO;
 import com.example.titto_backend.auth.dto.response.UserInfoDTO;
 import com.example.titto_backend.auth.dto.response.UserProfileViewDto;
+import com.example.titto_backend.auth.dto.response.UserRankingDto;
 import com.example.titto_backend.auth.service.ExperienceService;
 import com.example.titto_backend.auth.service.UserService;
 import com.example.titto_backend.questionBoard.dto.AnswerInfoDTO;
@@ -207,5 +208,18 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok("회원 탈퇴가 완료되었습니다");
+    }
+
+    @GetMapping("/ranking")
+    @Operation(
+            summary = "회원 랭킹 조회",
+            description = "회원 랭킹을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+            })
+    public ResponseEntity<List<UserRankingDto>> getUserRanking() {
+        List<UserRankingDto> userRankingDtoList = userService.findUserRanking();
+        return new ResponseEntity<>(userRankingDtoList, HttpStatus.OK);
     }
 }
