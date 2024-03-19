@@ -7,12 +7,14 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.repository.MessageRepository;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -40,20 +42,60 @@ public class MessageService {
         return "메시지 전송 성공";
     }
 
-    // 서로 주고 받은 메세지 조회
+    // 사용자의 주고 받은 메시지 조회
     @Transactional
-    public List<MessageDTO.Response> getBothMessages(String email, Long selectedUserId) {
-        User user = userRepository.findByEmail(email)
+    public List<MessageDTO.Response> getBothMessages(String currentUserEmail, Long selectedUserId) {
+        // 현재 사용자 조회
+        User currentUser = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        // 선택된 사용자 조회
         User selectedUser = userRepository.findById(selectedUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Message> messages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalseOrderBySentAtDesc(
-                user, selectedUser, user, selectedUser);
+        List<Message> sentMessages;
+        List<Message> receivedMessages;
 
-        return convertMessagesToDTO(messages);
+        // 현재 사용자가 보낸 메시지와 받은 메시지를 구분하여 조회
+        if (currentUser.getId().equals(selectedUserId)) {
+            // 현재 사용자가 선택한 대상에게 보낸 메시지 조회
+            sentMessages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalse(currentUser, selectedUser);
+            // 현재 사용자가 선택한 대상으로부터 받은 메시지 조회
+            receivedMessages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalse(selectedUser,
+                    currentUser);
+        } else {
+            // 현재 사용자가 선택한 대상에게 받은 메시지 조회
+            receivedMessages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalse(currentUser,
+                    selectedUser);
+            // 현재 사용자가 선택한 대상에게 보낸 메시지 조회
+            sentMessages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalse(selectedUser, currentUser);
+        }
+
+        // 조회된 메시지를 DTO로 변환하여 반환
+        List<MessageDTO.Response> messagesDTO = new ArrayList<>();
+        messagesDTO.addAll(convertMessagesToDTO(sentMessages));
+        messagesDTO.addAll(convertMessagesToDTO(receivedMessages));
+
+        // 메시지를 보낸 시간을 기준으로 정렬
+        messagesDTO.sort(Comparator.comparing(MessageDTO.Response::getSentAt).reversed());
+
+        return messagesDTO;
     }
+
+    // 서로 주고 받은 메세지 조회
+//    @Transactional
+//    public List<MessageDTO.Response> getBothMessages(String email, Long selectedUserId) {
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+//
+//        User selectedUser = userRepository.findById(selectedUserId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+//
+//        List<Message> messages = messageRepository.findBySenderAndReceiverAndDeletedBySenderFalseOrReceiverAndSenderAndDeletedByReceiverFalseOrderBySentAtDesc(
+//                user, selectedUser, user, selectedUser);
+//
+//        return convertMessagesToDTO(messages);
+//    }
 
     // 메세지함에서 사용자 별 가장 최근 메세지만 보내줌.
     @Transactional
