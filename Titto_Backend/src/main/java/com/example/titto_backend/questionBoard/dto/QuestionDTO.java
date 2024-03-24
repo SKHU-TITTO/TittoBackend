@@ -132,5 +132,8 @@ public class QuestionDTO {
 
         @Schema(description = "카테고리")
         private Department department;
+
+        @Schema(description = "보낼 경험치")
+        private Integer sendExperience;
     }
 }
