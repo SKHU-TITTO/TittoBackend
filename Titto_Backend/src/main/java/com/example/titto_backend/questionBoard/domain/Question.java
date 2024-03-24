@@ -63,10 +63,11 @@ public class Question extends BaseEntity {
     @Column(name = "answer_count")
     private Integer answerCount;
 
-    public void update(String title, String content, Department department) {
+    public void update(String title, String content, Department department, Integer sendExperience) {
         this.title = title;
         this.content = content;
         this.department = department;
+        this.sendExperience = sendExperience;
     }
 
     @Column(name = "view_count", nullable = false, columnDefinition = "INTEGER DEFAULT 0")

@@ -109,7 +109,8 @@ public class QuestionService {
         oldQuestion.update(
                 update.getTitle(),
                 update.getContent(),
-                Department.valueOf(String.valueOf(update.getDepartment()))
+                Department.valueOf(String.valueOf(update.getDepartment())),
+                update.getSendExperience()
         );
     }
 
