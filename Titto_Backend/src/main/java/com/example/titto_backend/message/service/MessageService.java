@@ -7,6 +7,8 @@ import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.repository.MessageRepository;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,13 +56,31 @@ public class MessageService {
     }
 
     @Transactional
-    public List<Message> getUserMessages(String email) {
+    public List<Message> getUserConversationsMessages(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        List<Message> userMessages = messageRepository.findBySenderAndDeletedBySenderFalseOrReceiverAndDeletedByReceiverFalseOrderBySentAtDesc(user, user);
+        List<Message> userSentMessages = messageRepository.findBySenderAndDeletedBySenderFalseOrderBySentAtDesc(user);
+        List<Message> userReceivedMessages = messageRepository.findByReceiverAndDeletedByReceiverFalseOrderBySentAtDesc(user);
+
+        List<Message> userMessages = new ArrayList<>();
+        userMessages.addAll(userSentMessages);
+        userMessages.addAll(userReceivedMessages);
+
+        // 메시지를 시간 순서대로 정렬
+        userMessages.sort(Comparator.comparing(Message::getSentAt).reversed());
+
         return userMessages;
     }
+
+//    @Transactional
+//    public List<Message> getUserMessages(String email) {
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+//
+//        List<Message> userMessages = messageRepository.findBySenderAndDeletedBySenderFalseOrReceiverAndDeletedByReceiverFalseOrderBySentAtDesc(user, user);
+//        return userMessages;
+//    }
 
     // 메세지함에서 사용자 별 가장 최근 메세지만 보내줌.
 //    @Transactional

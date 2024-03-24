@@ -48,7 +48,7 @@ public class MessageController {
     // 쪽지함 목록 조회
     @GetMapping("/all")
     public ResponseEntity<List<MessageDTO.Preview>> getAllMessages(@AuthenticationPrincipal UserDetails userDetails) {
-        List<Message> userMessages = messageService.getUserMessages(userDetails.getUsername());
+        List<Message> userMessages = messageService.getUserConversationsMessages(userDetails.getUsername());
         List<MessageDTO.Preview> previews = userMessages.stream()
                 .map(MessageDTO.Preview::new)
                 .collect(Collectors.toList());
