@@ -70,14 +70,14 @@ public class MessageDTO {
         @Schema(description = "내용")
         private String content;
 
-        @Schema(description = "보낸 사람 닉네임")
-        private String senderNickname;
-
         @Schema(description = "보낸 시간")
         private String sentAt;
 
         @Schema(description = "보낸 사람 ID")
         private Long senderId;
+
+        @Schema(description = "보낸 사람 닉네임")
+        private String senderNickname;
 
         @Schema(description = "받는 사람 ID")
         private Long receiverId;
