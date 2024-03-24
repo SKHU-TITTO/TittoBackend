@@ -1,6 +1,5 @@
 package com.example.titto_backend.message.controller;
 
-import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.message.domain.Message;
 import com.example.titto_backend.message.dto.MessageDTO;
 import com.example.titto_backend.message.service.MessageService;
@@ -8,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,15 +48,25 @@ public class MessageController {
     // 쪽지함 목록 조회
     @GetMapping("/all")
     public ResponseEntity<List<MessageDTO.Preview>> getAllMessages(@AuthenticationPrincipal UserDetails userDetails) {
-        Map<User, Message> conversations = messageService.getUserConversations(userDetails.getUsername());
-
-        // 대화 목록을 DTO로 변환하여 반환
-        List<MessageDTO.Preview> previews = conversations.values().stream()
+        List<Message> userMessages = messageService.getUserMessages(userDetails.getUsername());
+        List<MessageDTO.Preview> previews = userMessages.stream()
                 .map(MessageDTO.Preview::new)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(previews, HttpStatus.OK);
     }
+
+//    @GetMapping("/all")
+//    public ResponseEntity<List<MessageDTO.Preview>> getAllMessages(@AuthenticationPrincipal UserDetails userDetails) {
+//        Map<User, Message> conversations = messageService.getUserConversations(userDetails.getUsername());
+//
+//        // 대화 목록을 DTO로 변환하여 반환
+//        List<MessageDTO.Preview> previews = conversations.values().stream()
+//                .map(MessageDTO.Preview::new)
+//                .collect(Collectors.toList());
+//
+//        return new ResponseEntity<>(previews, HttpStatus.OK);
+//    }
 
     //쪽지함 세부 조회 ( 주고 받은 사용자와의 대화 내용을 뿌려줄 수 있는 api)
     @GetMapping("/{selectedUserId}")
