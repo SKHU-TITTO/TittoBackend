@@ -12,7 +12,7 @@ TIME_NOW=$(date +%c)
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> "$DEPLOY_LOG"
 cd /home/ubuntu/app/Titto_Backend/build/libs
-nohup java -jar "$JAR_FILE" >> /dev/null 2>&1 &
+nohup java -jar "$JAR_FILE" &
 
 sleep 5  # 프로세스가 실행되기를 기다립니다. 필요한 경우 조정하세요.
 
