@@ -9,12 +9,12 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -49,9 +49,9 @@ springdoc:
   api-docs:
     path: /api-docs/json
     groups:
-      enable : true
+      enable: true
   cache:
-    disabled : true
+    disabled: true
   use-fqn: true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
