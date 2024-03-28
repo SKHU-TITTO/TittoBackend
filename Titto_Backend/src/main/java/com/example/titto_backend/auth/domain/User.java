@@ -127,11 +127,6 @@ public class User extends BaseEntity {
     @Column(name = "level")
     private Integer level; // 사용자의 레벨
 
-    // TODO : isDeleted 로 유저가 삭제되었는지 안되었는지 확인하고 삭제되었을 경우에는 사용자의 닉네임을 '알수없음'으로 담은 dto를 반환하도록 하기
-//    @Setter
-//    @Column(name = "is_deleted")
-//    private boolean isDeleted;
-
     @Builder
     public User(String email, String profile, String socialId, SocialType socialType) {
         this.email = email;

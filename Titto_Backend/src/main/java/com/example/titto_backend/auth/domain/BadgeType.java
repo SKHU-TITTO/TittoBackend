@@ -1,6 +1,6 @@
 package com.example.titto_backend.auth.domain;
 
-// TODO: 어떤 뱃지 넣을 지 정하기
+
 public enum BadgeType {
     // 신입 답변러, 초보 답변러, 견습 답변러, 프로 답변러, 전문 답변러
     NOVICE_RESPONDER, BEGINNER_RESPONDER, TRAINEE_RESPONDER, PROFESSIONAL_RESPONDER, EXPERT_RESPONDER,

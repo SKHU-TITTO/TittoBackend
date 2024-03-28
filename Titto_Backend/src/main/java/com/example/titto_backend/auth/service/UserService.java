@@ -37,7 +37,6 @@ public class UserService {
     private final QuestionRepository questionRepository;
     private final MatchingPostReviewRepository matchingPostReviewRepository;
 
-    // 닉네임, 학번 중복 여부 확인
     @Transactional
     public void signUp(SignUpDTO signUpDTO, String email) {
         User user = userRepository.findByEmail(email)
