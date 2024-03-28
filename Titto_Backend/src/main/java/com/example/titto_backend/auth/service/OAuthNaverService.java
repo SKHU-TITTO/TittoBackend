@@ -89,7 +89,6 @@ public class OAuthNaverService {
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(reqURL, HttpMethod.POST, requestEntity,
                 String.class);
-        System.out.println(responseEntity.getBody());
 
         String email = "";
         String profileImage = "";

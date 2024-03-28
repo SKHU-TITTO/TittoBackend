@@ -215,7 +215,7 @@ public class UserController {
             summary = "회원 랭킹 조회",
             description = "회원 랭킹을 조회합니다.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+                    @ApiResponse(responseCode = "200", description = "조회 성공"),
                     @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
             })
     public ResponseEntity<List<UserRankingDto>> getUserRanking() {

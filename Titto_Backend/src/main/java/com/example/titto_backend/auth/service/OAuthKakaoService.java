@@ -88,7 +88,6 @@ public class OAuthKakaoService {
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(reqURL, HttpMethod.POST, requestEntity,
                 String.class);
-        System.out.printf(Objects.requireNonNull(responseEntity.getBody()));
 
         String email, profileImage = "";
         long kakaoId = 0;

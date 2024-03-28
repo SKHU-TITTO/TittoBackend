@@ -2,19 +2,16 @@ package com.example.titto_backend.matchingBoard.domain.matchingBoard;
 
 import com.example.titto_backend.auth.domain.User;
 import com.example.titto_backend.common.BaseEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,10 +36,6 @@ public class MatchingPost extends BaseEntity {
     @Setter
     @JoinColumn(name = "author")
     private User user;
-
-    // 매칭게시판
-    @OneToOne(mappedBy = "matchingPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private MatchingBoard matchingBoard;
 
     // 카테고리(멘토, 멘티, 한솥밥, 스터디)
     @Enumerated(EnumType.STRING)
