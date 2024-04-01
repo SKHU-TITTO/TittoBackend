@@ -25,4 +25,5 @@ public class MatchingPostReviewUpdateResponseDto {
         this.content = matchingPostReview.getContent();
         this.updateDate = matchingPostReview.getUpdateDate();
     }
+
 }

@@ -74,4 +74,5 @@ public class AnswerDTO {
             this.level = answer.getAuthor().getLevel();
         }
     }
+
 }

@@ -15,4 +15,5 @@ public class MatchingPostReviewDeleteResponseDto {
     public static MatchingPostReviewDeleteResponseDto of(Long reviewId){
         return new MatchingPostReviewDeleteResponseDto(reviewId);
     }
+
 }

@@ -102,4 +102,5 @@ public class MatchingPostController {
     public ResponseEntity<String> handleAuthorizationException(AuthorizationServiceException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
+
 }

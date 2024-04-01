@@ -79,4 +79,5 @@ public class Question extends BaseEntity {
     public void addViewCount() {
         this.viewCount++;
     }
+
 }

@@ -16,4 +16,5 @@ public class MatchingPostDeleteResponseDto {
     public static MatchingPostDeleteResponseDto of(Long MatchingPostId) {
         return new MatchingPostDeleteResponseDto(MatchingPostId);
     }
+
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MatchingPostUpdateRequestDto {
+
     @NotNull
     private String category;
 

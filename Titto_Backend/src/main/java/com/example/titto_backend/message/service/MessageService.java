@@ -40,7 +40,6 @@ public class MessageService {
         return "메시지 전송 성공";
     }
 
-    // 서로 주고 받은 메세지 조회
     @Transactional
     public List<MessageDTO.Response> getBothMessages(String email, Long selectedUserId) {
         User user = userRepository.findByEmail(email)
@@ -55,7 +54,6 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    // 메세지함에서 사용자 별 가장 최근 메세지만 보내줌.
     @Transactional
     public Map<User, Message> getUserConversations(String email) {
         User user = userRepository.findByEmail(email)
@@ -79,7 +77,6 @@ public class MessageService {
         return conversations;
     }
 
-    // 받은 메세지함 조회
     @Transactional
     public List<MessageDTO.Response> getMessagesByReceiver(String email) {
         User receiver = userRepository.findByEmail(email)
@@ -88,7 +85,6 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    // 보낸 메세지함 조회
     @Transactional
     public List<MessageDTO.Response> getMessagesBySender(String email) {
         User sender = userRepository.findByEmail(email)
@@ -97,7 +93,6 @@ public class MessageService {
         return convertMessagesToDTO(messages);
     }
 
-    // 메세지 삭제
     @Transactional
     public void deleteAllMessages(String email, Long selectedUserId) {
         User user = userRepository.findByEmail(email)

@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MatchingPostReviewDeleteRequestDto {
+
     @NotNull
     private Long reviewId;
     @NotNull
     private Long postId;
+
 }

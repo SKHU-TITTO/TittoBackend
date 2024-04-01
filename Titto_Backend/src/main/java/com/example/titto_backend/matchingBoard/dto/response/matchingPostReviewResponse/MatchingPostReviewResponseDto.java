@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MatchingPostReviewResponseDto {
+
     private Long reviewAuthorId;
     private Long reviewId;
     private String reviewAuthor;
@@ -29,4 +30,5 @@ public class MatchingPostReviewResponseDto {
         this.updateDate = matchingPostReview.getUpdateDate();
         this.level = matchingPostReview.getReviewAuthor().getLevel();
     }
+
 }

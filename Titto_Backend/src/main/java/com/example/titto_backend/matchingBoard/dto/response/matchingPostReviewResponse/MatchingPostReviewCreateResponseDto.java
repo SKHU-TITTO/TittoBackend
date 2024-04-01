@@ -24,4 +24,5 @@ public class MatchingPostReviewCreateResponseDto {
         this.content = matchingPostReview.getContent();
         this.createDate = matchingPostReview.getCreateDate();
     }
+
 }

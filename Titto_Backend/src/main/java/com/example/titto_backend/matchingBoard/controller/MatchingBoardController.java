@@ -65,4 +65,5 @@ public class MatchingBoardController {
         MatchingPostPagingResponseDto response = matchingBoardService.findByCategory(page, category);
         return ResponseEntity.ok(response);
     }
+
 }

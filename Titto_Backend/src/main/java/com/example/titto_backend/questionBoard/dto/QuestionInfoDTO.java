@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "사용자 작성 게시글 조회")
 public class QuestionInfoDTO {
+
     @Schema(description = "질문 ID")
     private Long id;
 
@@ -32,4 +33,5 @@ public class QuestionInfoDTO {
 
     @Schema(description = "학과")
     private Department department;
+
 }

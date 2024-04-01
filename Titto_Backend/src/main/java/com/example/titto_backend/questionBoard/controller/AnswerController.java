@@ -5,15 +5,18 @@ import com.example.titto_backend.auth.repository.UserRepository;
 import com.example.titto_backend.common.exception.CustomException;
 import com.example.titto_backend.common.exception.ErrorCode;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
+import com.example.titto_backend.questionBoard.dto.AnswerDTO.Response;
 import com.example.titto_backend.questionBoard.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,6 +47,18 @@ public class AnswerController {
         AnswerDTO.Response savedAnswer = answerService.save(request, request.getQuestionId(), email);
 
         return ResponseEntity.status(201).body(savedAnswer);
+    }
+
+    @GetMapping("/{postId}")
+    @Operation(
+            summary = "답변 조회",
+            description = "답변을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "답변 조회 성공"),
+                    @ApiResponse(responseCode = "404", description = "답변을 찾을 수 없음")
+            })
+    public ResponseEntity<List<Response>> getAnswers(@PathVariable("postId") Long postId) {
+        return ResponseEntity.ok(answerService.findAnswersByPostId(postId));
     }
 
     @PutMapping("/accept/{answerId}")
