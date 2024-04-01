@@ -10,11 +10,8 @@ import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
-import com.example.titto_backend.questionBoard.dto.AnswerDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,16 +51,6 @@ public class AnswerService {
         experienceService.addExperience(question.getAuthor(), user, 5);
 
         return new AnswerDTO.Response(savedAnswer);
-    }
-
-    @Transactional
-    public List<Response> findAnswersByPostId(Long postId) {
-        Question question = questionRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
-        List<Answer> answers = question.getAnswers();
-        return answers.stream()
-                .map(AnswerDTO.Response::new)
-                .collect(Collectors.toList());
     }
 
     @Transactional
