@@ -31,37 +31,30 @@ public class MatchingPost extends BaseEntity {
     @Column(name = "matchingPost_id")
     private Long matchingPostId;
 
-    // 직상자
     @ManyToOne
     @Setter
     @JoinColumn(name = "author")
     private User user;
 
-    // 카테고리(멘토, 멘티, 한솥밥, 스터디)
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private Category category;
 
-    // 상태(모집중, 모집 완료)
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
-    // 제목
     @Column(name = "title", nullable = false)
     private String title;
 
-    //내용
     @Lob
     @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    // 조회수
     @Setter
     @Column(name = "view_count", columnDefinition = "integer default 0")
     private Integer viewCount;
 
-    // 댓글 수
     @Setter
     @Column(name = "review_count", columnDefinition = "integer default 0")
     private Integer reviewCount;
@@ -79,17 +72,14 @@ public class MatchingPost extends BaseEntity {
         this.status = status;
     }
 
-    // 조회 수 증가
     public void updateViewCount() {
         this.viewCount++;
     }
 
-    // 댓글 수 증가
     public void increaseReviewCount() {
         this.reviewCount++;
     }
 
-    // 댓글 수를 감소
     public void decreaseReviewCount() {
         if (this.reviewCount != null && this.reviewCount > 0) {
             this.reviewCount--;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "사용자 작성 게시글 조회")
 public class MatchingPostInfoDto {
+
     @Schema(description = "질문 ID")
     private Long id;
 

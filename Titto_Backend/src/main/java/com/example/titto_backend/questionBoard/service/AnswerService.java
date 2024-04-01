@@ -10,8 +10,11 @@ import com.example.titto_backend.questionBoard.domain.Answer;
 import com.example.titto_backend.questionBoard.domain.Question;
 import com.example.titto_backend.questionBoard.domain.Status;
 import com.example.titto_backend.questionBoard.dto.AnswerDTO;
+import com.example.titto_backend.questionBoard.dto.AnswerDTO.Response;
 import com.example.titto_backend.questionBoard.repository.AnswerRepository;
 import com.example.titto_backend.questionBoard.repository.QuestionRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +26,10 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+
     private final ExperienceService experienceService;
     private final BadgeService badgeService;
 
-    // Create
     @Transactional
     public AnswerDTO.Response save(AnswerDTO.Request request, Long questionId, String email) {
         User user = userRepository.findByEmail(email)
@@ -53,7 +56,16 @@ public class AnswerService {
         return new AnswerDTO.Response(savedAnswer);
     }
 
-    //Update
+    @Transactional
+    public List<Response> findAnswersByPostId(Long postId) {
+        Question question = questionRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
+        List<Answer> answers = question.getAnswers();
+        return answers.stream()
+                .map(AnswerDTO.Response::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public AnswerDTO.Response update(Long id, AnswerDTO.Request request, User user) throws CustomException {
         Answer answer = answerRepository.findById(id)
@@ -63,7 +75,6 @@ public class AnswerService {
         return new AnswerDTO.Response(answer);
     }
 
-    // Delete
     @Transactional
     public void delete(Long answerId, User user) throws CustomException {
         Answer answer = answerRepository.findById(answerId)

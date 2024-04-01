@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class MatchingPostPagingResponseDto {
+
     private List<MatchingPost> content;
     private int totalPages;
     private long totalElements;
@@ -29,4 +30,5 @@ public class MatchingPostPagingResponseDto {
                 .existNextPage(postPages.hasNext())
                 .build();
     }
+
 }

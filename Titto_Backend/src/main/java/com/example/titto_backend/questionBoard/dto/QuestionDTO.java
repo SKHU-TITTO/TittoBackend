@@ -136,4 +136,5 @@ public class QuestionDTO {
         @Schema(description = "보낼 경험치")
         private Integer sendExperience;
     }
+
 }

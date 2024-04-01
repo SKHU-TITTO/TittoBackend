@@ -25,11 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MatchingPostReviewService {
+
     private final MatchingPostReviewRepository matchingPostReviewRepository;
     private final UserRepository userRepository;
     private final MatchingPostRepository matchingPostRepository;
 
-    // 생성
     @Transactional
     public MatchingPostReviewCreateResponseDto createReview(Principal principal,
                                                             MatchingPostReviewCreateRequestDto matchingPostReviewCreateRequestDto) {
@@ -47,7 +47,6 @@ public class MatchingPostReviewService {
         return new MatchingPostReviewCreateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
 
-    // 조회
     public List<MatchingPostReviewResponseDto> getAllMatchingBoardReviewsByPostId(Long postId) {
         MatchingPost matchingPost = matchingPostRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
@@ -59,8 +58,6 @@ public class MatchingPostReviewService {
                 .collect(Collectors.toList());
     }
 
-
-    // 수정
     @Transactional
     public MatchingPostReviewUpdateResponseDto updateReview(Principal principal,
                                                             MatchingPostReviewUpdateRequestDto matchingPostReviewUpdateRequestDto) {
@@ -77,8 +74,6 @@ public class MatchingPostReviewService {
         return new MatchingPostReviewUpdateResponseDto(matchingPostReviewRepository.save(matchingPostReview));
     }
 
-
-    // 삭제
     @Transactional
     public MatchingPostReviewDeleteResponseDto deleteReviewByReviewId(
             MatchingPostReviewDeleteRequestDto matchingPostReviewDeleteRequestDto,
@@ -111,4 +106,5 @@ public class MatchingPostReviewService {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
+
 }

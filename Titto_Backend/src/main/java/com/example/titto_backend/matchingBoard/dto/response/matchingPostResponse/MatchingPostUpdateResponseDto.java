@@ -37,4 +37,5 @@ public class MatchingPostUpdateResponseDto {
                 matchingPost.getReviewCount(),
                 matchingPost.getUpdateDate());
     }
+
 }

@@ -34,7 +34,6 @@ public class QuestionController {
     private final QuestionService questionService;
     private final UserRepository userRepository;
 
-    // Create
     @PostMapping("/create")
     @Operation(
             summary = "질문 작성",
@@ -49,7 +48,6 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(questionService.save(email, request));
     }
 
-    // Read
     @GetMapping("/posts")
     @Operation(
             summary = "전체 질문 조회",
@@ -119,7 +117,6 @@ public class QuestionController {
         return ResponseEntity.ok(questions);
     }
 
-    // Update
     @PutMapping("/{postId}")
     @Operation(
             summary = "질문 수정",
@@ -140,7 +137,6 @@ public class QuestionController {
         return ResponseEntity.ok("질문 수정 성공");
     }
 
-    // Delete
     @DeleteMapping("/{postId}")
     @Operation(
             summary = "질문 삭제",
@@ -156,4 +152,5 @@ public class QuestionController {
         questionService.delete(postId, currentUser); // 현재 사용자의 ID를 전달하여 삭제 메소드 호출
         return ResponseEntity.noContent().build();
     }
+
 }

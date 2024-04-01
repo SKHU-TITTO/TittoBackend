@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MatchingBoardService {
+
     private final MatchingPostRepository matchingPostRepository;
 
     @Transactional
@@ -40,6 +41,7 @@ public class MatchingBoardService {
         Page<MatchingPost> matchingPosts = matchingPostRepository.findByCategory(Category.valueOf(category), pageable);
         return MatchingPostPagingResponseDto.from(matchingPosts);
     }
+
 }
 
 

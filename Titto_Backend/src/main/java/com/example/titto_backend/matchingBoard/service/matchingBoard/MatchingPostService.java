@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MatchingPostService {
+
     private final MatchingPostRepository matchingPostRepository;
     private final UserRepository userRepository;
     private final MatchingPostReviewRepository matchingPostReviewRepository;
@@ -123,4 +124,5 @@ public class MatchingPostService {
             throw new CustomException(ErrorCode.MISMATCH_AUTHOR);
         }
     }
+
 }

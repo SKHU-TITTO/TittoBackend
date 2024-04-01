@@ -72,4 +72,5 @@ public class Message extends BaseEntity {
         this.deletedByReceiver = false;
         this.sentAt = LocalDateTime.now();
     }
+
 }

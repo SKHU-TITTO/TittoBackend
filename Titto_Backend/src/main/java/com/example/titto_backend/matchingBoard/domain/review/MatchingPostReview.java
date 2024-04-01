@@ -28,18 +28,15 @@ public class MatchingPostReview extends BaseEntity {
     @Column(name = "review_id")
     private Long review_id;
 
-    // 댓글 작성자
     @ManyToOne
     @Setter
     @JoinColumn(name = "review_author")
     private User reviewAuthor;
 
-    // 게시글
     @ManyToOne
     @JoinColumn(name = "matchingPost_id")
     private MatchingPost matchingPost;
 
-    // 내용
     @Column(name = "review_content", nullable = false)
     private String content;
 

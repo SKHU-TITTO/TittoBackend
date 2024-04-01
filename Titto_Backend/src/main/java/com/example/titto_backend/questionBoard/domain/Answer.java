@@ -45,4 +45,5 @@ public class Answer extends BaseEntity {
     @Column(name = "is_accepted")
     @Setter
     private boolean isAccepted;
+
 }

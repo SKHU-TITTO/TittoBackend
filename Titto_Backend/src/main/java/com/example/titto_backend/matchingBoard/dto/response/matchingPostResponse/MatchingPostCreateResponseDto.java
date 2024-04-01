@@ -37,5 +37,6 @@ public class MatchingPostCreateResponseDto {
                 matchingPost.getReviewCount(),
                 matchingPost.getCreateDate());
     }
+
 }
 
