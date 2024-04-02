@@ -3,6 +3,7 @@ package com.example.titto_backend.feedback.domain;
 import static jakarta.persistence.FetchType.EAGER;
 
 import com.example.titto_backend.auth.domain.User;
+import com.example.titto_backend.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "feedback")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Feedback {
+public class Feedback extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
