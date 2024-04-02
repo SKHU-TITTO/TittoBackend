@@ -40,7 +40,7 @@ public class Message extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
-    @OnDelete(action = OnDeleteAction.NO_ACTION) // 수신자나 발신자가 삭제되면 메시지는 삭제되지 않음
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private User receiver;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)

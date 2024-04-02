@@ -2,6 +2,7 @@ package com.example.titto_backend.auth.domain;
 
 import com.example.titto_backend.auth.dto.request.SignUpDTO;
 import com.example.titto_backend.common.BaseEntity;
+import com.example.titto_backend.feedback.domain.Feedback;
 import com.example.titto_backend.matchingBoard.domain.matchingBoard.MatchingPost;
 import com.example.titto_backend.matchingBoard.domain.review.MatchingPostReview;
 import com.example.titto_backend.message.domain.Message;
@@ -102,6 +103,10 @@ public class User extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Message> receivedMessages;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "feedbackUser", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<Feedback> feedbacks;
 
     @Setter
     @Column(name = "total_experience")
