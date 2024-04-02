@@ -38,13 +38,12 @@ public class QuestionService {
     private final RedisUtil redisUtil;
     private final BadgeService badgeService;
 
-    //Create
     @Transactional
     public String save(String email, QuestionDTO.Request request) throws CustomException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        experienceService.deductExperience(user, request.getSendExperience()); // 유저 경험치 차감
+        experienceService.deductExperience(user, request.getSendExperience());
         user.setCountQuestion(user.getCountQuestion() + 1);
         badgeService.getQuestionBadge(user, user.getCountQuestion());
 
@@ -99,7 +98,6 @@ public class QuestionService {
         return questionRepository.findByTitleContaining(keyWord, pageable).map(QuestionDTO.Response::new);
     }
 
-    // Update
     @Transactional
     public void update(QuestionDTO.Update update, Long id, User user) throws CustomException {
         validateAuthorIsLoggedInUser(id, user);
@@ -114,25 +112,21 @@ public class QuestionService {
         );
     }
 
-    // Delete
     @Transactional
     public void delete(Long id, User user) {
         validateAuthorIsLoggedInUser(id, user);
         user.setCountQuestion(user.getCountQuestion() - 1);
-        // 질문에 연관된 답변들을 가져옴
+
         List<Answer> answers = answerRepository.findByQuestionId(id);
 
-        // 답변들을 하나씩 삭제
         answers.forEach(answer -> {
             User answerAuthor = answer.getAuthor();
             answerService.delete(answer.getId(), answerAuthor);
         });
 
-        // 질문 삭제
         questionRepository.deleteById(id);
     }
 
-    // 질문 게시판에 채택된 답변이 없으면 걸었던 경험치 되돌려줌, 채택된 답변 있을 시 삭제 불가능
     private void isAcceptAnswer(Question question, User user) {
         if (!question.isAnswerAccepted()) {
             user.setCurrentExperience(user.getCurrentExperience() + question.getSendExperience());
@@ -141,7 +135,6 @@ public class QuestionService {
         }
     }
 
-    // 글을 쓴 사람과 현재 로그인한 사람이 같은지 확인
     private void validateAuthorIsLoggedInUser(Long id, User user) {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
