@@ -106,12 +106,20 @@ public class QuestionService {
         Question oldQuestion = questionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
+        if (oldQuestion.getSendExperience() > update.getSendExperience()) {
+            user.setCurrentExperience(
+                    user.getCurrentExperience() + oldQuestion.getSendExperience() - update.getSendExperience());
+        } else {
+            experienceService.deductExperience(user, update.getSendExperience() - oldQuestion.getSendExperience());
+        }
+
         oldQuestion.update(
                 update.getTitle(),
                 update.getContent(),
                 Department.valueOf(String.valueOf(update.getDepartment())),
                 update.getSendExperience()
         );
+
     }
 
     // Delete
