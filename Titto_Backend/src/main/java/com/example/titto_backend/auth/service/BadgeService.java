@@ -2,7 +2,7 @@ package com.example.titto_backend.auth.service;
 
 import com.example.titto_backend.auth.domain.BadgeType;
 import com.example.titto_backend.auth.domain.User;
-import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ public class BadgeService {
 
     @Transactional
     public void getAnswerBadge(User user, int countAnswer) {
-        List<BadgeType> badges = user.getBadges();
+        Set<BadgeType> badges = user.getBadges();
         addBadge(badges, countAnswer, BadgeType.NOVICE_RESPONDER, 1);
         addBadge(badges, countAnswer, BadgeType.BEGINNER_RESPONDER, 2, 5);
         addBadge(badges, countAnswer, BadgeType.TRAINEE_RESPONDER, 6, 10);
@@ -24,7 +24,7 @@ public class BadgeService {
     }
 
     public void getQuestionBadge(User user, int countQuestion) {
-        List<BadgeType> badges = user.getBadges();
+        Set<BadgeType> badges = user.getBadges();
         addBadge(badges, countQuestion, BadgeType.NOVICE_INQUIRER, 1);
         addBadge(badges, countQuestion, BadgeType.BEGINNER_INQUIRER, 2, 5);
         addBadge(badges, countQuestion, BadgeType.TRAINEE_INQUIRER, 6, 10);
@@ -35,7 +35,7 @@ public class BadgeService {
     }
 
     public void getAcceptBadge(User user, int countAccept) {
-        List<BadgeType> badges = user.getBadges();
+        Set<BadgeType> badges = user.getBadges();
         addBadge(badges, countAccept, BadgeType.NOVICE_SOLVER, 1);
         addBadge(badges, countAccept, BadgeType.BEGINNER_SOLVER, 2, 5);
         addBadge(badges, countAccept, BadgeType.TRAINEE_SOLVER, 6, 10);
@@ -46,20 +46,20 @@ public class BadgeService {
     }
 
     public void getTittoAuthorityBadge(User user) {
-        List<BadgeType> badges = user.getBadges();
+        Set<BadgeType> badges = user.getBadges();
         if (user.getLevel() == 5) {
             badges.add(BadgeType.TITTO_AUTHORITY);
         }
     }
 
     public void getTittoMasterBadge(User user) {
-        List<BadgeType> badges = user.getBadges();
+        Set<BadgeType> badges = user.getBadges();
         if (badges.size() == 16) {
             badges.add(BadgeType.TITTO_MASTER);
         }
     }
 
-    private void addBadge(List<BadgeType> badges, int count, BadgeType badgeType, int... counts) {
+    private void addBadge(Set<BadgeType> badges, int count, BadgeType badgeType, int... counts) {
         boolean hasBadge = badges.contains(badgeType);
         if (!hasBadge) {
             for (int i = 0; i < counts.length; i += 2) {
