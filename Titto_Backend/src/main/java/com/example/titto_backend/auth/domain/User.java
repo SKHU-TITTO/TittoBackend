@@ -20,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -77,7 +78,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ElementCollection
     @Column(name = "badge")
-    private List<BadgeType> badges;
+    private Set<BadgeType> badges;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
