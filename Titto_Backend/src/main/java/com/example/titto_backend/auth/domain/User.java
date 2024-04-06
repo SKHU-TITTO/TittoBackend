@@ -106,7 +106,7 @@ public class User extends BaseEntity {
     private List<Message> receivedMessages;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "feedbackUser", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "feedbackUser", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Feedback> feedbacks;
 
     @Setter
